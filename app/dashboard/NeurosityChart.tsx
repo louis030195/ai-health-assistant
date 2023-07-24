@@ -3,10 +3,12 @@ import { PowerByBand } from '@neurosity/sdk/dist/esm/types/brainwaves';
 import { Credentials } from '@neurosity/sdk/dist/esm/types/credentials';
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
+import { useNeurosity, neurosity } from './useNeurosity';
 
 
 export const NeurosityChart = () => {
-
+    // @ts-ignore
+    const data = useNeurosity(neurosity);
     const [numDataPoints, setNumDataPoints] = useState(50);
     const handleChange = (value: number) => {
         setNumDataPoints(value);
