@@ -8,7 +8,7 @@ export default async function SignIn() {
   const session = await getSession();
 
   if (session) {
-    return redirect('/account');
+    return redirect('/onboarding/neurosity');
   }
 
   return (

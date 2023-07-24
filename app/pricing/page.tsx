@@ -1,5 +1,4 @@
 import Pricing from '@/components/Pricing';
-
 import {
   getSession,
   getSubscription,
@@ -7,7 +6,6 @@ import {
 } from '@/app/supabase-server';
 
 export default async function PricingPage() {
-
   const [session, products, subscription] = await Promise.all([
     getSession(),
     getActiveProductsWithPrices(),
@@ -15,31 +13,15 @@ export default async function PricingPage() {
   ]);
 
   return (
-    <div className="py-16 overflow-hidden">
-      <div className="max-w-7xl mx-auto px-4 space-y-8 sm:px-6 lg:px-8">
-
-        <div className="text-center space-y-4">
-          <p className="mt-1 text-4xl font-extrabold text-gray-100 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            ChatGPT meets Neurosity
-          </p>
-          <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Let ChatGPT optimize your health and wellness based on your brain activity.
-          </p>
-
-          <div className="inline-flex rounded-md shadow">
-            <a href="/login" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-100 bg-gray-900 hover:bg-gray-950">
-              Get started - free
-            </a>
-          </div>
-        </div>
-
-
-      </div>
-    </div>
-  )
-
+    <Pricing
+      session={session}
+      user={session?.user}
+      products={products}
+      subscription={subscription}
+    />
+    // <Banner />
+  );
 }
-
 
 import React from 'react'
 
