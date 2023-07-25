@@ -12,6 +12,7 @@
   },
   "dependencies": {
     "@neurosity/sdk": "^6.5.9",
+    "@sentry/nextjs": "^7.60.0",
     "@stripe/stripe-js": "^1.53.0",
     "@supabase/auth-helpers-nextjs": "^0.7.0",
     "@supabase/auth-ui-react": "^0.4.2",
@@ -21,6 +22,7 @@
     "classnames": "^2.3.2",
     "next": "13.4.3",
     "openai-edge": "^1.2.2",
+    "posthog-js": "^1.75.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hot-toast": "^2.4.1",

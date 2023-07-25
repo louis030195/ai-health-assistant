@@ -28,7 +28,8 @@ export default function ManageSubscriptionButton({ session }: Props) {
       <p className="pb-4 sm:pb-0">Manage your subscription on Stripe.</p>
       <Button
         variant="slim"
-        disabled={!session}
+        // disabled={!session}
+        disabled={true} // TODO
         onClick={redirectToCustomerPortal}
       >
         Open customer portal

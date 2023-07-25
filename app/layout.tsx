@@ -3,6 +3,25 @@ import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
+import PHProvider from './posthog-provider';
+import * as Sentry from '@sentry/browser'
+import posthog from 'posthog-js'
+
+if (process.env.ENVIRONMENT !== 'development') {
+  Sentry.init({
+    dsn: "https://d991f2934a8a47e3ab3c6f5789a6c4ca@o4505591122886656.ingest.sentry.io/4505591123607552",
+    integrations: [
+      new Sentry.BrowserTracing(),
+      new Sentry.Replay(),
+      new posthog.SentryIntegration(posthog, 'mediar', 4505591123607552)
+    ],
+    // Performance Monitoring
+    tracesSampleRate: 0, // Capture 100% of the transactions, reduce in production!
+    // Session Replay
+    replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
+    replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.
+  });
+}
 
 const meta = {
   title: 'Mediar',
@@ -47,16 +66,18 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-white loading">
-        <SupabaseProvider>
-          <Navbar />
-          <main
-            id="skip"
-            className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
-          >
-            {children}
-          </main>
-          <Footer />
-        </SupabaseProvider>
+        <PHProvider>
+          <SupabaseProvider>
+            <Navbar />
+            <main
+              id="skip"
+              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+            >
+              {children}
+            </main>
+            <Footer />
+          </SupabaseProvider>
+        </PHProvider>
       </body>
     </html>
   );

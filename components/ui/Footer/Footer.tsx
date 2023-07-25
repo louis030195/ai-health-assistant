@@ -12,7 +12,7 @@ export default function Footer() {
             href="/"
             className="flex items-center flex-initial font-bold md:mr-24"
           >
-            <span className="mr-2 border rounded-full border-gray-400">
+            <span className="mr-2">
               {/* <Logo /> */}
               <Image
                 // center 
