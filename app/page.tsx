@@ -25,14 +25,13 @@ export default async function PricingPage() {
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
             Let ChatGPT optimize your health and wellness based on your brain activity.
           </p>
-
           <div className="inline-flex rounded-md shadow">
             <a href="/signin" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-gray-100 hover:bg-gray-50">
               Get started - free
             </a>
           </div>
+          <iframe src="https://link.excalidraw.com/p/readonly/HPHqJw8yfgFU0lEHDblD" width="100%" height="800px"></iframe>
         </div>
-
 
       </div>
     </div>
