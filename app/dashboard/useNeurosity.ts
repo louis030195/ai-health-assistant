@@ -6,93 +6,59 @@ import { Credentials } from '@neurosity/sdk/dist/esm/types/credentials';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types_db';
 
-
-class FakeNeurosity extends Neurosity {
-    login(_: Credentials) {
-        console.log("Fake login");
-        return Promise.resolve();
-    }
-
-    // @ts-ignore
-    brainwaves(_: BrainwavesLabel) {
-        return {
-            subscribe: (callback: (data: PowerByBand) => void) => {
-                setInterval(() => {
-                    const randomData = {
-                        label: "fake",
-                        timestamp: Date.now(),
-                        alpha: randomArray(8),
-                        beta: randomArray(8),
-                        delta: randomArray(8),
-                        gamma: randomArray(8),
-                        theta: randomArray(8),
-                    };
-
-                    callback(randomData);
-                }, 1000);
-
-                return {
-                    unsubscribe: () => { }
-                }
-            },
-        };
-    }
-}
-
-function randomArray(length: number) {
-    return Array.from({ length }, () => Math.random());
-}
-
-// const neurosity = new Neurosity();
-export const neurosity = new FakeNeurosity();
-
 export function useNeurosity(neurosity: Neurosity) {
     const [data, setData] = useState<any[]>([]);
-    const supabase = createClientComponentClient<any>()
+    const supabase = createClientComponentClient<Database>()
+
+    const [isLogged, setIsLogged] = useState(false);
 
     useEffect(() => {
-        const unsubscribe = listenToBrain(neurosity, async (brainwaves) => {
-            setData(prev => [...prev, brainwaves]);
-            const { error } = await supabase.from('waves').insert({
-                alpha: brainwaves.alpha,
-                beta: brainwaves.beta,
-                delta: brainwaves.delta,
-                gamma: brainwaves.gamma,
-                theta: brainwaves.theta,
-                // @ts-ignore
-                timestamp: brainwaves.timestamp?.toString(),
+        neurosity.onAuthStateChanged().subscribe((r) => {
+            setIsLogged(r !== null)
+        })
+    }, [])
+
+    useEffect(() => {
+        if (!isLogged) return
+        console.log("listening to focus now");
+        const { unsubscribe } = neurosity.focus().subscribe((focus) => {
+            console.log("focus", focus);
+            const nf = {
+                created_at: focus.timestamp?.toString(),
+                probability: focus.probability,
                 metadata: {
-                    // @ts-ignore
-                    label: brainwaves.label,
+                    label: focus.label,
                 }
-            })
-            if (error) {
-                console.log("error", error);
-                unsubscribe();
-                console.log("unsubscribed");
             }
+            setData(prev => [...prev, nf]);
+            // const { error } = await supabase.from('states').insert(nf)
+            // if (error) {
+            //     console.log("error", error);
+            //     unsubscribe();
+            //     console.log("unsubscribed");
+            // }
         });
 
-        return () => unsubscribe();
-    }, [neurosity]);
+        // return () => unsubscribe();
+    }, [isLogged]);
 
-    useEffect(() => {
-        const channelB = supabase
-            .channel('table-db-changes')
-            .on(
-                'postgres_changes',
-                {
-                    event: 'INSERT',
-                    schema: 'public',
-                    table: 'waves',
-                },
-                (payload) => setData((prev) => [...prev, payload.new])
-            )
-            .subscribe()
-        return () => {
-            channelB.unsubscribe().then(console.log)
-        }
-    }, [neurosity]);
+    // useEffect(() => {
+    //     const channelB = supabase
+    //         .channel('table-db-changes')
+    //         .on(
+    //             'postgres_changes',
+    //             {
+    //                 event: 'INSERT',
+    //                 schema: 'public',
+    //                 table: 'waves',
+    //             },
+    //             (payload) => setData((prev) => [...prev, payload.new])
+    //         )
+    //         .subscribe()
+    //     return () => {
+    //         channelB.unsubscribe().then(console.log)
+    //     }
+    // }, [neurosity]);
 
     return data;
 }

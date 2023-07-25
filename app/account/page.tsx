@@ -5,6 +5,7 @@ import {
   getSubscription
 } from '@/app/supabase-server';
 import Button from '@/components/ui/Button';
+import Input from '@/components/ui/Input';
 import { Database } from '@/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
@@ -64,13 +65,13 @@ export default async function Account() {
   };
 
   return (
-    <section className="mb-32 bg-black">
+    <section className="mb-32 bg-white">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
         <div className="sm:align-center sm:flex sm:flex-col">
-          <h1 className="text-4xl font-extrabold text-white sm:text-center sm:text-6xl">
+          <h1 className="text-4xl font-extrabold text-black sm:text-center sm:text-6xl">
             Account
           </h1>
-          <p className="max-w-2xl m-auto mt-5 text-xl text-zinc-200 sm:text-center sm:text-2xl">
+          <p className="max-w-2xl m-auto mt-5 text-xl text-gray-600 sm:text-center sm:text-2xl">
             We partnered with Stripe for a simplified billing.
           </p>
         </div>
@@ -93,7 +94,7 @@ export default async function Account() {
             )}
           </div>
         </Card>
-        <Card
+        {/* <Card
           title="Your Name"
           description="Please enter your full name, or a display name you are comfortable with."
           footer={
@@ -105,7 +106,6 @@ export default async function Account() {
                 form="nameForm"
                 disabled={true}
               >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
                 Update Name
               </Button>
             </div>
@@ -116,15 +116,15 @@ export default async function Account() {
               <input
                 type="text"
                 name="name"
-                className="w-1/2 p-3 rounded-md bg-zinc-800"
+                className="w-1/2 p-3 rounded-md bg-gray-100" 
                 defaultValue={userDetails?.full_name ?? ''}
                 placeholder="Your name"
                 maxLength={64}
               />
             </form>
           </div>
-        </Card>
-        <Card
+        </Card> */}
+        {/* <Card
           title="Your Email"
           description="Please enter the email address you want to use to login."
           footer={
@@ -138,7 +138,6 @@ export default async function Account() {
                 form="emailForm"
                 disabled={true}
               >
-                {/* WARNING - In Next.js 13.4.x server actions are in alpha and should not be used in production code! */}
                 Update Email
               </Button>
             </div>
@@ -146,17 +145,17 @@ export default async function Account() {
         >
           <div className="mt-8 mb-4 text-xl font-semibold">
             <form id="emailForm" action={updateEmail}>
-              <input
+              <Input
                 type="text"
                 name="email"
-                className="w-1/2 p-3 rounded-md bg-zinc-800"
+                className="w-1/2 p-3 rounded-md bg-gray-100"
                 defaultValue={user ? user.email : ''}
                 placeholder="Your email"
                 maxLength={64}
               />
             </form>
           </div>
-        </Card>
+        </Card> */}
       </div>
     </section>
   );
@@ -171,13 +170,13 @@ interface Props {
 
 function Card({ title, description, footer, children }: Props) {
   return (
-    <div className="w-full max-w-3xl m-auto my-8 border rounded-md p border-zinc-700">
+    <div className="w-full max-w-3xl m-auto my-8 border rounded-md p border-gray-200">
       <div className="px-5 py-4">
         <h3 className="mb-1 text-2xl font-medium">{title}</h3>
-        <p className="text-zinc-300">{description}</p>
+        <p className="text-gray-500">{description}</p>
         {children}
       </div>
-      <div className="p-4 border-t rounded-b-md border-zinc-700 bg-zinc-900 text-zinc-500">
+      <div className="p-4 border-t rounded-b-md border-gray-200 bg-gray-50 text-gray-700">
         {footer}
       </div>
     </div>

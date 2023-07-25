@@ -5,19 +5,19 @@ import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 
 const meta = {
-  title: 'Next.js Subscription Starter',
-  description: 'Brought to you by Vercel, Stripe, and Supabase.',
-  cardImage: '/og.png',
+  title: 'Mediar',
+  description: 'ChatGPT x Neurosity',
+  // cardImage: '/og.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
-  url: 'https://subscription-starter.vercel.app',
+  url: 'https://mediar.ai',
   type: 'website'
 };
 
 export const metadata = {
   title: meta.title,
   description: meta.description,
-  cardImage: meta.cardImage,
+  // cardImage: meta.cardImage,
   robots: meta.robots,
   favicon: meta.favicon,
   url: meta.url,
@@ -26,16 +26,16 @@ export const metadata = {
     url: meta.url,
     title: meta.title,
     description: meta.description,
-    cardImage: meta.cardImage,
+    // cardImage: meta.cardImage,
     type: meta.type,
     site_name: meta.title
   },
   twitter: {
     card: 'summary_large_image',
-    site: '@vercel',
+    site: '@mediar',
     title: meta.title,
     description: meta.description,
-    cardImage: meta.cardImage
+    // cardImage: meta.cardImage
   }
 };
 
@@ -46,7 +46,7 @@ export default function RootLayout({
 }: PropsWithChildren) {
   return (
     <html lang="en">
-      <body className="bg-black loading">
+      <body className="bg-white loading">
         <SupabaseProvider>
           <Navbar />
           <main

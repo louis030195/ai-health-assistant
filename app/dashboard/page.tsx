@@ -5,7 +5,7 @@ import {
   getActiveProductsWithPrices
 } from '@/app/supabase-server';
 
-export default async function PricingPage() {
+export default async function Dashboard() {
   const [session, products, subscription] = await Promise.all([
     getSession(),
     getActiveProductsWithPrices(),
@@ -13,12 +13,22 @@ export default async function PricingPage() {
   ]);
 
   return (
-    <p>dashboard</p>
-    // <Banner />
+    // center vertically
+    <div className="flex justify-center">
+      <h1
+        className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl"
+      >coming soon</h1>
+      {/* <NeurosityForm session={session!} /> */}
+      {/* <NeurosityStatus /> */}
+      {/* <NeurosityFocusChart /> */}
+    </div>
   );
 }
 
 import React from 'react'
+import { NeurosityFocusChart } from './NeurosityFocusChart';
+import { NeurosityStatus } from './NeurosityStatus';
+import NeurosityForm from '../onboarding/neurosity/NeurosityForm';
 
 const randomText = () => {
   let text = ''

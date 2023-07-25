@@ -1,5 +1,5 @@
 .root {
-  @apply bg-black py-2 px-3 w-full appearance-none transition duration-150 ease-in-out border border-zinc-500 text-zinc-200;
+  @apply bg-white py-2 px-3 w-full appearance-none transition duration-150 ease-in-out border border-zinc-500 text-zinc-800;
 }
 
 .root:focus {

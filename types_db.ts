@@ -107,6 +107,27 @@ export interface Database {
         }
         Relationships: []
       }
+      states: {
+        Row: {
+          created_at: string | null
+          id: number
+          metadata: Json | null
+          probability: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          metadata?: Json | null
+          probability?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          metadata?: Json | null
+          probability?: number | null
+        }
+        Relationships: []
+      }
       subscriptions: {
         Row: {
           cancel_at: string | null

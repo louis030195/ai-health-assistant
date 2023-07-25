@@ -19,7 +19,7 @@ export default async function PricingPage() {
       <div className="max-w-7xl mx-auto px-4 space-y-8 sm:px-6 lg:px-8">
 
         <div className="text-center space-y-4">
-          <p className="mt-1 text-4xl font-extrabold text-gray-100 sm:text-5xl sm:tracking-tight lg:text-6xl">
+          <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
             ChatGPT meets Neurosity
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
@@ -27,7 +27,7 @@ export default async function PricingPage() {
           </p>
 
           <div className="inline-flex rounded-md shadow">
-            <a href="/login" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-100 bg-gray-900 hover:bg-gray-950">
+            <a href="/login" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-gray-100 hover:bg-gray-50">
               Get started - free
             </a>
           </div>

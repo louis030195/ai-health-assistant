@@ -8,8 +8,7 @@ import { Session } from '@supabase/supabase-js';
 import Button from '@/components/ui/Button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-
-const neurosity = new Neurosity();
+import { neurosity } from '@/utils/neurosity-client';
 
 interface Props {
     session: Session;
@@ -25,20 +24,21 @@ export default function ConnectNeurosity({ session }: Props) {
     // const supabase = createClientComponentClient()
 
     useEffect(() => {
-        neurosity.getDevices().then((r) => {
-            setIsLogged(true)
+        neurosity.onAuthStateChanged().subscribe((r) => {
             console.log(r)
-        }).catch((e) => {
-            setIsLogged(false)
-            console.log(e)
+            setIsLogged(r !== null)
         })
     }, [])
 
+    console.log('session')
     const handleConnect = async () => {
-        await neurosity.logout();
-        toast.promise(neurosity.login({ email: email!, password }), {
+        console.log(email, password)
+        if (isLogged) return toast.success('Connected to Neurosity!');
+        await toast.promise(neurosity.login({ email: email!, password }), {
             success: 'Connected to Neurosity!',
-            error: 'Could not connect to Neurosity',
+            error: (e) => e.toString().includes('Already') ?
+                'Already connected to Neurosity' :
+                'Could not connect to Neurosity',
             loading: 'Connecting to Neurosity...',
         })
 
@@ -93,7 +93,7 @@ export default function ConnectNeurosity({ session }: Props) {
                 <Button
                     className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full py-3 rounded-md"
                     onClick={handleConnect}
-                    disabled={!email || !password}
+                // disabled={!email || !password}
                 >
                     Connect to Neurosity
                 </Button>
