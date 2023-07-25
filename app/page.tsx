@@ -27,7 +27,7 @@ export default async function PricingPage() {
           </p>
 
           <div className="inline-flex rounded-md shadow">
-            <a href="/login" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-gray-100 hover:bg-gray-50">
+            <a href="/signin" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-gray-100 hover:bg-gray-50">
               Get started - free
             </a>
           </div>
