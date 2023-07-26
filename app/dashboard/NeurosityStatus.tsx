@@ -3,7 +3,6 @@ import { PowerByBand } from '@neurosity/sdk/dist/esm/types/brainwaves';
 import { Credentials } from '@neurosity/sdk/dist/esm/types/credentials';
 import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { useNeurosity } from './useNeurosity';
 import { SignalQuality } from '@neurosity/sdk/dist/esm/types/signalQuality';
 import { Neurosity } from '@neurosity/sdk';
 
