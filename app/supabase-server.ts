@@ -107,12 +107,11 @@ export const getOnboarding = async (userId: string) => {
     .select('*')
     .eq('user_id', userId)
     .limit(1)
-    .single();
 
   if (error) {
     console.log(error.message);
   }
-  return data ?? [];
+  return data !== null && data.length > 0;
 };
 
 export const saveOnboarding = async (userId: string) => {

@@ -8,9 +8,9 @@ export default async function SignIn() {
   const session = await getSession();
 
   if (session) {
-    const onBoarding = await getOnboarding(session.user.id);
-    console.log('onBoarding', onBoarding);
-    if (!onBoarding || onBoarding.length === 0) return redirect('/onboarding/intro');
+    const hasOnboarded = await getOnboarding(session.user.id);
+    console.log('hasOnboarded', hasOnboarded);
+    if (!hasOnboarded) return redirect('/onboarding/intro');
     return redirect('/dashboard');
   }
 
