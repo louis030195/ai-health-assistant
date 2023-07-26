@@ -3,7 +3,6 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 import { useSyncFocus } from './useNeurosity';
 import { Neurosity } from '@neurosity/sdk';
 import { Session } from '@supabase/auth-helpers-nextjs';
-import { State } from '@/types_db';
 import React, { useState } from 'react';
 import Button from '@/components/ui/Button';
 import { Fragment } from 'react'
