@@ -7,6 +7,7 @@ import { mergeRefs } from 'react-merge-refs';
 import LoadingDots from '@/components/ui/LoadingDots';
 
 import styles from './Button.module.css';
+import classNames from 'classnames';
 
 interface Props extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: 'slim' | 'flat';
@@ -44,7 +45,7 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
       aria-pressed={active}
       data-variant={variant}
       ref={mergeRefs([ref, buttonRef])}
-      className={rootClassName}
+      className={classNames(rootClassName, className)}
       disabled={disabled}
       style={{
         width,
@@ -53,12 +54,14 @@ const Button = forwardRef<HTMLButtonElement, Props>((props, buttonRef) => {
       {...rest}
     >
       {children}
-      {loading && (
-        <i className="flex pl-2 m-0">
-          <LoadingDots />
-        </i>
-      )}
-    </Component>
+      {
+        loading && (
+          <i className="flex pl-2 m-0">
+            <LoadingDots />
+          </i>
+        )
+      }
+    </Component >
   );
 });
 

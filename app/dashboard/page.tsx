@@ -8,6 +8,7 @@ import {
   getUserDetails
 } from '@/app/supabase-server';
 
+
 export default async function Dashboard() {
   const [session, states] = await Promise.all([
     getSession(),
@@ -15,6 +16,11 @@ export default async function Dashboard() {
   ]);
 
   console.log(states)
+
+  const getStatesServer = async () => {
+    'use server'
+    return getStatesWithFunction()
+  }
 
   return (
     // center vertically and horizontally
@@ -26,7 +32,7 @@ export default async function Dashboard() {
       {/* center children */}
       <div className="flex flex-col mt-20 items-center">
         {/* <ChartTimePicker /> */}
-        <NeurosityFocusChart session={session!} states={states} />
+        <NeurosityFocusChart session={session!} defaultStates={states} getStates={getStatesServer} />
       </div>
       {/* <FeelingsModal user={user} /> */}
     </div>

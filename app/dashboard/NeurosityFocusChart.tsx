@@ -2,16 +2,20 @@
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
 import { Neurosity } from '@neurosity/sdk';
 import { Session } from '@supabase/auth-helpers-nextjs';
+import { useState } from 'react';
+import { ArrowPathIcon } from '@heroicons/react/20/solid';
+import Button from '@/components/ui/Button';
 
 interface Props {
     session: Session;
-    states: any[];
+    defaultStates: any[];
+    getStates: () => Promise<any[]>;
 }
 function roundToTwo(num: number) {
     return Math.round(num * 100) / 100;
 }
-export const NeurosityFocusChart = ({ session, states }: Props) => {
-    console.log(states)
+export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props) => {
+    let [states, setStates] = useState<any[]>(defaultStates);
 
 
     // Modify your data to include an 'hour' field
@@ -23,12 +27,28 @@ export const NeurosityFocusChart = ({ session, states }: Props) => {
         };
     });
 
+    const refreshState = async () => {
+        const ns = await getStates();
+        setStates(ns);
+    }
+
 
     return (
         <div className="flex flex-col space-y-4">
             <h1 className="text-2xl text-gray-900 text-center">
                 Focus history
             </h1>
+            <div className="flex justify-end">
+                <Button
+                    // width={20}
+                    // className="p-0"
+                    onClick={refreshState}>
+                    <ArrowPathIcon
+                        width={20}
+                        height={20}
+                    />
+                </Button>
+            </div>
             <LineChart
                 width={600}
                 height={300}

@@ -23,6 +23,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLogged, setIsLogged] = useState(false);
+    const [isReceivingFocus, setIsReceivingFocus] = useState(false);
     const router = useRouter();
 
     useEffect(() => {
@@ -47,6 +48,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
             toast.success('Listening to your focus...');
             // neurosity.calm().forEach(console.log)
             const { unsubscribe } = neurosity.focus().subscribe(async (focus) => {
+                setIsReceivingFocus(true)
                 console.log("focus", focus);
                 const nf = {
                     // created_at: focus.timestamp?.toString(),
@@ -74,7 +76,8 @@ export default function ConnectNeurosity({ session, className }: Props) {
         }).catch((e) => {
             console.log(e)
             if (e.toString().includes('Already')) return onConnected()
-            toast.error('Could not connect to Neurosity')
+            toast.error(e.message || 'Could not connect to Neurosity');
+            setIsReceivingFocus(false)
         }).finally(() => setTimeout(() => toast.dismiss(), 2000));
 
 
@@ -95,29 +98,41 @@ export default function ConnectNeurosity({ session, className }: Props) {
                 <h1 className="text-3xl font-bold text-indigo-600">Record your focus</h1>
                 <p className="text-lg text-gray-600">Connect your account to <Link
                     className="underline"
-                    href="https://neurosity.co">Neurosity</Link> to save your focus.</p>
+                    href="https://neurosity.co">Neurosity</Link> to record your focus.</p>
             </div>
 
             {/* Form */}
-            <div className="bg-white rounded-lg shadow-md p-10 max-w-md">
+            <div className="bg-white rounded-lg shadow-md p-10 max-w-md space-y-10">
 
-                {/* Email */}
-                <input
-                    className="border p-3 w-full mb-5 rounded-md text-gray-600"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                />
+                {/* display a green dot blinking if receiving focus */}
+                <div className="flex justify-center">
+                    {
+                        isReceivingFocus && <div className='flex items-center space-x-2'
+                        ><div className="w-3 h-3 bg-green-500 rounded-full animate-ping">
+                            </div>
+                            <span className="text-gray-400">Receiving focus</span>
+                        </div>
+                    }
+                </div>
 
-                {/* Password */}
-                <input
-                    className="border p-3 w-full mb-5 rounded-md text-gray-600"
-                    type="password"
-                    placeholder="Password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                />
+                <div>
+                    {/* Email */}
+                    <input
+                        className="border p-3 w-full mb-5 rounded-md text-gray-600"
+                        placeholder="Email"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
 
+                    {/* Password */}
+                    <input
+                        className="border p-3 w-full mb-5 rounded-md text-gray-600"
+                        type="password"
+                        placeholder="Password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                    />
+                </div>
                 {/* Connect button */}
                 <Button
                     className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full py-3 rounded-md"
