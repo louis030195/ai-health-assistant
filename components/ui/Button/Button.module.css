@@ -1,16 +1,16 @@
 .root {
-  @apply bg-white text-zinc-800 cursor-pointer inline-flex px-10 rounded-sm leading-6  transition ease-in-out duration-150 shadow-sm font-semibold text-center justify-center uppercase py-4 border border-transparent items-center;
+  @apply bg-white text-zinc-800 cursor-pointer inline-flex px-10 rounded-md leading-6  transition ease-in-out duration-150 shadow-sm font-semibold text-center justify-center uppercase py-4 border border-transparent items-center;
 }
 
 .root:hover {
   @apply bg-zinc-800 text-white border border-white;
 }
 
-/*
+
 .root:focus {
-  @apply outline-none ring-2 ring-pink-500 ring-opacity-50;
+  @apply outline-none ring-2 ring-blue-500 ring-opacity-50;
 }
-*/
+
 
 .root[data-active] {
   @apply bg-zinc-600;

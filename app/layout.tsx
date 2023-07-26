@@ -7,7 +7,8 @@ import PHProvider from './posthog-provider';
 import * as Sentry from '@sentry/browser'
 import posthog from 'posthog-js'
 
-if (process.env.ENVIRONMENT !== 'development') {
+if (process.env.ENVIRONMENT && process.env.ENVIRONMENT !== 'development') {
+  console.log('init sentry')
   Sentry.init({
     dsn: "https://d991f2934a8a47e3ab3c6f5789a6c4ca@o4505591122886656.ingest.sentry.io/4505591123607552",
     integrations: [
@@ -16,7 +17,7 @@ if (process.env.ENVIRONMENT !== 'development') {
       new posthog.SentryIntegration(posthog, 'mediar', 4505591123607552)
     ],
     // Performance Monitoring
-    tracesSampleRate: 0, // Capture 100% of the transactions, reduce in production!
+    tracesSampleRate: 0, // Capture 0% of the transactions, reduce in production!
     // Session Replay
     replaysSessionSampleRate: 0.1, // This sets the sample rate at 10%. You may want to change it to 100% while in development and then sample at a lower rate in production.
     replaysOnErrorSampleRate: 1.0, // If you're not already sampling the entire session, change the sample rate to 100% when sampling sessions where errors occur.

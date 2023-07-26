@@ -11,6 +11,8 @@
     "generate-types": "npx supabase gen types typescript --project-id zfjdysuchblioghfuluq --schema public > types_db.ts"
   },
   "dependencies": {
+    "@headlessui/react": "^1.7.15",
+    "@heroicons/react": "^2.0.18",
     "@neurosity/sdk": "^6.5.9",
     "@sentry/nextjs": "^7.60.0",
     "@stripe/stripe-js": "^1.53.0",

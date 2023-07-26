@@ -3,17 +3,17 @@ import { Neurosity } from '@neurosity/sdk';
 import { useState, useEffect } from 'react';
 import { BrainwavesLabel, PowerByBand } from '@neurosity/sdk/dist/esm/types/brainwaves';
 import { Credentials } from '@neurosity/sdk/dist/esm/types/credentials';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types_db';
+import { neurosity } from '@/utils/neurosity-client';
 
-export function useNeurosity(neurosity: Neurosity) {
-    const [data, setData] = useState<any[]>([]);
+export function useSyncFocus(session: Session) {
     const supabase = createClientComponentClient<Database>()
 
     const [isLogged, setIsLogged] = useState(false);
 
     useEffect(() => {
-        neurosity.onAuthStateChanged().subscribe((r) => {
+        neurosity.focus().subscribe((r) => {
             setIsLogged(r !== null)
         })
     }, [])
@@ -21,46 +21,32 @@ export function useNeurosity(neurosity: Neurosity) {
     useEffect(() => {
         if (!isLogged) return
         console.log("listening to focus now");
-        const { unsubscribe } = neurosity.focus().subscribe((focus) => {
+        const { unsubscribe } = neurosity.focus().subscribe(async (focus) => {
             console.log("focus", focus);
             const nf = {
-                created_at: focus.timestamp?.toString(),
+                // created_at: focus.timestamp?.toString(),
                 probability: focus.probability,
                 metadata: {
                     label: focus.label,
-                }
+                },
+                user_id: session.user.id,
             }
-            setData(prev => [...prev, nf]);
-            // const { error } = await supabase.from('states').insert(nf)
-            // if (error) {
-            //     console.log("error", error);
-            //     unsubscribe();
-            //     console.log("unsubscribed");
-            // }
+            const { error } = await supabase.from('states').insert(nf)
+            if (error) {
+                console.log("error", error);
+                try {
+                    unsubscribe();
+                } catch { }
+                console.log("unsubscribed");
+            }
         });
 
-        // return () => unsubscribe();
+        return () => {
+            try {
+                unsubscribe();
+            } catch { }
+        }
     }, [isLogged]);
-
-    // useEffect(() => {
-    //     const channelB = supabase
-    //         .channel('table-db-changes')
-    //         .on(
-    //             'postgres_changes',
-    //             {
-    //                 event: 'INSERT',
-    //                 schema: 'public',
-    //                 table: 'waves',
-    //             },
-    //             (payload) => setData((prev) => [...prev, payload.new])
-    //         )
-    //         .subscribe()
-    //     return () => {
-    //         channelB.unsubscribe().then(console.log)
-    //     }
-    // }, [neurosity]);
-
-    return data;
 }
 
 

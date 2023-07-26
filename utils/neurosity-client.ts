@@ -1,5 +1,6 @@
 
-import { Neurosity } from '@neurosity/sdk';
+
+import { Neurosity, STREAMING_MODE } from '@neurosity/sdk';
 import { useState, useEffect } from 'react';
 import { BrainwavesLabel, PowerByBand } from '@neurosity/sdk/dist/esm/types/brainwaves';
 import { Credentials } from '@neurosity/sdk/dist/esm/types/credentials';
@@ -41,6 +42,4 @@ class FakeNeurosity extends Neurosity {
 function randomArray(length: number) {
     return Array.from({ length }, () => Math.random());
 }
-
 export const neurosity = new Neurosity();
-// export const neurosity = new FakeNeurosity();

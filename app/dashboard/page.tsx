@@ -2,25 +2,33 @@ import Pricing from '@/components/Pricing';
 import {
   getSession,
   getSubscription,
-  getActiveProductsWithPrices
+  getActiveProductsWithPrices,
+  getStates,
+  getStatesWithFunction,
+  getUserDetails
 } from '@/app/supabase-server';
 
 export default async function Dashboard() {
-  const [session, products, subscription] = await Promise.all([
+  const [session, states] = await Promise.all([
     getSession(),
-    getActiveProductsWithPrices(),
-    getSubscription()
+    getStatesWithFunction(),
   ]);
 
+  console.log(states)
+
   return (
-    // center vertically
-    <div className="flex justify-center">
-      <h1
-        className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl"
-      >coming soon</h1>
-      {/* <NeurosityForm session={session!} /> */}
-      {/* <NeurosityStatus /> */}
-      {/* <NeurosityFocusChart /> */}
+    // center vertically and horizontally
+    <div className="flex justify-center p-12 gap-4">
+      <div className="flex flex-col space-y-4">
+        <NeurosityForm session={session!} />
+      </div>
+      {/* <NeurosityStatus neurosity={neurosity} /> */}+
+      {/* center children */}
+      <div className="flex flex-col mt-20 items-center">
+        {/* <ChartTimePicker /> */}
+        <NeurosityFocusChart session={session!} states={states} />
+      </div>
+      {/* <FeelingsModal user={user} /> */}
     </div>
   );
 }
@@ -29,6 +37,9 @@ import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
 import { NeurosityStatus } from './NeurosityStatus';
 import NeurosityForm from '../onboarding/neurosity/NeurosityForm';
+import { Neurosity } from '@neurosity/sdk';
+import FeelingsModal from './FeelingsModal';
+import { ChartTimePicker } from './ChartTimePicker';
 
 const randomText = () => {
   let text = ''

@@ -31,6 +31,31 @@ export interface Database {
           }
         ]
       }
+      onboardings: {
+        Row: {
+          id: number
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          id?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          id?: number
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "onboardings_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       prices: {
         Row: {
           active: boolean | null
@@ -109,24 +134,34 @@ export interface Database {
       }
       states: {
         Row: {
-          created_at: string | null
+          created_at: string
           id: number
           metadata: Json | null
-          probability: number | null
+          probability: number
+          user_id: string
         }
         Insert: {
-          created_at?: string | null
+          created_at?: string
           id?: number
           metadata?: Json | null
-          probability?: number | null
+          probability: number
+          user_id: string
         }
         Update: {
-          created_at?: string | null
+          created_at?: string
           id?: number
           metadata?: Json | null
-          probability?: number | null
+          probability?: number
+          user_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "states_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
       }
       subscriptions: {
         Row: {
@@ -231,7 +266,19 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_states: {
+        Args: {
+          bucket_size?: number
+          timezone?: string
+          day?: string
+        }
+        Returns: {
+          start_ts: string
+          end_ts: string
+          bucket_size: unknown
+          avg_score: number
+        }[]
+      }
     }
     Enums: {
       pricing_plan_interval: "day" | "week" | "month" | "year"

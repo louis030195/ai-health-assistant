@@ -1,101 +1,75 @@
 'use client'
-import { PowerByBand } from '@neurosity/sdk/dist/esm/types/brainwaves';
-import { Credentials } from '@neurosity/sdk/dist/esm/types/credentials';
-import { useState, useEffect } from 'react';
 import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { useNeurosity } from './useNeurosity';
-import { neurosity } from '@/utils/neurosity-client';
+import { useSyncFocus } from './useNeurosity';
 import { Neurosity } from '@neurosity/sdk';
+import { Session } from '@supabase/auth-helpers-nextjs';
+import { State } from '@/types_db';
+
+interface Props {
+    session: Session;
+    states: any[];
+}
+function roundToTwo(num: number) {
+    return Math.round(num * 100) / 100;
+}
+export const NeurosityFocusChart = ({ session, states }: Props) => {
+    console.log(states)
 
 
-export const NeurosityFocusChart = () => {
-    const [data, setData] = useState<any[]>([]);
+    // Modify your data to include an 'hour' field
+    states = states.map(state => {
+        const date = new Date(state.start_ts);
+        return {
+            ...state,
+            hour: date.getUTCHours() + date.getMinutes() / 60
+        };
+    });
 
-    const [isLogged, setIsLogged] = useState(false);
-    useEffect(() => {
-        neurosity.onAuthStateChanged().subscribe((r) => {
-            setIsLogged(r !== null)
-        })
-    }, [])
-
-    useEffect(() => {
-        // if (!isLogged) return;
-        const neurosity = new Neurosity();
-
-        neurosity.login({
-            email: ".",
-            password: "."
-        }).then(() => {
-            console.log('subscribing to focus')
-            neurosity.focus().subscribe((focus) => {
-                console.log('focus', focus)
-                const nf = {
-                    created_at: focus.timestamp?.toString(),
-                    probability: focus.probability,
-                    metadata: {
-                        label: focus.label,
-                    }
-                }
-                setData(prev => [...prev, nf]);
-            })
-        })
-    }, [])
-    console.log(data);
-    const [numDataPoints, setNumDataPoints] = useState(50);
-    const handleChange = (value: number) => {
-        setNumDataPoints(value);
-    }
-
-    // Add a formatter for the timestamp on the X axis
-    const xAxisFormatter = (timestamp: number) => {
-        const date = new Date(timestamp);
-
-        const hours = date.getHours();
-        const minutes = date.getMinutes();
-
-        return `${hours}:${minutes}`;
-    }
 
     return (
-        <>
-            <input
-                type="number"
-                value={numDataPoints}
-                onChange={(e) => handleChange(parseInt(e.target.value))}
-            />
+        <div className="flex flex-col space-y-4">
+            <h1 className="text-2xl text-gray-900 text-center">
+                Focus history
+            </h1>
             <LineChart
-                width={800}
-                height={600}
-                data={data}
+                width={600}
+                height={300}
+                data={states}
                 margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
             >
                 <CartesianGrid strokeDasharray="3 3" />
 
                 <XAxis
-                    dataKey="created_at"
-                    tickFormatter={xAxisFormatter}
-                    // type="number"
+                    domain={[0, 24]}
+                    type="number"
+                    dataKey="hour"
                 />
 
-                <YAxis dataKey="probability" />
+                <YAxis dataKey="avg_score" />
+
 
                 <Tooltip
-                    labelFormatter={value => `${value}%`}
+                    formatter={(value, name, entry: any) => {
+                        // console.log(entry)
+                        return [
+                            `Score: ${roundToTwo(entry.payload.avg_score) * 100}`
+                        ];
+                    }}
                 />
 
                 <Line
                     type="monotone"
-                    dataKey="probability"
+                    dataKey="avg_score"
                     stroke="#8884d8"
                 />
 
                 <Legend
                     payload={[
-                        { value: 'Focus', type: 'line', id: 'probability' }
+                        { value: 'Focus', type: 'line', id: 'avg_score' }
                     ]}
                 />
 
             </LineChart>
-        </>
+        </div>
     );
 }

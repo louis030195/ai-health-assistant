@@ -65,3 +65,69 @@ export const getActiveProductsWithPrices = async () => {
   }
   return data ?? [];
 };
+
+export const getStates = async () => {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('states')
+    .select('*')
+    // .order('metadata->index')
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.log(error.message);
+  }
+  return data ?? [];
+};
+
+interface GetStatesWithFunctionOptions {
+  bucketSize?: number;
+  timezone?: string;
+  day: Date;
+}
+export const getStatesWithFunction = async (options?: GetStatesWithFunctionOptions) => {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .rpc('get_states', {
+      bucket_size: options?.bucketSize || 300,
+      timezone: options?.timezone || 'America/Los_Angeles',
+      // @ts-ignore
+      day: options?.day || new Date(),
+    })
+  if (error) {
+    console.log(error.message);
+  }
+  return data ?? [];
+};
+
+export const getOnboarding = async (userId: string) => {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('onboardings')
+    .select('*')
+    .eq('user_id', userId)
+    .limit(1)
+    .single();
+
+  if (error) {
+    console.log(error.message);
+  }
+  return data ?? [];
+};
+
+export const saveOnboarding = async (userId: string) => {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('onboardings')
+    .upsert({
+      updated_at: new Date().toString(),
+      user_id: userId,
+    })
+    .eq('user_id', userId)
+
+  if (error) {
+    console.log(error.message);
+  }
+  return { error }
+};
+

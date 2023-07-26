@@ -1,4 +1,4 @@
-import { getSession } from '@/app/supabase-server';
+import { getOnboarding, getSession } from '@/app/supabase-server';
 import AuthUI from './AuthUI';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
@@ -8,7 +8,10 @@ export default async function SignIn() {
   const session = await getSession();
 
   if (session) {
-    return redirect('/onboarding/neurosity');
+    const onBoarding = await getOnboarding(session.user.id);
+    console.log('onBoarding', onBoarding);
+    if (!onBoarding || onBoarding.length === 0) return redirect('/onboarding/intro');
+    return redirect('/dashboard');
   }
 
   return (
