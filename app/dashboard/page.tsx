@@ -5,7 +5,9 @@ import {
   getActiveProductsWithPrices,
   getStates,
   getStatesWithFunction,
-  getUserDetails
+  getUserDetails,
+  getProcessedBrainwaves,
+  GetStatesWithFunctionOptions
 } from '@/app/supabase-server';
 
 
@@ -13,11 +15,18 @@ export default async function Dashboard() {
   const session = await getSession();
 
   const states = await (session?.user?.id ? getStatesWithFunction(session.user.id) : Promise.resolve([]))
-  console.log(states)
+  // const brainWaves = await (session?.user?.id ? getProcessedBrainwaves(session.user.id) : Promise.resolve([]))
+  console.log('states', states)
+  // console.log('brainWaves', brainWaves)
 
-  const getStatesServer = async (userId: string) => {
+  const getStatesServer = async (userId: string, options: GetStatesWithFunctionOptions) => {
     'use server'
-    return getStatesWithFunction(userId)
+    return getStatesWithFunction(userId, options)
+  }
+
+  const getBrainwavesServer = async (userId: string) => {
+    'use server'
+    return getProcessedBrainwaves(userId)
   }
 
   return (

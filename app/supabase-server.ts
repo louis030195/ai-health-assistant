@@ -80,10 +80,10 @@ export const getStates = async () => {
   return data ?? [];
 };
 
-interface GetStatesWithFunctionOptions {
+export interface GetStatesWithFunctionOptions {
   bucketSize?: number;
   timezone?: string;
-  day: Date;
+  day?: Date;
 }
 function formatDate(date: Date) {
   const year = date.getFullYear();
@@ -98,9 +98,9 @@ export const getStatesWithFunction = async (userId: string, options?: GetStatesW
     .rpc('get_states', {
       user_id: userId,
       // bucket_size: options?.bucketSize || 300,
-      // timezone: options?.timezone || 'America/Los_Angeles',
+      timezone: options?.timezone || 'America/Los_Angeles',
       // @ts-ignore
-      // day: formatDate(options?.day || new Date()),
+      day: formatDate(options?.day || new Date()),
     })
   if (error) {
     console.log(error.message);
@@ -138,18 +138,21 @@ export const saveOnboarding = async (userId: string) => {
   return { error }
 };
 
-// export const getProcessedBrainwaves = async (userId) => {
-//   const url = "https://process-brainwaves-e4mtrji55a-uc.a.run.app"
-//   const supabase = createServerSupabaseClient();
-//   const { data, error } = await supabase
-//     .rpc('get_states', {
-//       // bucket_size: options?.bucketSize || 300,
-//       // timezone: options?.timezone || 'America/Los_Angeles',
-//       // @ts-ignore
-//       // day: formatDate(options?.day || new Date()),
-//     })
-//   if (error) {
-//     console.log(error.message);
-//   }
-//   return data ?? [];
-// };
+export const getProcessedBrainwaves = async (userId: string) => {
+  const url = "https://process-brainwaves-e4mtrji55a-uc.a.run.app"
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ user_id: userId }),
+  }).then((response) => response.json())
+
+  if (!response.ok) {
+    throw new Error(response.statusText)
+  }
+
+  return response
+};
+
+
