@@ -268,6 +268,7 @@ export interface Database {
     Functions: {
       get_states: {
         Args: {
+          user_id: string
           bucket_size?: number
           timezone?: string
           day?: string

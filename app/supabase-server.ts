@@ -92,10 +92,11 @@ function formatDate(date: Date) {
 
   return `${year}-${month}-${day}`;
 }
-export const getStatesWithFunction = async (options?: GetStatesWithFunctionOptions) => {
+export const getStatesWithFunction = async (userId: string, options?: GetStatesWithFunctionOptions) => {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .rpc('get_states', {
+      user_id: userId,
       // bucket_size: options?.bucketSize || 300,
       // timezone: options?.timezone || 'America/Los_Angeles',
       // @ts-ignore
@@ -137,3 +138,18 @@ export const saveOnboarding = async (userId: string) => {
   return { error }
 };
 
+// export const getProcessedBrainwaves = async (userId) => {
+//   const url = "https://process-brainwaves-e4mtrji55a-uc.a.run.app"
+//   const supabase = createServerSupabaseClient();
+//   const { data, error } = await supabase
+//     .rpc('get_states', {
+//       // bucket_size: options?.bucketSize || 300,
+//       // timezone: options?.timezone || 'America/Los_Angeles',
+//       // @ts-ignore
+//       // day: formatDate(options?.day || new Date()),
+//     })
+//   if (error) {
+//     console.log(error.message);
+//   }
+//   return data ?? [];
+// };

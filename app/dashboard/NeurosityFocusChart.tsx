@@ -9,7 +9,7 @@ import Button from '@/components/ui/Button';
 interface Props {
     session: Session;
     defaultStates: any[];
-    getStates: () => Promise<any[]>;
+    getStates: (userId: string) => Promise<any[]>;
 }
 function roundToTwo(num: number) {
     return Math.round(num * 100) / 100;
@@ -28,7 +28,7 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props
     });
 
     const refreshState = async () => {
-        const ns = await getStates();
+        const ns = await getStates(session.user.id);
         setStates(ns);
     }
 

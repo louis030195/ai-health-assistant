@@ -10,16 +10,14 @@ import {
 
 
 export default async function Dashboard() {
-  const [session, states] = await Promise.all([
-    getSession(),
-    getStatesWithFunction(),
-  ]);
+  const session = await getSession();
 
+  const states = await (session?.user?.id ? getStatesWithFunction(session.user.id) : Promise.resolve([]))
   console.log(states)
 
-  const getStatesServer = async () => {
+  const getStatesServer = async (userId: string) => {
     'use server'
-    return getStatesWithFunction()
+    return getStatesWithFunction(userId)
   }
 
   return (
