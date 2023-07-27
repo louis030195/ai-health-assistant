@@ -72,6 +72,7 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props
                 </Button>
             </div>
             <Plot
+                // @ts-ignore
                 data={data}
                 layout={layout}
                 style={{ width: "600px", height: "300px" }}
