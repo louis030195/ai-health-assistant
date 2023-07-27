@@ -138,19 +138,26 @@ export const saveOnboarding = async (userId: string) => {
   return { error }
 };
 
-export const getProcessedBrainwaves = async (userId: string) => {
+export interface GetProcessedBrainwavesOptions {
+  timezone?: string;
+  day?: Date;
+  window_seconds?: number;
+}
+export const getProcessedBrainwaves = async (userId: string, options?: GetProcessedBrainwavesOptions) => {
   const url = "https://process-brainwaves-e4mtrji55a-uc.a.run.app"
+
   const response = await fetch(url, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ user_id: userId }),
+    body: JSON.stringify({
+      user_id: userId,
+      timezone: options?.timezone || 'America/Los_Angeles',
+      day: formatDate(options?.day || new Date()),
+      window_seconds: options?.window_seconds || 300,
+    }),
   }).then((response) => response.json())
-
-  if (!response.ok) {
-    throw new Error(response.statusText)
-  }
 
   return response
 };

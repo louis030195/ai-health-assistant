@@ -1,0 +1,4 @@
+supabase
+functions-framework==3.*
+scikit-learn
+pandas

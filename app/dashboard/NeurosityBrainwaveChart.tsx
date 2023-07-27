@@ -1,89 +1,77 @@
 'use client'
-import { PowerByBand } from '@neurosity/sdk/dist/esm/types/brainwaves';
-import { Credentials } from '@neurosity/sdk/dist/esm/types/credentials';
-import { useState, useEffect } from 'react';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts';
-import { neurosity } from '@/utils/neurosity-client';
+import { useState } from 'react';
+import Plot from 'react-plotly.js';
+import { Neurosity } from '@neurosity/sdk';
+import { Session } from '@supabase/auth-helpers-nextjs';
+import { ArrowPathIcon } from '@heroicons/react/20/solid';
+import Button from '@/components/ui/Button';
+import { GetProcessedBrainwavesOptions } from '../supabase-server';
 
+interface Props {
+    session: Session;
+    defaultBrainwaves: any[];
+    getBrainwaves: (userId: string, options?: GetProcessedBrainwavesOptions) => Promise<any[]>;
+}
+const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#d00000', '#804000', '#00ff00'];
 
-export const NeurosityBrainwaveChart = () => {
-    return (<></>)
-    // const [numDataPoints, setNumDataPoints] = useState(50);
-    // const handleChange = (value: number) => {
-    //     setNumDataPoints(value);
-    // }
+export const NeurosityBrainwaveChart = ({ session, defaultBrainwaves, getBrainwaves }: Props) => {
+    let [states, setStates] = useState<any[]>(defaultBrainwaves);
 
-    // // Add a formatter for the timestamp on the X axis
-    // const xAxisFormatter = (timestamp: number) => {
-    //     const date = new Date(timestamp);
+    states = states.map(state => {
+        const date = new Date(state.created_at);
+        return {
+            ...state,
+            hour: date.getUTCHours() + date.getMinutes() / 60
+        };
+    });
 
-    //     const hours = date.getHours();
-    //     const minutes = date.getMinutes();
+    const refreshState = async () => {
+        const ns = await getBrainwaves(session.user.id, {
+            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            day: new Date(),
+        });
+        setStates(ns);
+    }
 
-    //     return `${hours}:${minutes}`;
-    // }
+    console.log('brain', states)
 
-    // // Use distinct colors for each line
-    // const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#d00000', '#804000', '#00ff00'];
-    // // Get the last timestamp from the sliced data
-    // const lastTimestamp = data[data.length - numDataPoints]?.timestamp;
-    // const slicedData = data.slice(-numDataPoints);
+    const data = new Array(8).fill(0).map((value, index) => ({
+        // convert timestamp to human readable format
+        x: states.map(s => new Date(s.timestamp)),
+        y: states.map(s => s[`gamma_${index}`]),
+        mode: 'lines',
+        name: `Gamma ${index}`,
+        line: { color: colors[index] }
+    }));
 
+    const layout = {
+        title: 'Gamma brainwaves history',
+        xaxis: { title: 'Time' },
+        yaxis: { title: 'Amplitude' },
+        autosize: false,
+        width: 600,
+        height: 300,
+    };
 
-    // return (
-    //     <>
-    //         <input
-    //             type="number"
-    //             value={numDataPoints}
-    //             onChange={(e) => handleChange(parseInt(e.target.value))}
-    //         />
-    //         {
-    //             !lastTimestamp ?
-    //                 <div role="status" className="max-w-sm animate-pulse">
-    //                     <div className="h-2.5 bg-gray-200 rounded-full dark:bg-gray-700 w-48 mb-4"></div>
-    //                     <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px] mb-2.5"></div>
-    //                     <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 mb-2.5"></div>
-    //                     <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[330px] mb-2.5"></div>
-    //                     <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[300px] mb-2.5"></div>
-    //                     <div className="h-2 bg-gray-200 rounded-full dark:bg-gray-700 max-w-[360px]"></div>
-    //                     <span className="sr-only">Loading...</span>
-    //                 </div>
-    //                 :
-    //                 <LineChart
-    //                     width={800}
-    //                     height={600}
-    //                     data={slicedData}
-    //                     margin={{
-    //                         top: 5,
-    //                         right: 30,
-    //                         left: 20,
-    //                         bottom: 5
-    //                     }}
-    //                 >
-    //                     <CartesianGrid strokeDasharray="3 3" />
-    //                     <XAxis
-    //                         type="number"
-    //                         dataKey="timestamp"
-    //                         tickFormatter={xAxisFormatter}
-    //                         domain={[lastTimestamp, 'auto']}
-    //                     />
-    //                     <YAxis />
-    //                     <Tooltip />
-    //                     <Legend />
-
-    //                     {new Array(8).fill(0).map((value, index) => (
-    //                         <Line
-    //                             key={index}
-    //                             type="monotone"
-    //                             dataKey={`data.gamma.${index}`}
-    //                             data={slicedData}
-    //                             stroke={colors[index]}
-    //                         />
-    //                     ))}
-
-
-    //                 </LineChart>
-    //         }
-    //     </>
-    // );
+    return (
+        <div className="flex flex-col">
+            <div className="flex justify-end">
+                <Button
+                    onClick={refreshState}>
+                    <ArrowPathIcon
+                        width={20}
+                        height={20}
+                    />
+                </Button>
+            </div>
+            <Plot
+                data={data}
+                layout={layout}
+            />
+            <p className="mb-3 text-sm text-gray-500">
+                Gamma waves are associated with peak concentration, alertness, creativity, and positive mood states.<br />
+                <a href='https://www.perplexity.ai/search/1f007e06-bfd8-4100-a191-551a7edf69d2?s=c' target='_blank' className='text-blue-500'> Learn more</a>
+            </p>
+        </div>
+    );
 }

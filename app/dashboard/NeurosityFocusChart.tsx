@@ -61,7 +61,7 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props
     };
 
     return (
-        <div className="flex flex-col space-y-4">
+        <div className="flex flex-col">
             <div className="flex justify-end">
                 <Button
                     onClick={refreshState}>

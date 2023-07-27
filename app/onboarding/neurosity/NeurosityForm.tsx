@@ -44,7 +44,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
         // }).catch(console.log);
         toast.loading('Connecting to your Neurosity...');
         await neurosity.logout()
-        let u1: Function, u2: Function = () => {}
+        let u1: Function, u2: Function = () => { }
         const onConnected = () => {
             toast.success('Listening to your focus...');
             // neurosity.calm().forEach(console.log)
@@ -109,7 +109,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
     };
 
     return (
-        <div className={`flex-col space-y-10 ${className}`}>
+        <div className={`bg-white rounded-lg shadow-md p-6  flex-col space-y-5 ${className}`}>
             <Toaster />
             {/* Header */}
             <div className="text-center">
@@ -125,7 +125,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
             </div>
 
             {/* Form */}
-            <div className="bg-white rounded-lg shadow-md p-10 max-w-md space-y-10">
+            <div className="max-w-md space-y-4">
 
                 {/* display a green dot blinking if receiving focus */}
                 <div className="flex justify-center">
@@ -164,7 +164,9 @@ export default function ConnectNeurosity({ session, className }: Props) {
                 >
                     Record your mind
                 </Button>
-
+                <p className="mb-3 text-sm text-gray-500">
+                    This will record data about your brain in order to provide you insights
+                </p>
             </div>
 
         </div>

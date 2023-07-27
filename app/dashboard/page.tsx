@@ -1,62 +1,55 @@
-import Pricing from '@/components/Pricing';
 import {
   getSession,
-  getSubscription,
-  getActiveProductsWithPrices,
-  getStates,
   getStatesWithFunction,
-  getUserDetails,
   getProcessedBrainwaves,
-  GetStatesWithFunctionOptions
+  GetStatesWithFunctionOptions,
+  GetProcessedBrainwavesOptions
 } from '@/app/supabase-server';
+import React from 'react'
+import { NeurosityFocusChart } from './NeurosityFocusChart';
+import NeurosityForm from '../onboarding/neurosity/NeurosityForm';
+import { NeurosityBrainwaveChart } from './NeurosityBrainwaveChart';
 
 
 export default async function Dashboard() {
   const session = await getSession();
 
   const states = await (session?.user?.id ? getStatesWithFunction(session.user.id) : Promise.resolve([]))
-  // const brainWaves = await (session?.user?.id ? getProcessedBrainwaves(session.user.id) : Promise.resolve([]))
+  const brainwaves = await (session?.user?.id ? getProcessedBrainwaves(session.user.id) : Promise.resolve([]))
   console.log('states', states)
-  // console.log('brainWaves', brainWaves)
+  console.log('brainwaves', brainwaves)
 
-  const getStatesServer = async (userId: string, options: GetStatesWithFunctionOptions) => {
+  const getStatesServer = async (userId: string, options?: GetStatesWithFunctionOptions) => {
     'use server'
     return getStatesWithFunction(userId, options)
   }
 
-  const getBrainwavesServer = async (userId: string) => {
+  const getBrainwavesServer = async (userId: string, options?: GetProcessedBrainwavesOptions) => {
     'use server'
-    return getProcessedBrainwaves(userId)
+    return getProcessedBrainwaves(userId, options)
   }
 
   return (
     // center vertically and horizontally
-    <div className="flex justify-center p-12 gap-4">
-      <div className="flex flex-col space-y-4">
+    <div className="flex justify-center pt-12 gap-2">
+      <div className="flex flex-col">
         <NeurosityForm session={session!} />
 
-        <p className="mb-3 text-sm text-gray-500">
-          This will record data about your brain in order to provide you insights
-        </p>
+        
       </div>
-      {/* <NeurosityStatus neurosity={neurosity} /> */}+
+      {/* <NeurosityStatus neurosity={neurosity} /> */}
       {/* center children */}
-      <div className="flex flex-col mt-20 items-center">
+      {/* shadow */}
+      <div className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg">
         {/* <ChartTimePicker /> */}
         <NeurosityFocusChart session={session!} defaultStates={states} getStates={getStatesServer} />
+        <NeurosityBrainwaveChart session={session!} defaultBrainwaves={brainwaves} getBrainwaves={getBrainwavesServer} />
       </div>
       {/* <FeelingsModal user={user} /> */}
     </div>
   );
 }
 
-import React from 'react'
-import { NeurosityFocusChart } from './NeurosityFocusChart';
-import { NeurosityStatus } from './NeurosityStatus';
-import NeurosityForm from '../onboarding/neurosity/NeurosityForm';
-import { Neurosity } from '@neurosity/sdk';
-import FeelingsModal from './FeelingsModal';
-import { ChartTimePicker } from './ChartTimePicker';
 
 const randomText = () => {
   let text = ''
