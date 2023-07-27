@@ -27,6 +27,10 @@ export default async function Dashboard() {
     <div className="flex justify-center p-12 gap-4">
       <div className="flex flex-col space-y-4">
         <NeurosityForm session={session!} />
+
+        <p className="mb-3 text-sm text-gray-500">
+          This will record data about your brain in order to provide you insights
+        </p>
       </div>
       {/* <NeurosityStatus neurosity={neurosity} /> */}+
       {/* center children */}

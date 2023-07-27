@@ -44,10 +44,31 @@ export default function ConnectNeurosity({ session, className }: Props) {
         // }).catch(console.log);
         toast.loading('Connecting to your Neurosity...');
         await neurosity.logout()
+        let u1: Function, u2: Function = () => {}
         const onConnected = () => {
             toast.success('Listening to your focus...');
             // neurosity.calm().forEach(console.log)
-            const { unsubscribe } = neurosity.focus().subscribe(async (focus) => {
+            const { unsubscribe: u1 } = neurosity.brainwaves("powerByBand").subscribe(async (powerByBand) => {
+                setIsReceivingFocus(true)
+                console.log("powerByBand", powerByBand);
+                const nf = {
+                    // created_at: focus.timestamp?.toString(),
+                    // probability: focus.probability,
+                    metadata: {
+                        ...powerByBand
+                    },
+                    user_id: session.user.id,
+                }
+                const { error } = await supabase.from('states').insert(nf)
+                if (error) {
+                    console.log("error", error);
+                    try {
+                        u1();
+                    } catch { }
+                    console.log("unsubscribed");
+                }
+            })
+            const { unsubscribe: u2 } = neurosity.focus().subscribe(async (focus) => {
                 setIsReceivingFocus(true)
                 console.log("focus", focus);
                 const nf = {
@@ -62,7 +83,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
                 if (error) {
                     console.log("error", error);
                     try {
-                        unsubscribe();
+                        u2();
                     } catch { }
                     console.log("unsubscribed");
                 }
@@ -77,6 +98,8 @@ export default function ConnectNeurosity({ session, className }: Props) {
             console.log(e)
             if (e.toString().includes('Already')) return onConnected()
             toast.error(e.message || 'Could not connect to Neurosity');
+            u1();
+            u2();
             setIsReceivingFocus(false)
         }).finally(() => setTimeout(() => toast.dismiss(), 2000));
 
@@ -95,10 +118,10 @@ export default function ConnectNeurosity({ session, className }: Props) {
                     className="mx-auto"
                     src="/neurosity.png" alt="neurosity" width="64" height="64"
                 />
-                <h1 className="text-3xl font-bold text-indigo-600">Record your focus</h1>
+                <h1 className="text-3xl font-bold text-indigo-600">Record your mind</h1>
                 <p className="text-lg text-gray-600">Connect your account to <Link
                     className="underline"
-                    href="https://neurosity.co">Neurosity</Link> to record your focus.</p>
+                    href="https://neurosity.co">Neurosity</Link> to record your mind.</p>
             </div>
 
             {/* Form */}
@@ -110,7 +133,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
                         isReceivingFocus && <div className='flex items-center space-x-2'
                         ><div className="w-3 h-3 bg-green-500 rounded-full animate-ping">
                             </div>
-                            <span className="text-gray-400">Receiving focus</span>
+                            <span className="text-gray-400">Recording your mind</span>
                         </div>
                     }
                 </div>
@@ -137,9 +160,9 @@ export default function ConnectNeurosity({ session, className }: Props) {
                 <Button
                     className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full py-3 rounded-md"
                     onClick={handleConnect}
-                // disabled={!email || !password}
+                    disabled={!email || !password}
                 >
-                    Focus now
+                    Record your mind
                 </Button>
 
             </div>
