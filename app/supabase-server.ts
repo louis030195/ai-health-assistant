@@ -96,10 +96,10 @@ export const getStatesWithFunction = async (options?: GetStatesWithFunctionOptio
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
     .rpc('get_states', {
-      bucket_size: options?.bucketSize || 300,
-      timezone: options?.timezone || 'America/Los_Angeles',
+      // bucket_size: options?.bucketSize || 300,
+      // timezone: options?.timezone || 'America/Los_Angeles',
       // @ts-ignore
-      day: formatDate(options?.day || new Date()),
+      // day: formatDate(options?.day || new Date()),
     })
   if (error) {
     console.log(error.message);
