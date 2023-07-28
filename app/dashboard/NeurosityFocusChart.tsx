@@ -109,6 +109,7 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
                     height={20}
                 />
             </Button>
+            {/* @ts-expect-error */}
             <Plot
                 // @ts-ignore
                 data={data}
