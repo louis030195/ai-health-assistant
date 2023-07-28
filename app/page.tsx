@@ -20,10 +20,10 @@ export default async function Home() {
 
         <div className="text-center space-y-4">
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            ChatGPT meets Neurosity
+            Optimize your brain health with Neurosity
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Let ChatGPT optimize your health and wellness based on your brain activity.
+            Track your brain health, tag, get insights, get better, weekly.
           </p>
           <div className="inline-flex rounded-md shadow">
             <a href="/signin" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-gray-100 hover:bg-gray-50">
