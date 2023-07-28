@@ -9,6 +9,7 @@ import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
 import NeurosityForm from '../onboarding/neurosity/NeurosityForm';
 import { NeurosityBrainwaveChart } from './NeurosityBrainwaveChart';
+import { PosthogMail } from './PosthogMail';
 
 
 export default async function Dashboard() {
@@ -32,10 +33,11 @@ export default async function Dashboard() {
   return (
     // center vertically and horizontally
     <div className="flex justify-center pt-12 gap-2">
+      <PosthogMail session={session!} />
       <div className="flex flex-col">
         <NeurosityForm session={session!} />
 
-        
+
       </div>
       {/* <NeurosityStatus neurosity={neurosity} /> */}
       {/* center children */}
