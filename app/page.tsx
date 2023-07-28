@@ -20,7 +20,9 @@ export default async function Home() {
 
         <div className="text-center space-y-4">
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            Optimize your brain health with Neurosity
+            Optimize your brain health with <a href="https://neurosity.co"
+              className="text-indigo-700 hover:text-indigo-600 underline"
+              target="_blank">Neurosity</a>
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
             Track your brain health, tag, get insights, get better, weekly.

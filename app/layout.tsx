@@ -6,6 +6,7 @@ import 'styles/main.css';
 import PHProvider from './posthog-provider';
 import * as Sentry from '@sentry/browser'
 import posthog from 'posthog-js'
+import dynamic from 'next/dynamic'
 
 if (process.env.SENTRY_ENABLED !== 'false' && process.env.ENVIRONMENT && process.env.ENVIRONMENT !== 'development') {
   console.log('init sentry')
@@ -64,8 +65,13 @@ export default function RootLayout({
   // This will be populated with nested layouts or pages
   children
 }: PropsWithChildren) {
+
+  const CrispWithNoSSR = dynamic(
+    () => import('@/components/ui/CrispChat'),
+  )
   return (
     <html lang="en">
+      <CrispWithNoSSR />
       <body className="bg-white loading">
         <PHProvider>
           <SupabaseProvider>
