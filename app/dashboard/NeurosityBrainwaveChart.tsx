@@ -47,7 +47,11 @@ export const NeurosityBrainwaveChart = ({ session, defaultBrainwaves, getBrainwa
     const layout = {
         title: 'Gamma brainwaves history',
         xaxis: { title: 'Time' },
-        yaxis: { title: 'Amplitude' },
+        yaxis: {
+            title: 'Amplitude',
+            range: [-10, 100] // Adjust the y-axis to show the tags at the bottom
+
+        },
         // autosize: false,
     };
 

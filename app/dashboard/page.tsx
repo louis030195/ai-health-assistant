@@ -3,7 +3,8 @@ import {
   getStatesWithFunction,
   getProcessedBrainwaves,
   GetStatesWithFunctionOptions,
-  GetProcessedBrainwavesOptions
+  GetProcessedBrainwavesOptions,
+  getTags
 } from '@/app/supabase-server';
 import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
@@ -31,6 +32,11 @@ export default async function Dashboard() {
     return getProcessedBrainwaves(userId, options)
   }
 
+  const getTagsServer = async (userId: string) => {
+    'use server'
+    return getTags(userId)
+  }
+
   return (
     // scrollable
     <div className="flex flex-col justify-center pt-12 gap-2 h-full items-center">
@@ -46,7 +52,7 @@ export default async function Dashboard() {
       {/* shadow */}
       <div className="flex-row items-center gap-2 p-4 bg-white">
         {/* <ChartTimePicker /> */}
-        <NeurosityFocusChart session={session!} defaultStates={states} getStates={getStatesServer} />
+        <NeurosityFocusChart session={session!} defaultStates={states} getStates={getStatesServer} getTags={getTagsServer} />
         <NeurosityBrainwaveChart session={session!} defaultBrainwaves={brainwaves} getBrainwaves={getBrainwavesServer} />
       </div>
       {/* <FeelingsModal user={user} /> */}

@@ -162,4 +162,15 @@ export const getProcessedBrainwaves = async (userId: string, options?: GetProces
   return response
 };
 
+export const getTags = async (userId: string) => {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('tags')
+    .select('text, created_at')
+    .eq('user_id', userId)
 
+  if (error) {
+    console.log(error.message);
+  }
+  return data || [];
+};

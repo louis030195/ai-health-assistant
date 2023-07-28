@@ -11,14 +11,12 @@ interface Props {
     session: Session;
     defaultStates: any[];
     getStates: (userId: string, options: GetStatesWithFunctionOptions) => Promise<any[]>;
+    getTags: (userId: string) => Promise<any[]>;
 }
 
-function roundToTwo(num: number) {
-    return Math.round(num * 100) / 100;
-}
-
-export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props) => {
+export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags }: Props) => {
     let [states, setStates] = useState<any[]>(defaultStates);
+    const [tags, setTags] = useState<any[]>([]);
 
     // Modify your data to include an 'hour' field
     states = states.map(state => {
@@ -35,17 +33,55 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props
             day: new Date(),
         });
         setStates(ns);
+        const nt = await getTags(session.user.id);
+        setTags(nt);
     }
+
+    // Convert tags to annotations for the layout
+    const annotations = tags.map((tag, index) => {
+        return {
+            x: tag.created_at,
+            y: 0,
+            xref: 'x',
+            yref: 'paper',
+            // text: tag.text,
+            showarrow: false,
+            arrowhead: 7,
+            ax: 0,
+            ay: -50,
+            bgcolor: 'rgba(255, 255, 255, 0.9)',
+            borderwidth: 2,
+            borderpad: 4,
+            hovertext: tag.text,
+        };
+    });
 
     const data = [
         {
             x: states.map(state => state.start_ts),
-            // x: states.map(state => state.hour),
             y: states.map(state => state.avg_score),
             type: 'scatter',
             mode: 'lines',
             marker: { color: '#8884d8' },
             name: 'Focus'
+        },
+        {
+            x: tags.map(tag => {
+                const date = new Date(tag.created_at);
+                const offset = date.getTimezoneOffset();
+                const localDate = new Date(date.getTime() - offset * 60 * 1000);
+                return localDate.toISOString().split('T')[0];
+            }),
+            y: tags.map(() => 0), // Show the tags at the bottom of the plot
+            mode: 'markers',
+            marker: {
+                // green
+                color: '#48bb78',
+                size: 5
+            },
+            hovertemplate: '%{text}', // Show the tag text when hovering over the marker
+            text: tags.map(tag => tag.text),
+            name: 'Tags' // This name will appear in the legend
         }
     ];
 
@@ -53,12 +89,12 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props
         title: 'Focus history',
         xaxis: {
             title: 'Time',
-            // range: [0, 24]
         },
         yaxis: {
             title: 'Score',
+            range: [-1, 1] // Adjust the y-axis to show the tags at the bottom
         },
-        // autosize: false,
+        annotations: annotations, // Add the annotations to the layout
     };
 
     return (
@@ -76,6 +112,7 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props
             <Plot
                 // @ts-ignore
                 data={data}
+                // @ts-ignore
                 layout={layout}
                 style={{
                     width:
