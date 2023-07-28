@@ -138,10 +138,10 @@ export default function Pricing({
                       </p>
                       <p className="mt-4 text-gray-600">{price.description}</p>
                       <Button
-                        variant="slim"
+                        // variant="slim"
                         type="button"
                         disabled={false}
-                        loading={priceIdLoading === price.id}
+                        // loading={priceIdLoading === price.id}
                         onClick={() => handleCheckout(price)}
                         className="block w-full py-2 mt-12 text-sm font-semibold text-center text-white rounded-md bg-blue-500 hover:bg-blue-600"
                       >
@@ -235,10 +235,10 @@ export default function Pricing({
                     </span>
                   </p>
                   <Button
-                    variant="slim"
+                    // variant="slim"
                     type="button"
                     disabled={!session}
-                    loading={priceIdLoading === price.id}
+                    // loading={priceIdLoading === price.id}
                     onClick={() => handleCheckout(price)}
                     className="block w-full py-2 mt-8 text-sm font-semibold text-center text-white rounded-md bg-blue-500 hover:bg-blue-600"
                   >
