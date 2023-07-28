@@ -1,12 +1,12 @@
 'use client'
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
-import {Button} from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 
 interface Props {
     user: any
 }
-export default function FeelingsModal({user}: Props) {
+export default function FeelingsModal({ user }: Props) {
     const [isOpen, setIsOpen] = useState(false);
     const [feeling, setFeeling] = useState('');
 

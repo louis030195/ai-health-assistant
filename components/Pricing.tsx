@@ -1,6 +1,6 @@
 'use client'
 
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import { Database } from '@/types_db';
 import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
@@ -177,8 +177,8 @@ export default function Pricing({
                 onClick={() => setBillingInterval('month')}
                 type="button"
                 className={`${billingInterval === 'month'
-                    ? 'relative w-1/2 bg-gray-200 border-gray-200 shadow-sm text-black'
-                    : 'ml-0.5 relative w-1/2 border border-transparent text-gray-500'
+                  ? 'relative w-1/2 bg-gray-200 border-gray-200 shadow-sm text-black'
+                  : 'ml-0.5 relative w-1/2 border border-transparent text-gray-500'
                   } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
               >
                 Monthly billing
@@ -189,8 +189,8 @@ export default function Pricing({
                 onClick={() => setBillingInterval('year')}
                 type="button"
                 className={`${billingInterval === 'year'
-                    ? 'relative w-1/2 bg-gray-200 border-gray-200 shadow-sm text-black'
-                    : 'ml-0.5 relative w-1/2 border border-transparent text-gray-500'
+                  ? 'relative w-1/2 bg-gray-200 border-gray-200 shadow-sm text-black'
+                  : 'ml-0.5 relative w-1/2 border border-transparent text-gray-500'
                   } rounded-md m-1 py-2 text-sm font-medium whitespace-nowrap focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 focus:z-10 sm:w-auto sm:px-8`}
               >
                 Yearly billing

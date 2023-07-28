@@ -4,7 +4,7 @@ import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
 
 import { Session } from '@supabase/supabase-js';
-import { Button } from '@/components/ui/Button';
+import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { neurosity } from '@/utils/neurosity-client';
