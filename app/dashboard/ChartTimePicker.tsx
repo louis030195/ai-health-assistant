@@ -3,7 +3,7 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'r
 import { Neurosity } from '@neurosity/sdk';
 import { Session } from '@supabase/auth-helpers-nextjs';
 import React, { useState } from 'react';
-import Button from '@/components/ui/Button';
+import {Button} from '@/components/ui/Button';
 import { Fragment } from 'react'
 import {
     CalendarIcon,

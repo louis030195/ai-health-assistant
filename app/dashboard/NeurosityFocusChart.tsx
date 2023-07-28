@@ -4,7 +4,7 @@ import Plot from 'react-plotly.js';
 import { Neurosity } from '@neurosity/sdk';
 import { Session } from '@supabase/auth-helpers-nextjs';
 import { ArrowPathIcon } from '@heroicons/react/20/solid';
-import Button from '@/components/ui/Button';
+import { Button } from '@/components/ui/Button';
 import { GetStatesWithFunctionOptions } from '../supabase-server';
 
 interface Props {
@@ -57,25 +57,35 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates }: Props
         },
         yaxis: {
             title: 'Score',
-        }
+        },
+        // autosize: false,
     };
 
     return (
-        <div className="flex flex-col">
-            <div className="flex justify-end">
-                <Button
-                    onClick={refreshState}>
-                    <ArrowPathIcon
-                        width={20}
-                        height={20}
-                    />
-                </Button>
-            </div>
+        <div className="relative flex flex-col p-4 rounded-lg shadow-lg">
+            <Button
+                onClick={refreshState}
+                variant="secondary"
+                className="absolute top-0 left-50 mt-2 mr-2 z-10 bg-white"
+            >
+                <ArrowPathIcon
+                    width={20}
+                    height={20}
+                />
+            </Button>
             <Plot
                 // @ts-ignore
                 data={data}
                 layout={layout}
-                style={{ width: "600px", height: "300px" }}
+                style={{
+                    width:
+                        // small on mobile
+                        window.innerWidth < 640 ? "300px" :
+                            "600px",
+                    height:
+                        window.innerWidth < 640 ? "200px" :
+                            "300px"
+                }}
             />
         </div>
     );

@@ -6,7 +6,7 @@ import {
   getActiveProductsWithPrices
 } from '@/app/supabase-server';
 
-export default async function PricingPage() {
+export default async function Home() {
 
   const [session, products, subscription] = await Promise.all([
     getSession(),
@@ -41,6 +41,7 @@ export default async function PricingPage() {
 
 
 import React from 'react'
+import RootLayout from './layout';
 
 const randomText = () => {
   let text = ''
@@ -74,3 +75,4 @@ function Banner() {
   )
 
 }
+

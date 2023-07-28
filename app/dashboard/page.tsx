@@ -10,6 +10,7 @@ import { NeurosityFocusChart } from './NeurosityFocusChart';
 import NeurosityForm from '../onboarding/neurosity/NeurosityForm';
 import { NeurosityBrainwaveChart } from './NeurosityBrainwaveChart';
 import { PosthogMail } from './PosthogMail';
+import TagBox from './TagBox';
 
 
 export default async function Dashboard() {
@@ -31,18 +32,19 @@ export default async function Dashboard() {
   }
 
   return (
-    // center vertically and horizontally
-    <div className="flex justify-center pt-12 gap-2">
+    // scrollable
+    <div className="flex flex-col justify-center pt-12 gap-2 h-full items-center">
       <PosthogMail session={session!} />
-      <div className="flex flex-col">
-        <NeurosityForm session={session!} />
-
-
+      <div className="flex flex-row justify-center gap-2 items-end">
+        <NeurosityForm session={session!} className="flex flex-col items-center bg-white rounded-lg shadow-lg" />
+        <TagBox session={session!}
+          className="h-1/2 flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
+        />
       </div>
       {/* <NeurosityStatus neurosity={neurosity} /> */}
       {/* center children */}
       {/* shadow */}
-      <div className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg">
+      <div className="flex-row items-center gap-2 p-4 bg-white">
         {/* <ChartTimePicker /> */}
         <NeurosityFocusChart session={session!} defaultStates={states} getStates={getStatesServer} />
         <NeurosityBrainwaveChart session={session!} defaultBrainwaves={brainwaves} getBrainwaves={getBrainwavesServer} />

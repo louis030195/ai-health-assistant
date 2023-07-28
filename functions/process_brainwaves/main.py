@@ -100,8 +100,8 @@ def process_brainwaves(request):
         supabase.table("states")
         .select("metadata")
         .is_("probability", "null")
-        .eq("user_id", "20284713-5cd6-4199-8313-0d883f0711a1")
-        .gte("metadata->>timestamp", ts)
+        .eq("user_id", user_id)
+        # .gte("metadata->>timestamp", ts)
         .execute()
         .data
     )

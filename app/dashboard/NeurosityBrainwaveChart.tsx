@@ -4,8 +4,8 @@ import Plot from 'react-plotly.js';
 import { Neurosity } from '@neurosity/sdk';
 import { Session } from '@supabase/auth-helpers-nextjs';
 import { ArrowPathIcon } from '@heroicons/react/20/solid';
-import Button from '@/components/ui/Button';
 import { GetProcessedBrainwavesOptions } from '../supabase-server';
+import { Button } from '@/components/ui/Button';
 
 interface Props {
     session: Session;
@@ -48,25 +48,33 @@ export const NeurosityBrainwaveChart = ({ session, defaultBrainwaves, getBrainwa
         title: 'Gamma brainwaves history',
         xaxis: { title: 'Time' },
         yaxis: { title: 'Amplitude' },
-        autosize: false,
-        width: 600,
-        height: 300,
+        // autosize: false,
     };
 
     return (
-        <div className="flex flex-col">
-            <div className="flex justify-end">
-                <Button
-                    onClick={refreshState}>
-                    <ArrowPathIcon
-                        width={20}
-                        height={20}
-                    />
-                </Button>
-            </div>
+        <div className="relative flex flex-col p-4 rounded-lg shadow-lg">
+            <Button
+                onClick={refreshState}
+                variant="secondary"
+                className="absolute top-5 left-50 mt-2 mr-2 z-10 bg-white"
+            >
+                <ArrowPathIcon
+                    width={20}
+                    height={20}
+                />
+            </Button>
             <Plot
                 data={data}
                 layout={layout}
+                style={{
+                    width:
+                        // small on mobile
+                        window.innerWidth < 640 ? "300px" :
+                            "600px",
+                    height:
+                        window.innerWidth < 640 ? "200px" :
+                            "300px"
+                }}
             />
             <p className="mb-3 text-sm text-gray-500">
                 Gamma waves are associated with peak concentration, alertness, creativity, and positive mood states.<br />

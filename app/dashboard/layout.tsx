@@ -1,6 +1,7 @@
 
 import Footer from '@/components/ui/Footer';
 import Navbar from '@/components/ui/Navbar';
+import { ScrollArea } from '@/components/ui/scroll-area';
 import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 
@@ -47,12 +48,10 @@ export default function RootLayout({
     return (
         <div className="flex flex-col h-screen">
             <main className="flex flex-1">
-                <aside className="p-4 w-64">
-                    {/* Sidebar */}
-                    abc
-                </aside>
+                {/* <aside className="p-4 w-64"> */}
+                {/* </aside> */}
 
-                <div className="flex flex-1">
+                <div className="flex justify-center flex-1">
                     {children}
                 </div>
             </main>
