@@ -9,8 +9,8 @@ const neurosity = new Neurosity({
     autoSelectDevice: false
 });
 
-export async function GET(request: NextRequest, { params }: { params: { userId: string } }) {
-    const { userId } = params
+export async function POST(request: NextRequest) {
+    const { userId } = await request.json()
     return neurosity
         .getOAuthToken({
             clientId: process.env.NEUROSITY_OAUTH_CLIENT_ID!,
