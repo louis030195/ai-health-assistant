@@ -80,12 +80,25 @@ export default function ConnectNeurosity({ session, className }: Props) {
     const [error, setError] = useState('');
     const [isLogged, setIsLogged] = useState(false);
     const [isReceivingFocus, setIsReceivingFocus] = useState(false);
-    const [signalQuality, setSignalQuality] = useState<undefined | "bad" | "good" | "great">(undefined);
     const router = useRouter();
     const { user, token } = useNeurosity()
 
+    // useEffect(() => {
+    //     console.log("token", token);
+    //     console.log("token", localStorage.getItem('access_token'));
+    //     if (!token) return
+    //     neurosity.login({
+    //         customToken: token
+    //     }).then(() => {
+    //         neurosity.signalQuality().subscribe((signalQuality) => {
+    //             console.log("signalQuality", signalQuality);
+    //             const sg = qualityScoreToString(getAvgSignalQuality(signalQuality.values));
+    //             localStorage.setItem('neurosity_signal_quality', sg);
+    //         })
+    //     })
+    // }, [token])
+
     const handleConnect = async () => {
-        const neurosity = new Neurosity();
 
         toast.loading('Connecting to your Neurosity...');
         let u1: Function, u2: Function = () => { }
@@ -165,14 +178,6 @@ export default function ConnectNeurosity({ session, className }: Props) {
                     ><div className="w-3 h-3 bg-green-500 rounded-full animate-ping">
                         </div>
                         <span className="text-gray-400">Recording your mind</span>
-                    </div>
-                }
-                {/* display signal quality */}
-                {
-                    signalQuality && <div className='flex items-center space-x-2'
-                    ><div className={`w-3 h-3 rounded-full ${signalQuality === 'bad' ? 'bg-red-500' : signalQuality === 'good' ? 'bg-yellow-500' : 'bg-green-500'}`}>
-                        </div>
-                        <span className="text-gray-400">{signalQuality}</span>
                     </div>
                 }
             </div>

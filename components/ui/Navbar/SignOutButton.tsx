@@ -16,6 +16,7 @@ export default function SignOutButton() {
         await supabase.auth.signOut();
         await neurosity.logout();
         localStorage.removeItem('access_token');
+        localStorage.removeItem("neurosity_user_id")
         router.push('/signin');
       }}
     >

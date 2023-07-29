@@ -110,7 +110,7 @@ const neurosity = new Neurosity();
 export function useNeurosity() {
     const [state, setState] = useState(initialState);
     const { customToken } = useOAuthResult();
-
+    console.log('state', state)
     // Fires everytime an uth session starts or ends
     useEffect(() => {
         const subscription = neurosity.onAuthStateChanged().subscribe((user) => {
@@ -119,6 +119,7 @@ export function useNeurosity() {
                 loading: false,
                 user
             }));
+            localStorage.setItem("neurosity_user_id", user?.uid || "")
         });
 
         return () => {
@@ -137,6 +138,24 @@ export function useNeurosity() {
                     token: customToken
                 }));
             });
+        } else {
+            if (!localStorage.getItem("neurosity_user_id")) return
+            fetch(`/auth/neurosity/token`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ userId: localStorage.getItem("neurosity_user_id") })
+            }).then(r => r.json()).then((response) => {
+                console.log(response)
+                if ("token" in response) {
+                    setState((prevState) => ({
+                        ...prevState,
+                        token: response.token
+                    }));
+                    localStorage.setItem("access_token", response.token)
+                }
+            })
         }
     }, [customToken]);
 
