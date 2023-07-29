@@ -10,7 +10,7 @@ import { useRouter } from 'next/navigation';
 import { neurosity } from '@/utils/neurosity-client';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types_db';
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 
 interface Props {
     session: Session;

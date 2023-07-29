@@ -1,5 +1,5 @@
 'use client'
-import { Input } from '@/components/ui/Input';
+import { Input } from '@/components/ui/input';
 import { Database } from '@/types_db';
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import React, { useState } from 'react';

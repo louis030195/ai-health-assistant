@@ -6,7 +6,7 @@ import {
   getSubscription
 } from '@/app/supabase-server';
 import { Button } from '@/components/ui/button';
-import Input from '@/components/ui/Input';
+import Input from '@/components/ui/input';
 import { Database } from '@/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
 import { revalidatePath } from 'next/cache';
