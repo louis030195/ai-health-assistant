@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Neurosity } from '@neurosity/sdk';
 import { Session } from '@supabase/auth-helpers-nextjs';
@@ -37,41 +37,51 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
         setTags(nt);
     }
 
-    // Convert tags to annotations for the layout
-    const annotations = tags.map((tag, index) => {
-        return {
-            x: tag.created_at,
-            y: 0,
-            xref: 'x',
-            yref: 'paper',
-            // text: tag.text,
-            showarrow: false,
-            arrowhead: 7,
-            ax: 0,
-            ay: -50,
-            bgcolor: 'rgba(255, 255, 255, 0.9)',
-            borderwidth: 2,
-            borderpad: 4,
-            hovertext: tag.text,
-        };
-    });
+    useEffect(() => {
+        refreshState();
+    }, []);
 
-    const data = [
-        {
-            x: states.map(state => state.start_ts),
-            y: states.map(state => state.avg_score),
-            type: 'scatter',
-            mode: 'lines',
-            marker: { color: '#8884d8' },
-            name: 'Focus'
-        },
-        {
-            x: tags.map(tag => {
+
+    const dateFormat = (tag: any) => {
+        if (!tag.created_at) return null
+        console.log('date', tag.created_at)
+
+        const date = new Date(tag.created_at);
+        console.log('date', date)
+        const offset = date.getTimezoneOffset();
+        const localDate = new Date(date.getTime() - offset * 60 * 1000);
+        console.log('localDate', localDate)
+        return localDate.toISOString().split('T')[0];
+    }
+    // Create the "Focus" data series
+    const focusData = {
+        x: states.map(state => state.start_ts),
+        y: states.map(state => state.avg_score),
+        type: 'scatter',
+        mode: 'lines',
+        marker: { color: '#8884d8' },
+        name: 'Focus'
+    };
+
+    // If tags are not empty, create the "Tags" data series and annotations
+    let tagsData: any = {};
+    let annotations: any[] = [];
+    if (tags.length > 0) {
+        tagsData = {
+            x: tags.map((tag) => {
                 const date = new Date(tag.created_at);
                 const offset = date.getTimezoneOffset();
                 const localDate = new Date(date.getTime() - offset * 60 * 1000);
-                return localDate.toISOString().split('T')[0];
-            }),
+                const parsedDate = localDate.toISOString()//.split('T')[0];
+
+                if (isNaN(Date.parse(parsedDate))) {
+                    console.warn("Invalid tag date:", tag.created_at);
+                    return null;
+                }
+                console.log('parsedDate', parsedDate)
+                return parsedDate;
+            }).filter(Boolean), // Removes null entries
+
             y: tags.map(() => 0), // Show the tags at the bottom of the plot
             mode: 'markers',
             marker: {
@@ -79,11 +89,39 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
                 color: '#48bb78',
                 size: 5
             },
-            hovertemplate: '%{text}', // Show the tag text when hovering over the marker
+            hovertemplate: '%{text}<br>%{x}', // Show the tag text when hovering over the marker
             text: tags.map(tag => tag.text),
             name: 'Tags' // This name will appear in the legend
-        }
-    ];
+        };
+        annotations = tags.map((tag, index) => {
+            const date = tag.created_at ? dateFormat(tag.created_at) : null;
+            if (!date) {
+                console.warn("Invalid tag date:", tag.created_at);
+                return null;
+            }
+            return {
+                x: tag.created_at ? dateFormat(tag.created_at) : null,
+                y: 0,
+                xref: 'x',
+                yref: 'paper',
+                // text: tag.text,
+                showarrow: false,
+                arrowhead: 7,
+                ax: 0,
+                ay: -50,
+                bgcolor: 'rgba(255, 255, 255, 0.9)',
+                borderwidth: 2,
+                borderpad: 4,
+                hovertext: tag.text,
+            };
+        }).filter(Boolean);
+    }
+
+    const data = [focusData];
+    // Only add the "Tags" series if it exists
+    if (Object.keys(tagsData).length > 0) {
+        data.push(tagsData);
+    }
 
     const layout = {
         title: 'Focus history',

@@ -2,6 +2,7 @@
 import { Fragment, useState } from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/Input';
 
 interface Props {
     user: any
@@ -44,7 +45,7 @@ export default function FeelingsModal({ user }: Props) {
                                                 How are you feeling today?
                                             </Dialog.Title>
                                             <div className="mt-2">
-                                                <input
+                                                <Input
                                                     type="text"
                                                     className="w-full rounded border border-gray-300 px-3 py-2 text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
                                                     value={feeling}

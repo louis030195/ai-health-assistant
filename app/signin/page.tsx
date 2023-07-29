@@ -3,6 +3,7 @@ import AuthUI from './AuthUI';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import Logo from '@/components/icons/Logo';
+import SignUpForm from '@/components/ui/Auth';
 
 export default async function SignIn() {
   const session = await getSession();
@@ -26,6 +27,7 @@ export default async function SignIn() {
           />
         </div>
         <AuthUI />
+        {/* <SignUpForm /> */}
       </div>
     </div>
   );

@@ -7,6 +7,7 @@ import PHProvider from './posthog-provider';
 import * as Sentry from '@sentry/browser'
 import posthog from 'posthog-js'
 import dynamic from 'next/dynamic'
+import { Toaster } from '@/components/ui/toaster';
 
 if (process.env.SENTRY_ENABLED !== 'false' && process.env.ENVIRONMENT && process.env.ENVIRONMENT !== 'development') {
   console.log('init sentry')
@@ -74,6 +75,7 @@ export default function RootLayout({
       <CrispWithNoSSR />
       <body className="bg-white loading">
         <PHProvider>
+          <Toaster />
           <SupabaseProvider>
             <Navbar />
             <main

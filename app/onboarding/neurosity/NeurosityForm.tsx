@@ -10,6 +10,7 @@ import { useRouter } from 'next/navigation';
 import { neurosity } from '@/utils/neurosity-client';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types_db';
+import { Input } from '@/components/ui/Input';
 
 interface Props {
     session: Session;
@@ -140,7 +141,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
 
                 <div>
                     {/* Email */}
-                    <input
+                    <Input
                         className="border p-3 w-full mb-5 rounded-md text-gray-600"
                         placeholder="Email"
                         value={email}
@@ -148,7 +149,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
                     />
 
                     {/* Password */}
-                    <input
+                    <Input
                         className="border p-3 w-full mb-5 rounded-md text-gray-600"
                         type="password"
                         placeholder="Password"

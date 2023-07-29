@@ -1,4 +1,5 @@
 'use client'
+import { Input } from '@/components/ui/Input';
 import { Database } from '@/types_db';
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import React, { useState } from 'react';
@@ -70,7 +71,7 @@ const TagBox = ({ session, className }: Props) => {
                     </button>
                 ))}
             </div> */}
-            <input
+            <Input
                 type="text"
                 value={inputValue}
                 onChange={handleInputChange}
