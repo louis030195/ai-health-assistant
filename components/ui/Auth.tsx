@@ -1,7 +1,7 @@
 'use client'
 import { FC, useState } from 'react'
 import { Button } from './button'
-import { Input } from './Input'
+import { Input } from './input'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useToast } from './use-toast'
 import { useRouter } from 'next/navigation'
