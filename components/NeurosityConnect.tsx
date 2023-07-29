@@ -22,7 +22,6 @@ export default function NeurosityConnect({ session, className }: Props) {
 
     const handleConnect = async () => {
         const response = await fetch(`/auth/neurosity/url`).then(r => r.json())
-        console.log(response)
         if ("url" in response) {
             // Takes the url returned by the cloud function and redirects the browser to the Neurosity OAuth sign-in page
             window.location.href = response.url;
@@ -110,7 +109,6 @@ const neurosity = new Neurosity();
 export function useNeurosity() {
     const [state, setState] = useState(initialState);
     const { customToken } = useOAuthResult();
-    console.log('state', state)
     // Fires everytime an uth session starts or ends
     useEffect(() => {
         const subscription = neurosity.onAuthStateChanged().subscribe((user) => {
