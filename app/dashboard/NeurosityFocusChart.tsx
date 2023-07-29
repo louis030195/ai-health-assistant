@@ -28,6 +28,8 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
     });
 
     const refreshState = async () => {
+        if (!session?.user?.id) return
+
         const ns = await getStates(session.user.id, {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             day: new Date(),
@@ -44,13 +46,9 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
 
     const dateFormat = (tag: any) => {
         if (!tag.created_at) return null
-        console.log('date', tag.created_at)
-
         const date = new Date(tag.created_at);
-        console.log('date', date)
         const offset = date.getTimezoneOffset();
         const localDate = new Date(date.getTime() - offset * 60 * 1000);
-        console.log('localDate', localDate)
         return localDate.toISOString().split('T')[0];
     }
     // Create the "Focus" data series
@@ -58,7 +56,7 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
         x: states.map(state => state.start_ts),
         y: states.map(state => state.avg_score),
         type: 'scatter',
-        mode: 'lines',
+        mode: 'markers',
         marker: { color: '#8884d8' },
         name: 'Focus'
     };
@@ -75,10 +73,9 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
                 const parsedDate = localDate.toISOString()//.split('T')[0];
 
                 if (isNaN(Date.parse(parsedDate))) {
-                    console.warn("Invalid tag date:", tag.created_at);
+                    // console.warn("Invalid tag date:", tag.created_at);
                     return null;
                 }
-                console.log('parsedDate', parsedDate)
                 return parsedDate;
             }).filter(Boolean), // Removes null entries
 
@@ -96,7 +93,7 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
         annotations = tags.map((tag, index) => {
             const date = tag.created_at ? dateFormat(tag.created_at) : null;
             if (!date) {
-                console.warn("Invalid tag date:", tag.created_at);
+                // console.warn("Invalid tag date:", tag.created_at);
                 return null;
             }
             return {

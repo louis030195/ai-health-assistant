@@ -7,48 +7,90 @@ import { Session } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { neurosity } from '@/utils/neurosity-client';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types_db';
 import { Input } from '@/components/ui/input';
+import { useNeurosity } from '@/components/NeurosityConnect';
+import { Neurosity } from '@neurosity/sdk';
+import { unsubscribe } from 'diagnostics_channel';
 
 interface Props {
     session: Session;
     className?: string;
 }
+const neurosity = new Neurosity();
+
+const getAvgSignalQuality = (values: any) => {
+    const statusValue: any = { "great": 3, "good": 2, "bad": 1 };
+
+    let totalSignalQuality = values.reduce((total: any, channel: any) => {
+        return total + statusValue[channel.status];
+    }, 0);
+
+    return totalSignalQuality / values.length;
+}
+
+
+// Function to convert numeric score to string status
+function qualityScoreToString(score: number) {
+    if (score >= 2.5) {
+        return "great";
+    } else if (score >= 1.5) {
+        return "good";
+    } else {
+        return "bad";
+    }
+}
+
+type DeviceStatusProps = {
+    metrics: {
+        state: "online" | "offline" | "shuttingOff" | "updating" | "booting",
+        sleepMode: boolean,
+        sleepModeReason: "updating" | "charging" | null,
+        charging: boolean,
+        battery: number,
+        lastHeartbeat: number,
+        ssid: string,
+        claimedBy: string
+    }
+};
+
+const DeviceStatus: React.FC<DeviceStatusProps> = ({ metrics }) => {
+    return (
+        <div className="p-4 bg-white rounded-md shadow-md">
+            <h2 className="text-xl font-bold mb-2">Device Status</h2>
+            <p><strong>State:</strong> {metrics.state}</p>
+            <p><strong>Sleep Mode:</strong> {metrics.sleepMode ? "On" : "Off"} {metrics.sleepMode && <span>- Reason: {metrics.sleepModeReason}</span>}</p>
+            <p><strong>Charging:</strong> {metrics.charging ? "Yes" : "No"}</p>
+            <p><strong>Battery Level:</strong> {metrics.battery}%</p>
+            <div className="w-full h-2 bg-gray-200 rounded-full mt-1">
+                <div className="h-2 bg-green-500 rounded-full" style={{ width: `${metrics.battery}%` }}></div>
+            </div>
+            <p><strong>Last Heartbeat:</strong> {new Date(metrics.lastHeartbeat).toLocaleString()}</p>
+            <p><strong>SSID:</strong> {metrics.ssid}</p>
+            <p><strong>Claimed By:</strong> {metrics.claimedBy}</p>
+        </div>
+    );
+};
+
 
 export default function ConnectNeurosity({ session, className }: Props) {
     const supabase = createClientComponentClient<Database>()
 
-    const [email, setEmail] = useState(session?.user?.email);
-    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [isLogged, setIsLogged] = useState(false);
     const [isReceivingFocus, setIsReceivingFocus] = useState(false);
+    const [signalQuality, setSignalQuality] = useState<undefined | "bad" | "good" | "great">(undefined);
     const router = useRouter();
-
-    useEffect(() => {
-        neurosity.focus().subscribe((r) => {
-            console.log(r)
-            setIsLogged(r !== null)
-        })
-    }, [])
+    const { user, token } = useNeurosity()
 
     const handleConnect = async () => {
-        if (isLogged) return toast.success('Connected to Neurosity!');
-        // await toast.promise(neurosity.login({ email: email!, password }), {
-        //     // success: 'Connected to Neurosity!',
-        //     // error: (e) => e.toString().includes('Already') ?
-        //         // undefined : //'Already connected to Neurosity' :
-        //         // 'Could not connect to Neurosity',
-        //     loading: 'Listening to your focus...',
-        // }).catch(console.log);
+        const neurosity = new Neurosity();
+
         toast.loading('Connecting to your Neurosity...');
-        await neurosity.logout()
         let u1: Function, u2: Function = () => { }
         const onConnected = () => {
             toast.success('Listening to your focus...');
-            // neurosity.calm().forEach(console.log)
             const { unsubscribe: u1 } = neurosity.brainwaves("powerByBand").subscribe(async (powerByBand) => {
                 setIsReceivingFocus(true)
                 console.log("powerByBand", powerByBand);
@@ -91,84 +133,64 @@ export default function ConnectNeurosity({ session, className }: Props) {
             });
         }
 
-        neurosity.login({ email: email!, password }).then(() => {
+        neurosity.login({
+            customToken: localStorage.getItem('access_token') || ''
+        }).then(() => {
             toast.dismiss()
             setError(''); // clear error
             onConnected()
         }).catch((e) => {
             console.log(e)
             if (e.toString().includes('Already')) return onConnected()
-            toast.error(e.message || 'Could not connect to Neurosity');
+            toast.error(
+                e.message || 'Could not connect to your Neurosity'
+            );
+            toast.error('Make sure to connect to your Neurosity account in your account settings')
             u1();
             u2();
             setIsReceivingFocus(false)
         }).finally(() => setTimeout(() => toast.dismiss(), 2000));
 
 
-        // router.push('/account');
-        // router.refresh();
     };
 
     return (
-        <div className={`bg-white rounded-lg shadow-md p-6  flex-col space-y-5 ${className}`}>
+        <div className={`flex-col ${className}`}>
             <Toaster />
-            {/* Header */}
-            <div className="text-center">
+
+            {/* display a green dot blinking if receiving focus */}
+            <div className="flex justify-center">
+                {
+                    isReceivingFocus && <div className='flex items-center space-x-2'
+                    ><div className="w-3 h-3 bg-green-500 rounded-full animate-ping">
+                        </div>
+                        <span className="text-gray-400">Recording your mind</span>
+                    </div>
+                }
+                {/* display signal quality */}
+                {
+                    signalQuality && <div className='flex items-center space-x-2'
+                    ><div className={`w-3 h-3 rounded-full ${signalQuality === 'bad' ? 'bg-red-500' : signalQuality === 'good' ? 'bg-yellow-500' : 'bg-green-500'}`}>
+                        </div>
+                        <span className="text-gray-400">{signalQuality}</span>
+                    </div>
+                }
+            </div>
+
+            <Button
+                onClick={handleConnect}
+                className="mb-2 bg-indigo-600 text-white rounded"
+            >
                 <Image
                     // center 
                     className="mx-auto"
-                    src="/neurosity.png" alt="neurosity" width="64" height="64"
+                    src="/neurosity.png" alt="neurosity" width="32" height="32"
                 />
-                <h1 className="text-3xl font-bold text-indigo-600">Record your mind</h1>
-                <p className="text-lg text-gray-600">Connect your account to <Link
-                    className="underline"
-                    href="https://neurosity.co">Neurosity</Link> to record your mind.</p>
-            </div>
-
-            {/* Form */}
-            <div className="max-w-md space-y-4">
-
-                {/* display a green dot blinking if receiving focus */}
-                <div className="flex justify-center">
-                    {
-                        isReceivingFocus && <div className='flex items-center space-x-2'
-                        ><div className="w-3 h-3 bg-green-500 rounded-full animate-ping">
-                            </div>
-                            <span className="text-gray-400">Recording your mind</span>
-                        </div>
-                    }
-                </div>
-
-                <div>
-                    {/* Email */}
-                    <Input
-                        className="border p-3 w-full mb-5 rounded-md text-gray-600"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                    />
-
-                    {/* Password */}
-                    <Input
-                        className="border p-3 w-full mb-5 rounded-md text-gray-600"
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                    />
-                </div>
-                {/* Connect button */}
-                <Button
-                    className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full py-3 rounded-md"
-                    onClick={handleConnect}
-                    disabled={!email || !password}
-                >
-                    Record your mind
-                </Button>
-                <p className="mb-3 text-sm text-gray-500">
-                    This will record data about your brain in order to provide you insights
-                </p>
-            </div>
+                Record your mind
+            </Button>
+            <p className="mb-3 text-sm text-gray-500">
+                This will record data about your brain in order to provide you insights
+            </p>
 
         </div>
     );

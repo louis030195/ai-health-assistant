@@ -19,8 +19,6 @@ export default async function Dashboard() {
 
   const states = await (session?.user?.id ? getStatesWithFunction(session.user.id) : Promise.resolve([]))
   const brainwaves = await (session?.user?.id ? getProcessedBrainwaves(session.user.id) : Promise.resolve([]))
-  console.log('states', states)
-  console.log('brainwaves', brainwaves)
 
   const getStatesServer = async (userId: string, options?: GetStatesWithFunctionOptions) => {
     'use server'
@@ -39,22 +37,21 @@ export default async function Dashboard() {
 
   return (
     // scrollable
-    <div className="flex flex-col justify-center pt-12 gap-2 h-full items-center">
+    <div className="flex flex-col justify-center gap-2 items-center">
       <PosthogMail session={session!} />
-      <div className="flex flex-row justify-center gap-2 items-end">
-        <NeurosityForm session={session!} className="flex flex-col items-center bg-white rounded-lg shadow-lg" />
-        <TagBox session={session!}
-          className="h-1/2 flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
-        />
-      </div>
+      <NeurosityForm session={session!} className="flex justify-center items-center" />
+
+      <TagBox session={session!}
+        className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
+      />
       {/* <NeurosityStatus neurosity={neurosity} /> */}
       {/* center children */}
       {/* shadow */}
-      <div className="flex-row items-center gap-2 p-4 bg-white">
+      {/* <div className="flex-row items-center gap-2 p-4 bg-white"> */}
         {/* <ChartTimePicker /> */}
         <NeurosityFocusChart session={session!} defaultStates={states} getStates={getStatesServer} getTags={getTagsServer} />
-        <NeurosityBrainwaveChart session={session!} defaultBrainwaves={brainwaves} getBrainwaves={getBrainwavesServer} />
-      </div>
+        {/* <NeurosityBrainwaveChart session={session!} defaultBrainwaves={brainwaves} getBrainwaves={getBrainwavesServer} /> */}
+      {/* </div> */}
       {/* <FeelingsModal user={user} /> */}
     </div>
   );

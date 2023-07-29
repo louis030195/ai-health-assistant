@@ -1,10 +1,14 @@
 import { redirect } from "next/navigation";
-import { getSession, getUserDetails, saveOnboarding } from "../../supabase-server";
-import { GoToDashboardButton } from "./GoToDashboardButton";
+import { getOnboarding, getSession, getUserDetails, saveOnboarding } from "../../supabase-server";
+import { GoToButton } from "./GoToButton";
 
 export default async function Onboarding() {
     const session = await getSession();
     if (!session) return redirect('/signin');
+    const hasOnboarded = await getOnboarding(session.user.id);
+    if (hasOnboarded) {
+        return redirect('/dashboard');
+    }
     const { error } = await saveOnboarding(session.user.id);
     return (
         <div className="p-16 col-span-full flex-1 pb-16 md:pb-0">
@@ -12,7 +16,7 @@ export default async function Onboarding() {
                 <h1 className="text-4xl mb-8">Welcome to Mediar</h1>
                 <iframe src="https://link.excalidraw.com/p/readonly/399QBRzLgRKcd2oqVLNb" width="100%" height="400px"></iframe>
                 <div className="flex gap-4">
-                    <GoToDashboardButton />
+                    <GoToButton text="Next" path="/onboarding/neurosity" />
                 </div>
             </div>
         </div>

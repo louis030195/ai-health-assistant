@@ -33,13 +33,12 @@ export const NeurosityBrainwaveChart = ({ session, defaultBrainwaves, getBrainwa
         setStates(ns);
     }
 
-    console.log('brain', states)
 
     const data = new Array(8).fill(0).map((value, index) => ({
         // convert timestamp to human readable format
         x: states.map(s => new Date(s.timestamp)),
         y: states.map(s => s[`gamma_${index}`]),
-        mode: 'lines',
+        mode: 'markers',
         name: `Gamma ${index}`,
         line: { color: colors[index] }
     }));

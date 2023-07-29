@@ -37,7 +37,6 @@ export function useSyncFocus(session: Session) {
                 try {
                     unsubscribe();
                 } catch { }
-                console.log("unsubscribed");
             }
         });
 

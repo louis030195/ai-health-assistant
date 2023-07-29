@@ -10,11 +10,9 @@ import { Neurosity } from '@neurosity/sdk';
 export const NeurosityStatus = ({ neurosity }: { neurosity: Neurosity }) => {
     const [isLogged, setIsLogged] = useState(false);
     const [signalQuality, setSignalQuality] = useState<SignalQuality | undefined>(undefined);
-    console.log('signalQuality', signalQuality)
 
     useEffect(() => {
         const { unsubscribe } = neurosity.focus().subscribe((r) => {
-            console.log(r)
             setIsLogged(r !== null)
         })
         const { unsubscribe: u2 } = neurosity.signalQuality().subscribe((r) => setSignalQuality(r))

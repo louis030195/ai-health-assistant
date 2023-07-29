@@ -28,8 +28,8 @@ if (process.env.SENTRY_ENABLED !== 'false' && process.env.ENVIRONMENT && process
 
 const meta = {
   title: 'Mediar',
-  description: 'ChatGPT x Neurosity',
-  // cardImage: '/og.png',
+  description: 'Track your brain health',
+  cardImage: '/logo.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
   url: 'https://mediar.ai',
@@ -39,7 +39,7 @@ const meta = {
 export const metadata = {
   title: meta.title,
   description: meta.description,
-  // cardImage: meta.cardImage,
+  cardImage: meta.cardImage,
   robots: meta.robots,
   favicon: meta.favicon,
   url: meta.url,
@@ -48,7 +48,7 @@ export const metadata = {
     url: meta.url,
     title: meta.title,
     description: meta.description,
-    // cardImage: meta.cardImage,
+    cardImage: meta.cardImage,
     type: meta.type,
     site_name: meta.title
   },
@@ -57,7 +57,7 @@ export const metadata = {
     site: '@mediar',
     title: meta.title,
     description: meta.description,
-    // cardImage: meta.cardImage
+    cardImage: meta.cardImage
   }
 };
 
@@ -80,7 +80,7 @@ export default function RootLayout({
             <Navbar />
             <main
               id="skip"
-              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)] mb-80"
+              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
             >
               {children}
             </main>

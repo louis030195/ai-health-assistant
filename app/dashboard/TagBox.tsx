@@ -36,8 +36,6 @@ const TagBox = ({ session, className }: Props) => {
 
     const handleSubmit = async () => {
         // Process the selected tags and input here
-        console.log("Input Value: ", inputValue);
-        // console.log("Selected Tags: ", selectedTags);
         const data = {
             text: inputValue,
             user_id: session.user.id,
@@ -81,7 +79,9 @@ const TagBox = ({ session, className }: Props) => {
                     randomPlaceholders[Math.floor(Math.random() * randomPlaceholders.length)]
                 }
             />
-            <button onClick={handleSubmit} className="w-full py-2 px-4 bg-indigo-600 text-white rounded">Confirm</button>
+            <button onClick={handleSubmit}
+                className="w-full py-2 px-4 bg-indigo-600 text-white rounded"
+            >Confirm</button>
         </div>
     );
 };

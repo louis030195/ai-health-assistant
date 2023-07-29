@@ -8,7 +8,7 @@ import type { Database } from '@/types_db'
 const neurosity = new Neurosity({
     autoSelectDevice: false
 });
-
+// export const runtime = 'edge'
 export async function GET(request: NextRequest) {
     return neurosity
         .createOAuthURL({
@@ -21,9 +21,11 @@ export async function GET(request: NextRequest) {
                 "read:devices-info",
                 "read:devices-status",
                 "read:signal-quality",
-                "read:brainwaves"
+                "read:brainwaves",
+                "read:focus",
             ]
         })
-        .then((url) => NextResponse.redirect(url))
+        // .then((url) => NextResponse.redirect(url))
+        .then((url) => NextResponse.json({url: url}))
         .catch((error) => NextResponse.json({ error: error.response.data }, { status: 400 }))
 }

@@ -17,6 +17,6 @@ export async function POST(request: NextRequest) {
             clientSecret: process.env.NEUROSITY_OAUTH_CLIENT_SECRET!,
             userId
         })
-        .then((token) => NextResponse.json(token))
+        .then((token) => NextResponse.json({token: token}))
         .catch((error) => NextResponse.json({ error: error.response.data }, { status: 400 }))
 }

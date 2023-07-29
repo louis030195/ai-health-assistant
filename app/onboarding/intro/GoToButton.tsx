@@ -3,14 +3,17 @@
 import { Button } from "@/components/ui/button";
 import { useRouter } from "next/navigation";
 
-export const GoToDashboardButton = () => {
+interface Props {
+    text: string;
+    path: string;
+}
+export const GoToButton = ({ text, path }: Props) => {
     const router = useRouter();
     return (
         <Button
-            className="px-4 py-2 mx-auto"
-            onClick={() => router.push('/dashboard')}
+            onClick={() => router.push(path)}
         >
-            Go to Dashboard
+            {text}
         </Button>
     )
 }

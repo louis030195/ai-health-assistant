@@ -37,12 +37,12 @@ export default async function Navbar() {
 
               {/* <Link href="/pricing" className={s.link}>
                 Pricing
-              </Link>
+              </Link> */}
               {user && (
                 <Link href="/account" className={s.link}>
                   Account
                 </Link>
-              )} */}
+              )}
             </nav>
           </div>
           <div className="flex justify-end flex-1 space-x-8">

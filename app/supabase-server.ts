@@ -115,7 +115,6 @@ export const getOnboarding = async (userId: string) => {
     .select('*')
     .eq('user_id', userId)
     .limit(1)
-
   if (error) {
     console.log(error.message);
   }
@@ -127,7 +126,7 @@ export const saveOnboarding = async (userId: string) => {
   const { data, error } = await supabase
     .from('onboardings')
     .upsert({
-      updated_at: new Date().toString(),
+      // updated_at: new Date().toString(),
       user_id: userId,
     })
     .eq('user_id', userId)
