@@ -6,16 +6,16 @@ import { Session } from '@supabase/auth-helpers-nextjs';
 import { ArrowPathIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/components/ui/button';
 import { GetStatesWithFunctionOptions } from '../supabase-server';
+import { LLMInsights } from './LLMInsights';
 
 interface Props {
     session: Session;
-    defaultStates: any[];
     getStates: (userId: string, options: GetStatesWithFunctionOptions) => Promise<any[]>;
     getTags: (userId: string) => Promise<any[]>;
 }
 
-export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags }: Props) => {
-    let [states, setStates] = useState<any[]>(defaultStates);
+export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
+    let [states, setStates] = useState<any[]>([]);
     const [tags, setTags] = useState<any[]>([]);
 
     // Modify your data to include an 'hour' field
@@ -144,21 +144,25 @@ export const NeurosityFocusChart = ({ session, defaultStates, getStates, getTags
                     height={20}
                 />
             </Button>
-            <Plot
-                // @ts-ignore
-                data={data}
-                // @ts-ignore
-                layout={layout}
-                style={{
-                    width:
-                        // small on mobile
-                        window.innerWidth < 640 ? "300px" :
-                            "600px",
-                    height:
-                        window.innerWidth < 640 ? "200px" :
-                            "300px"
-                }}
-            />
+            <div className="flex flex-col space-y-4">
+                <Plot
+                    // @ts-ignore
+                    data={data}
+                    // @ts-ignore
+                    layout={layout}
+                    style={{
+                        width:
+                            // small on mobile
+                            window.innerWidth < 640 ? "300px" :
+                                "600px",
+                        height:
+                            window.innerWidth < 640 ? "200px" :
+                                "300px"
+                    }}
+                />
+                <LLMInsights states={states} tags={tags} />
+            </div>
+
         </div>
     );
 }

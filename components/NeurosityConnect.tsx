@@ -84,6 +84,8 @@ export default function NeurosityConnect({ session, className }: Props) {
 
 
 function useOAuthResult() {
+    'use client'
+
     const paramsString = window.location.hash.replace("#", "");
     const params = new URLSearchParams(paramsString);
 
@@ -107,6 +109,7 @@ const initialState = {
 };
 const neurosity = new Neurosity();
 export function useNeurosity() {
+    'use client'
     const [state, setState] = useState(initialState);
     const { customToken } = useOAuthResult();
     // Fires everytime an uth session starts or ends

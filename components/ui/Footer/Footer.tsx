@@ -24,7 +24,7 @@ export default function Footer() {
           </Link>
         </div>
 
-        <div className="col-span-1 lg:col-span-2">
+        {/* <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="py-3 md:py-0 md:pb-4">
               <Link
@@ -35,9 +35,9 @@ export default function Footer() {
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
 
-        <div className="col-span-1 lg:col-span-2">
+        {/* <div className="col-span-1 lg:col-span-2">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="py-3 md:py-0 md:pb-4">
               <Link
@@ -56,7 +56,7 @@ export default function Footer() {
               </Link>
             </li>
           </ul>
-        </div>
+        </div> */}
 
       </div>
 

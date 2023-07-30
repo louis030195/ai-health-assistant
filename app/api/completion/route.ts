@@ -1,30 +1,30 @@
-// ./app/api/chat/route.js
-import { Configuration, OpenAIApi } from 'openai-edge'
-import { OpenAIStream, StreamingTextResponse } from 'ai'
+import { AnthropicStream, StreamingTextResponse } from 'ai'
 
-const config = new Configuration({
-    basePath: "https://28b6-2a01-e0a-3ee-1cb0-505a-5158-140c-80f8.ngrok-free.app/v1",
-    apiKey: "EMPTY",
-})
-const openai = new OpenAIApi(config)
-
+// IMPORTANT! Set the runtime to edge
 export const runtime = 'edge'
 
-export async function POST(req: any) {
-    // const { messages } = await req.json()
-    // const response = await openai.createChatCompletion({
-    //     model: 'TheBloke/Nous-Hermes-13B-GGML',
-    //     stream: true,
-    //     messages
-    // })
-    // const stream = OpenAIStream(response)
-    // return new StreamingTextResponse(stream)
-    const { prompt } = await req.json()
-    const response = await openai.createCompletion({
-        model: 'TheBloke/Nous-Hermes-13B-GGML',
-        stream: true,
-        prompt: prompt,
+export async function POST(req: Request) {
+  // Extract the `prompt` from the body of the request
+  const { prompt } = await req.json()
+
+  const response = await fetch('https://api.anthropic.com/v1/complete', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.ANTHROPIC_API_KEY!
+    },
+    body: JSON.stringify({
+      prompt: prompt,
+      model: 'claude-2',
+      max_tokens_to_sample: 300,
+      stream: true
     })
-    const stream = OpenAIStream(response)
-    return new StreamingTextResponse(stream)
+  })
+
+  // Convert the response into a friendly text-stream
+  const stream = AnthropicStream(response)
+
+  // Respond with the stream
+  return new StreamingTextResponse(stream)
 }
+

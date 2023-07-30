@@ -12,6 +12,8 @@ import NeurosityForm from '../onboarding/neurosity/NeurosityForm';
 import { NeurosityBrainwaveChart } from './NeurosityBrainwaveChart';
 import { PosthogMail } from './PosthogMail';
 import TagBox from './TagBox';
+import Anthropic from '@anthropic-ai/sdk';
+import { LLMInsights } from './LLMInsights';
 
 
 export default async function Dashboard() {
@@ -35,6 +37,7 @@ export default async function Dashboard() {
     return getTags(userId)
   }
 
+
   return (
     // scrollable
     <div className="flex flex-col justify-center gap-2 items-center">
@@ -48,9 +51,9 @@ export default async function Dashboard() {
       {/* center children */}
       {/* shadow */}
       {/* <div className="flex-row items-center gap-2 p-4 bg-white"> */}
-        {/* <ChartTimePicker /> */}
-        <NeurosityFocusChart session={session!} defaultStates={states} getStates={getStatesServer} getTags={getTagsServer} />
-        {/* <NeurosityBrainwaveChart session={session!} defaultBrainwaves={brainwaves} getBrainwaves={getBrainwavesServer} /> */}
+      {/* <ChartTimePicker /> */}
+      <NeurosityFocusChart session={session!} getStates={getStatesServer} getTags={getTagsServer} />
+      {/* <NeurosityBrainwaveChart session={session!} defaultBrainwaves={brainwaves} getBrainwaves={getBrainwavesServer} /> */}
       {/* </div> */}
       {/* <FeelingsModal user={user} /> */}
     </div>
