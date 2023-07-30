@@ -6,6 +6,7 @@ import SignOutButton from './SignOutButton';
 import Image from 'next/image';
 import s from './Navbar.module.css';
 import GitHub from '@/components/icons/GitHub';
+import Discord from '@/components/icons/Discord';
 
 export default async function Navbar() {
   const supabase = createServerSupabaseClient();
@@ -48,7 +49,7 @@ export default async function Navbar() {
           </div>
           <div className="flex justify-end flex-1 space-x-8">
             <Link href="https://discord.gg/pFKpxYpZEa" className={s.link}>
-              <GitHub />
+              <Discord />
             </Link>
             {user ? (
               <SignOutButton />
