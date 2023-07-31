@@ -1,5 +1,4 @@
 import { getOnboarding, getSession } from '@/app/supabase-server';
-import AuthUI from './AuthUI';
 import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import Logo from '@/components/icons/Logo';
