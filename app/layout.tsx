@@ -28,7 +28,7 @@ if (process.env.SENTRY_ENABLED !== 'false' && process.env.ENVIRONMENT && process
 
 const meta = {
   title: 'Mediar',
-  description: 'Track your brain health',
+  description: 'An assistant for your brain health',
   cardImage: '/logo.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
