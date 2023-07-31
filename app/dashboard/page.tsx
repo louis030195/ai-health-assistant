@@ -14,11 +14,14 @@ import { PosthogMail } from './PosthogMail';
 import TagBox from './TagBox';
 import Anthropic from '@anthropic-ai/sdk';
 import { LLMInsights } from './LLMInsights';
+import { redirect } from 'next/navigation';
 
 
 export default async function Dashboard() {
   const session = await getSession();
-
+  if (!session) {
+    return redirect('/signin');
+  }
   const states = await (session?.user?.id ? getStatesWithFunction(session.user.id) : Promise.resolve([]))
   const brainwaves = await (session?.user?.id ? getProcessedBrainwaves(session.user.id) : Promise.resolve([]))
 

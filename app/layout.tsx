@@ -67,6 +67,7 @@ export default function RootLayout({
   children
 }: PropsWithChildren) {
 
+
   const CrispWithNoSSR = dynamic(
     () => import('@/components/ui/CrispChat'),
   )
