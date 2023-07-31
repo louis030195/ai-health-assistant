@@ -4,7 +4,6 @@ import Image from 'next/image';
 import { redirect } from 'next/navigation';
 import Logo from '@/components/icons/Logo';
 import SignUpForm from '@/app/signup/SignUpForm';
-import SignInForm from '@/app/signin/SignInForm';
 
 export default async function SignIn() {
   const session = await getSession();
@@ -27,8 +26,8 @@ export default async function SignIn() {
             src="/logo.png" alt="neurosity" width="64" height="64"
           />
         </div>
-        <AuthUI />
-        {/* <SignInForm /> */}
+        {/* <AuthUI /> */}
+        <SignUpForm />
       </div>
     </div>
   );

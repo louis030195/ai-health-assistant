@@ -7,7 +7,7 @@ import 'styles/main.css';
 
 const meta = {
     title: 'Mediar',
-    description: 'Track your brain health',
+    description: 'An assistant for your brain health',
     cardImage: '/logo.png',
     robots: 'follow, index',
     favicon: '/favicon.ico',

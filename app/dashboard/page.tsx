@@ -22,6 +22,7 @@ export default async function Dashboard() {
   if (!session) {
     return redirect('/signin');
   }
+  
   const states = await (session?.user?.id ? getStatesWithFunction(session.user.id) : Promise.resolve([]))
   const brainwaves = await (session?.user?.id ? getProcessedBrainwaves(session.user.id) : Promise.resolve([]))
 

@@ -11,14 +11,11 @@ import Discord from '@/components/icons/Discord';
 export default async function Navbar() {
   const supabase = createServerSupabaseClient();
   const {
-    data: { user }
-  } = await supabase.auth.getUser();
+    data: { session }
+  } = await supabase.auth.getSession();
 
   return (
     <nav className={s.root}>
-      <a href="#skip" className="sr-only focus:not-sr-only">
-        Skip to content
-      </a>
       <div className="max-w-6xl px-6 mx-auto">
         <div className="relative flex flex-row justify-between py-4 align-center md:py-6">
           <div className="flex items-center flex-1">
@@ -31,7 +28,7 @@ export default async function Navbar() {
               />
             </Link>
             <nav className="hidden ml-6 space-x-2 lg:block">
-              {user && (
+              {session && (
                 <Link href="/dashboard" className={s.link}>
                   Dashboard
                 </Link>
@@ -40,7 +37,7 @@ export default async function Navbar() {
               {/* <Link href="/pricing" className={s.link}>
                 Pricing
               </Link> */}
-              {user && (
+              {session && (
                 <Link href="/account" className={s.link}>
                   Account
                 </Link>
@@ -51,7 +48,7 @@ export default async function Navbar() {
             <Link href="https://discord.gg/pFKpxYpZEa" className={s.link}>
               <Discord />
             </Link>
-            {user ? (
+            {session ? (
               <SignOutButton />
             ) : (
               <Link href="/signin" className={s.link}>
