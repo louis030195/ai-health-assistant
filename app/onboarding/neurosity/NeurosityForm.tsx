@@ -12,6 +12,7 @@ import { Database } from '@/types_db';
 import { Input } from '@/components/ui/input';
 import { Neurosity } from '@neurosity/sdk';
 import { unsubscribe } from 'diagnostics_channel';
+import useOAuthResult from '@/components/useAuth';
 
 interface Props {
     session: Session;
@@ -19,58 +20,6 @@ interface Props {
 }
 const neurosity = new Neurosity();
 
-const getAvgSignalQuality = (values: any) => {
-    const statusValue: any = { "great": 3, "good": 2, "bad": 1 };
-
-    let totalSignalQuality = values.reduce((total: any, channel: any) => {
-        return total + statusValue[channel.status];
-    }, 0);
-
-    return totalSignalQuality / values.length;
-}
-
-
-// Function to convert numeric score to string status
-function qualityScoreToString(score: number) {
-    if (score >= 2.5) {
-        return "great";
-    } else if (score >= 1.5) {
-        return "good";
-    } else {
-        return "bad";
-    }
-}
-
-type DeviceStatusProps = {
-    metrics: {
-        state: "online" | "offline" | "shuttingOff" | "updating" | "booting",
-        sleepMode: boolean,
-        sleepModeReason: "updating" | "charging" | null,
-        charging: boolean,
-        battery: number,
-        lastHeartbeat: number,
-        ssid: string,
-        claimedBy: string
-    }
-};
-
-const DeviceStatus: React.FC<DeviceStatusProps> = ({ metrics }) => {
-    return (
-        <div className="p-4 bg-white rounded-md shadow-md">
-            <h2 className="text-xl font-bold mb-2">Device Status</h2>
-            <p><strong>State:</strong> {metrics.state}</p>
-            <p><strong>Sleep Mode:</strong> {metrics.sleepMode ? "On" : "Off"} {metrics.sleepMode && <span>- Reason: {metrics.sleepModeReason}</span>}</p>
-            <p><strong>Charging:</strong> {metrics.charging ? "Yes" : "No"}</p>
-            <p><strong>Battery Level:</strong> {metrics.battery}%</p>
-            <div className="w-full h-2 bg-gray-200 rounded-full mt-1">
-                <div className="h-2 bg-green-500 rounded-full" style={{ width: `${metrics.battery}%` }}></div>
-            </div>
-            <p><strong>Last Heartbeat:</strong> {new Date(metrics.lastHeartbeat).toLocaleString()}</p>
-            <p><strong>SSID:</strong> {metrics.ssid}</p>
-            <p><strong>Claimed By:</strong> {metrics.claimedBy}</p>
-        </div>
-    );
-};
 
 
 export default function ConnectNeurosity({ session, className }: Props) {
@@ -80,6 +29,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
     const [isLogged, setIsLogged] = useState(false);
     const [isReceivingFocus, setIsReceivingFocus] = useState(false);
     const router = useRouter();
+    const { customToken } = useOAuthResult(session.user.id);
 
 
     const handleConnect = async () => {
@@ -131,7 +81,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
         }
 
         neurosity.login({
-            customToken: localStorage.getItem('access_token') || ''
+            customToken: customToken!,
         }).then(() => {
             toast.dismiss()
             setError(''); // clear error
