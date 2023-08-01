@@ -110,7 +110,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
                 );
             })
         }
-
+        await neurosity.logout()
         neurosity.login({
             customToken: customToken!,
         }).then(() => {
