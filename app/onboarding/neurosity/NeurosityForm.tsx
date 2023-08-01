@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import toast, { Toaster } from 'react-hot-toast';
 
-import { Session } from '@supabase/supabase-js';
+import { Session, SupabaseClient } from '@supabase/supabase-js';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import { Neurosity } from '@neurosity/sdk';
 import { unsubscribe } from 'diagnostics_channel';
 import useOAuthResult from '@/components/useAuth';
+import { PowerByBand } from '@neurosity/sdk/dist/esm/types/brainwaves';
 
 interface Props {
     session: Session;
@@ -20,6 +21,72 @@ interface Props {
 }
 const neurosity = new Neurosity();
 
+
+interface MyFuncOptions {
+    session: Session,
+    neurosity: Neurosity,
+    supabase: SupabaseClient, // replace with correct type
+    timeoutMs?: number
+}
+
+const listenToBrain = async ({ session, neurosity, supabase, timeoutMs = 3000 }: MyFuncOptions) => {
+    let isReceivingFocus = false;
+
+    const u1 = neurosity.brainwaves("powerByBand").subscribe(async (powerByBand) => {
+        isReceivingFocus = true;
+
+        console.log("powerByBand", powerByBand);
+        const nf = {
+            metadata: {
+                ...powerByBand
+            },
+            user_id: session.user.id,
+        }
+        const { error } = await supabase.from('states').insert(nf)
+        if (error) {
+            console.log("error", error);
+            try {
+                u1.unsubscribe();
+            } catch { }
+            console.log("unsubscribed");
+        }
+    })
+
+    const u2 = neurosity.focus().subscribe(async (focus) => {
+        isReceivingFocus = true;
+
+        console.log("focus", focus);
+        const nf = {
+            probability: focus.probability,
+            metadata: {
+                label: focus.label,
+            },
+            user_id: session.user.id,
+        }
+        const { error } = await supabase.from('states').insert(nf)
+        if (error) {
+            console.log("error", error);
+            try {
+                u2.unsubscribe();
+            } catch { }
+            console.log("unsubscribed");
+        }
+    });
+
+    await new Promise((resolve, reject) => {
+        setTimeout(() => {
+            if (isReceivingFocus) {
+                resolve(null);
+            } else {
+                u1.unsubscribe();
+                u2.unsubscribe();
+                reject(new Error("No data received from brainwaves in the specified timeout"));
+            }
+        }, timeoutMs);
+    });
+
+    return { unsubscribe1: u1.unsubscribe, unsubscribe2: u2.unsubscribe };
+}
 
 
 export default function ConnectNeurosity({ session, className }: Props) {
@@ -34,50 +101,14 @@ export default function ConnectNeurosity({ session, className }: Props) {
 
     const handleConnect = async () => {
 
-        toast.loading('Connecting to your Neurosity...');
-        let u1: Function, u2: Function = () => { }
-        const onConnected = () => {
-            toast.success('Listening to your focus...');
-            const { unsubscribe: u1 } = neurosity.brainwaves("powerByBand").subscribe(async (powerByBand) => {
-                setIsReceivingFocus(true)
-                console.log("powerByBand", powerByBand);
-                const nf = {
-                    // created_at: focus.timestamp?.toString(),
-                    // probability: focus.probability,
-                    metadata: {
-                        ...powerByBand
-                    },
-                    user_id: session.user.id,
-                }
-                const { error } = await supabase.from('states').insert(nf)
-                if (error) {
-                    console.log("error", error);
-                    try {
-                        u1();
-                    } catch { }
-                    console.log("unsubscribed");
-                }
+        const onConnected = async () => {
+            toast.loading('Listening to your focus...');
+            await listenToBrain({ session, neurosity, supabase, timeoutMs: 100_000 }).catch((e) => {
+                toast.dismiss()
+                toast.error(
+                    'Could not connect to your Neurosity, make sure the battery is charged and the headband is on your head'
+                );
             })
-            const { unsubscribe: u2 } = neurosity.focus().subscribe(async (focus) => {
-                setIsReceivingFocus(true)
-                console.log("focus", focus);
-                const nf = {
-                    // created_at: focus.timestamp?.toString(),
-                    probability: focus.probability,
-                    metadata: {
-                        label: focus.label,
-                    },
-                    user_id: session.user.id,
-                }
-                const { error } = await supabase.from('states').insert(nf)
-                if (error) {
-                    console.log("error", error);
-                    try {
-                        u2();
-                    } catch { }
-                    console.log("unsubscribed");
-                }
-            });
         }
 
         neurosity.login({
@@ -93,8 +124,6 @@ export default function ConnectNeurosity({ session, className }: Props) {
                 e.message || 'Could not connect to your Neurosity'
             );
             toast.error('Make sure to connect to your Neurosity account in your account settings')
-            u1();
-            u2();
             setIsReceivingFocus(false)
         }).finally(() => setTimeout(() => toast.dismiss(), 2000));
 

@@ -44,7 +44,6 @@ Assistant:`)
     }, [states, tags])
 
 
-    console.log('completion', completion)
     return (
         <form
             className="flex flex-col space-y-4 max-h-[300px] overflow-y-auto"

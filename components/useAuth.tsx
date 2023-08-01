@@ -22,7 +22,6 @@ export default function useOAuthResult(userId: string) {
             ).then(console.log)
         } else {
             supabase.from('tokens').select().eq('user_id', userId).then(({ data, error: e }) => {
-                console.log(data, e)
                 if (data?.length) {
                     setAccessToken(data[0].token)
                 }
