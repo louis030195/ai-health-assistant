@@ -23,6 +23,8 @@ export default function NeurosityConnect({ session, className }: Props) {
     const router = useRouter();
 
     const handleConnect = async () => {
+        const supabase = createClientComponentClient()
+        await supabase.from('tokens').delete().match({ user_id: session.user.id })
         const response = await fetch(`/auth/neurosity/url`).then(r => r.json())
         if ("url" in response) {
             // Takes the url returned by the cloud function and redirects the browser to the Neurosity OAuth sign-in page
@@ -85,8 +87,8 @@ export default function NeurosityConnect({ session, className }: Props) {
             {/* and that he has to login and come back here */}
             <div className="text-sm text-gray-500">
                 <p>⚠️ Due to a bug, you will have to login again and come back here.
-                We apologize for the inconvenience.
-                This will be fixed soon.</p>
+                    We apologize for the inconvenience.
+                    This will be fixed soon.</p>
             </div>
 
         </div>

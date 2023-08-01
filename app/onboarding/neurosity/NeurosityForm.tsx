@@ -98,16 +98,18 @@ export default function ConnectNeurosity({ session, className }: Props) {
     const router = useRouter();
     const { customToken } = useOAuthResult(session.user.id);
 
-
     const handleConnect = async () => {
 
         const onConnected = async () => {
             toast.loading('Listening to your focus...');
-            await listenToBrain({ session, neurosity, supabase, timeoutMs: 100_000 }).catch((e) => {
+            listenToBrain({ session, neurosity, supabase, timeoutMs: 100_000 }).catch((e) => {
                 toast.dismiss()
                 toast.error(
                     'Could not connect to your Neurosity, make sure the battery is charged and the headband is on your head'
                 );
+            }).then((_) => {
+                toast.dismiss()
+                toast.success('Connected to your Neurosity');
             })
         }
         await neurosity.logout()
@@ -148,6 +150,7 @@ export default function ConnectNeurosity({ session, className }: Props) {
             <Button
                 onClick={handleConnect}
                 className="mb-2 bg-indigo-600 text-white rounded"
+                disabled={!customToken}
             >
                 <Image
                     // center 
@@ -159,6 +162,11 @@ export default function ConnectNeurosity({ session, className }: Props) {
             <p className="mb-3 text-sm text-gray-500">
                 This will record data about your brain in order to provide you insights
             </p>
+            {
+                !customToken && <p className="mb-3 text-sm text-gray-500">
+                    Please connect to your Neurosity account in your account settings
+                </p>
+            }
 
         </div>
     );
