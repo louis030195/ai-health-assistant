@@ -8,12 +8,9 @@ import {
 } from '@/app/supabase-server';
 import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
-import NeurosityForm from '../onboarding/neurosity/NeurosityForm';
 import { NeurosityBrainwaveChart } from './NeurosityBrainwaveChart';
 import { PosthogMail } from './PosthogMail';
 import TagBox from './TagBox';
-import Anthropic from '@anthropic-ai/sdk';
-import { LLMInsights } from './LLMInsights';
 import { redirect } from 'next/navigation';
 import NeurosityStatus from './NeurosityStatus';
 
@@ -24,9 +21,6 @@ export default async function Dashboard() {
     return redirect('/signin');
   }
   
-  const states = await (session?.user?.id ? getStatesWithFunction(session.user.id) : Promise.resolve([]))
-  const brainwaves = await (session?.user?.id ? getProcessedBrainwaves(session.user.id) : Promise.resolve([]))
-
   const getStatesServer = async (userId: string, options?: GetStatesWithFunctionOptions) => {
     'use server'
     return getStatesWithFunction(userId, options)
@@ -44,50 +38,16 @@ export default async function Dashboard() {
 
 
   return (
-    // scrollable
     <div className="flex flex-col justify-center gap-2 items-center">
       <PosthogMail session={session!} />
-      {/* <NeurosityForm session={session!} className="flex justify-center items-center" /> */}
       <NeurosityStatus />
 
       <TagBox session={session!}
         className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
       />
       <NeurosityFocusChart session={session!} getStates={getStatesServer} getTags={getTagsServer} />
+      {/* <NeurosityBrainwaveChart session={session!} getBrainwaves={getBrainwavesServer} getTags={getTagsServer} /> */}
     </div>
   );
 }
 
-
-const randomText = () => {
-  let text = ''
-  for (let i = 0; i < 10; i++) {
-    text += String.fromCharCode(Math.floor(Math.random() * 26) + 97)
-  }
-  return text
-}
-
-
-function Banner() {
-  return (
-    <div>
-      <svg viewBox="0 0 600 600">
-
-        {[...Array(10)].map((_, i) => (
-          <text
-            key={i}
-            x="5"
-            y={`${i * 20}`}
-            fill="#7d9ddf"
-            className="text-sm text-banner"
-          >
-            {randomText()}
-          </text>
-        ))}
-
-      </svg>
-
-    </div>
-  )
-
-}

@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Plot from 'react-plotly.js';
 import { Neurosity } from '@neurosity/sdk';
 import { Session } from '@supabase/auth-helpers-nextjs';
@@ -9,13 +9,15 @@ import { Button } from '@/components/ui/button';
 
 interface Props {
     session: Session;
-    defaultBrainwaves: any[];
     getBrainwaves: (userId: string, options?: GetProcessedBrainwavesOptions) => Promise<any[]>;
+    getTags: (userId: string) => Promise<any[]>;
+
 }
 const colors = ['#8884d8', '#82ca9d', '#ffc658', '#ff7300', '#d00000', '#804000', '#00ff00'];
 
-export const NeurosityBrainwaveChart = ({ session, defaultBrainwaves, getBrainwaves }: Props) => {
-    let [states, setStates] = useState<any[]>(defaultBrainwaves);
+export const NeurosityBrainwaveChart = ({ session, getBrainwaves, getTags }: Props) => {
+    let [states, setStates] = useState<any[]>([]);
+    const [tags, setTags] = useState<any[]>([]);
 
     states = states.map(state => {
         const date = new Date(state.created_at);
@@ -26,13 +28,19 @@ export const NeurosityBrainwaveChart = ({ session, defaultBrainwaves, getBrainwa
     });
 
     const refreshState = async () => {
+        if (!session?.user?.id) return
+
         const ns = await getBrainwaves(session.user.id, {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             day: new Date(),
         });
         setStates(ns);
+        const nt = await getTags(session.user.id);
+        setTags(nt);
     }
-
+    useEffect(() => {
+        refreshState();
+    }, []);
 
     const data = new Array(8).fill(0).map((value, index) => ({
         // convert timestamp to human readable format
@@ -48,7 +56,7 @@ export const NeurosityBrainwaveChart = ({ session, defaultBrainwaves, getBrainwa
         xaxis: { title: 'Time' },
         yaxis: {
             title: 'Amplitude',
-            range: [-10, 100] // Adjust the y-axis to show the tags at the bottom
+            range: [-1, 1] // Adjust the y-axis to show the tags at the bottom
 
         },
         // autosize: false,
