@@ -1,0 +1,8 @@
+{
+    "crons": [
+      {
+        "path": "/auth/neurosity/renew-tokens",
+        "schedule": "*/50 * * * *"
+      }
+    ]
+  }
