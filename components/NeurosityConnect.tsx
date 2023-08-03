@@ -11,6 +11,7 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Database } from '@/types_db';
 import { Neurosity } from '@neurosity/sdk';
 import useOAuthResult from './useAuth';
+import posthog from 'posthog-js';
 
 interface Props {
     session: Session;
@@ -23,6 +24,8 @@ export default function NeurosityConnect({ session, className }: Props) {
     const router = useRouter();
 
     const handleConnect = async () => {
+        posthog.capture('neurosity-connect');
+
         const supabase = createClientComponentClient()
         await supabase.from('tokens').delete().match({ user_id: session.user.id })
         const response = await fetch(`/auth/neurosity/url`).then(r => r.json())

@@ -7,6 +7,7 @@ import { ArrowPathIcon } from '@heroicons/react/20/solid';
 import { Button } from '@/components/ui/button';
 import { GetStatesWithFunctionOptions } from '../supabase-server';
 import { LLMInsights } from './LLMInsights';
+import posthog from 'posthog-js';
 
 interface Props {
     session: Session;
@@ -37,6 +38,8 @@ export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
         setStates(ns);
         const nt = await getTags(session.user.id);
         setTags(nt);
+
+        posthog.capture('refresh-state');
     }
 
     useEffect(() => {
