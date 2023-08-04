@@ -52,7 +52,8 @@ export async function POST(req: NextRequest) {
             const { error: updateError } = await supabase
                 .from("tokens")
                 .update({
-                    token: oauthResponse, created_at: new Date(),
+                    // BUG keep old token bro
+                    // token: oauthResponse, created_at: new Date(),
                     status: {
                         valid: true
                     }
