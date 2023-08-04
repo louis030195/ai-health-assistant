@@ -51,7 +51,12 @@ export async function POST(req: NextRequest) {
             // Update the token in the database
             const { error: updateError } = await supabase
                 .from("tokens")
-                .update({ token: oauthResponse, created_at: new Date() })
+                .update({
+                    token: oauthResponse, created_at: new Date(),
+                    status: {
+                        valid: true
+                    }
+                })
                 .eq("user_id", token.user_id);
 
             console.log("Token updated for user: " + token.user_id, "at: " + new Date());
