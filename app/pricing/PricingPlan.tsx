@@ -78,6 +78,7 @@ export default function Example() {
                             </div>
 
                             <div className="flex flex-col justify-between rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
+
                                 <div>
                                     <h3 id="tier-executive" className="text-base font-semibold leading-7 text-indigo-600">
                                         Executive
