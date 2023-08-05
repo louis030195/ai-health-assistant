@@ -53,7 +53,8 @@ export async function POST(req: NextRequest) {
                 .from("tokens")
                 .update({
                     // BUG keep old token bro
-                    // token: oauthResponse, created_at: new Date(),
+                    // token: oauthResponse, 
+                    created_at: new Date(),
                     status: {
                         valid: true
                     }
