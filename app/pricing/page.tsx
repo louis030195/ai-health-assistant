@@ -4,59 +4,29 @@ import {
   getSubscription,
   getActiveProductsWithPrices
 } from '@/app/supabase-server';
+import React from 'react'
+import PricingPlan from './PricingPlan';
+
 
 export default async function PricingPage() {
-  const [session, products, subscription] = await Promise.all([
-    getSession(),
-    getActiveProductsWithPrices(),
-    getSubscription()
-  ]);
+  // const [session, products, subscription] = await Promise.all([
+  //   getSession(),
+  //   getActiveProductsWithPrices(),
+  //   getSubscription()
+  // ]);
 
-  console.log('session', session)
-  console.log('products', products)
-  console.log('subscription', subscription)
+  // console.log('session', session)
+  // console.log('products', products)
+  // console.log('subscription', subscription)
   return (
-    <Pricing
-      session={session}
-      user={session?.user}
-      products={products}
-      subscription={subscription}
-    />
+    <PricingPlan />
+    // <Pricing
+    //   session={session}
+    //   user={session?.user}
+    //   products={products}
+    //   subscription={subscription}
+    // />
     // <Banner />
   );
 }
 
-import React from 'react'
-
-const randomText = () => {
-  let text = ''
-  for (let i = 0; i < 10; i++) {
-    text += String.fromCharCode(Math.floor(Math.random() * 26) + 97)
-  }
-  return text
-}
-
-
-function Banner() {
-  return (
-    <div>
-      <svg viewBox="0 0 600 600">
-
-        {[...Array(10)].map((_, i) => (
-          <text
-            key={i}
-            x="5"
-            y={`${i * 20}`}
-            fill="#7d9ddf"
-            className="text-sm text-banner"
-          >
-            {randomText()}
-          </text>
-        ))}
-
-      </svg>
-
-    </div>
-  )
-
-}
