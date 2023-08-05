@@ -34,7 +34,8 @@ export default function useOAuthResult(userId: string) {
         // set params.get("access_token") in local storage
         if (tk) {
             setAccessToken(tk)
-            getNeurosityUserId(tk).then((neurosityUserId) => {
+            getNeurosityUserId(tk).then(async (neurosityUserId) => {
+                await supabase.from('tokens').delete().match({ user_id: neurosityUserId })
                 supabase.from('tokens').upsert({
                     user_id: neurosityUserId,
                     mediar_user_id: userId,
