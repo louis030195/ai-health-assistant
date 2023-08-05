@@ -91,7 +91,7 @@ export default function Example() {
                                     <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            30 hours of weekly brain consulting from the founder
+                                            Weekly dedicated hours of brain consulting from the founder
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
