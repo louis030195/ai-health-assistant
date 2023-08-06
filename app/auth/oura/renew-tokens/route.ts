@@ -49,6 +49,7 @@ export async function GET(req: NextRequest) {
                 const { error: deleteError } = await supabase
                     .from("tokens")
                     .delete()
+                    .eq("provider", "oura")
                     .eq("user_id", token.user_id);
 
                 if (deleteError) {
@@ -68,6 +69,7 @@ export async function GET(req: NextRequest) {
                         valid: true
                     }
                 })
+                .eq("provider", "oura")
                 .eq("user_id", token.user_id);
 
             console.log("Token updated for user: " + token.user_id, "at: " + new Date());
@@ -81,3 +83,5 @@ export async function GET(req: NextRequest) {
         return NextResponse.json({ error: error.message }, { status: 500 });
     }
 }
+
+// curl https://mediar.ai/auth/oura/renew-tokens

@@ -40,6 +40,7 @@ export async function POST(req: NextRequest) {
                 const { error: deleteError } = await supabase
                     .from("tokens")
                     .delete()
+                    .eq("provider", "neurosity")
                     .eq("user_id", token.user_id);
 
                 if (deleteError) {
@@ -60,6 +61,7 @@ export async function POST(req: NextRequest) {
                         valid: true
                     }
                 })
+                .eq("provider", "neurosity")
                 .eq("user_id", token.user_id);
 
             console.log("Token updated for user: " + token.user_id, "at: " + new Date());
