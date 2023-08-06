@@ -217,7 +217,7 @@ interface OuraSleepResponse {
 }
 
 export async function listOuraSleep(token: string, startDate: string, endDate: string) {
-    const url = `https://api.ouraring.com/v1/sleep?start=${startDate}&end=${endDate}`
+    const url = `https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=${startDate}&end_date=${endDate}`
     const options = {
         method: 'GET',
         headers: {
@@ -234,20 +234,24 @@ export async function listOuraSleep(token: string, startDate: string, endDate: s
     }
 
     const data = await response.json()
+    console.log("erhfjkwfherw", Object.keys(data))
     return data as OuraSleepResponse
 }
 
 export async function listDailySleep(token: string) {
-    const today = new Date()
-    const startDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 30)
-    const endDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() - 1)
+    // curl -X GET "https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=$(date +'%Y-%m-%d')&end_date=$(date +'%Y-%m-%d')" \
+    // today formatted like 2023-08-06
+    const startDate = new Date().toISOString().split('T')[0]
+    const endDate = new Date().toISOString().split('T')[0]
     const sleep: OuraSleep[] = []
 
-    let response = await listOuraSleep(token, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0])
+    let response = await listOuraSleep(token, startDate, endDate)
+
     while (response.next_token) {
         sleep.push(...response.data)
-        response = await listOuraSleep(token, startDate.toISOString().split('T')[0], endDate.toISOString().split('T')[0])
+        response = await listOuraSleep(token, startDate, endDate)
     }
+
     sleep.push(...response.data)
     return sleep
 }

@@ -14,9 +14,9 @@ export async function GET(req: NextRequest) {
 
     try {
         // Get all tokens from the database
-        const { data: tokens, error: tokensError } = await supabase
+        const { data, error: tokensError } = await supabase
             .from("tokens")
-            .select("*")
+            .select()
             .eq("provider", "oura");
 
         if (tokensError) {
@@ -24,10 +24,11 @@ export async function GET(req: NextRequest) {
         }
 
         // Loop over each token and refresh it
-        for (let token of tokens) {
+        for (const row of data) {
             let sleep: OuraSleep[] = []
+
             try {
-                sleep = await listDailySleep(token.token.access_token)
+                sleep = await listDailySleep(row.token)
             } catch (error) {
                 console.log(error)
 
@@ -36,17 +37,18 @@ export async function GET(req: NextRequest) {
                 continue;
             }
 
+
             const { error: updateError } = await supabase
                 .from("states")
                 .upsert(sleep.map(s => ({
                     metadata: {
                         provider: "oura",
                         sleep: s as any
-                    }, user_id: token.mediar_user_id
+                    }, user_id: row.mediar_user_id!
                 })))
-                .eq("user_id", token.user_id);
+                .eq("user_id", row.user_id);
 
-            console.log("Sleep updated for user: " + token.user_id, "at: " + new Date());
+            console.log("Sleep updated for user: " + row.user_id, "at: " + new Date());
             if (updateError) {
                 console.log(updateError)
             }

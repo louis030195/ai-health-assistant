@@ -230,6 +230,77 @@ export interface Database {
           }
         ]
       }
+      tags: {
+        Row: {
+          created_at: string | null
+          id: number
+          text: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: number
+          text?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: number
+          text?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tags_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      tokens: {
+        Row: {
+          created_at: string | null
+          mediar_user_id: string | null
+          metadata: Json | null
+          provider: string | null
+          refresh_token: string | null
+          scopes: string[] | null
+          status: Json | null
+          token: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          mediar_user_id?: string | null
+          metadata?: Json | null
+          provider?: string | null
+          refresh_token?: string | null
+          scopes?: string[] | null
+          status?: Json | null
+          token: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          mediar_user_id?: string | null
+          metadata?: Json | null
+          provider?: string | null
+          refresh_token?: string | null
+          scopes?: string[] | null
+          status?: Json | null
+          token?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tokens_mediar_user_id_fkey"
+            columns: ["mediar_user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       users: {
         Row: {
           avatar_url: string | null

@@ -13,7 +13,7 @@ const neurosity = new Neurosity({
     autoSelectDevice: false
 });
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
     try {
         // Get all tokens from the database
         const { data: tokens, error: tokensError } = await supabase
@@ -56,7 +56,6 @@ export async function POST(req: NextRequest) {
                 .update({
                     // BUG keep old token bro
                     // token: oauthResponse, 
-                    created_at: new Date(),
                     status: {
                         valid: true
                     }
