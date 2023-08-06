@@ -7,7 +7,7 @@ import 'styles/main.css';
 
 const meta = {
     title: 'Mediar',
-    description: 'Google Maps for your brain health',
+    description: 'Weekly AI insights for better brain health',
     cardImage: '/logo.png',
     robots: 'follow, index',
     favicon: '/favicon.ico',

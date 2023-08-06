@@ -28,7 +28,7 @@ if (process.env.SENTRY_ENABLED !== 'false' && process.env.ENVIRONMENT && process
 
 const meta = {
   title: 'Mediar',
-  description: 'Google Maps for your brain health',
+  description: 'Optimize your cognition weekly',
   cardImage: '/logo.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',

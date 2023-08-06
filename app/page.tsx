@@ -20,7 +20,7 @@ export default async function Home() {
 
         <div className="text-center space-y-4">
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            Google Maps for your brain health 
+            Weekly AI insights for better brain health 
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
             Record your brain activity with <a href="https://neurosity.co"
