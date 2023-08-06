@@ -8,8 +8,6 @@ export async function middleware(req: NextRequest) {
   const res = NextResponse.next()
   const supabase = createMiddlewareClient<Database>({ req, res })
   const { data: { session } } = await supabase.auth.getSession()
-  console.log('session', session)
-  console.log('res.headers', res.headers)
 
   // ugly hack due to https://github.com/orgs/supabase/discussions/16135#discussioncomment-6642592
   if (session) {
@@ -27,10 +25,9 @@ export async function middleware(req: NextRequest) {
         env.NODE_ENV === 'production',
     })
   } else if (req.cookies.get('supabase.auth.token')) {
-    const response = await supabase.auth.refreshSession({
+    await supabase.auth.refreshSession({
       refresh_token: req.cookies.get('supabase.auth.refresh_token')!.value,
     })
-    console.log('response', response)
   }
 
   return res

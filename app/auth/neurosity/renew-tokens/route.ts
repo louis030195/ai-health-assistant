@@ -18,7 +18,8 @@ export async function POST(req: NextRequest) {
         // Get all tokens from the database
         const { data: tokens, error: tokensError } = await supabase
             .from("tokens")
-            .select("*");
+            .select("*")
+            .eq("provider", "neurosity");
 
         if (tokensError) {
             return NextResponse.json({ error: tokensError.message }, { status: 500 });

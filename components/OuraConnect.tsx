@@ -15,7 +15,7 @@ interface Props {
     session: Session;
 }
 export default function OuraConnect({ onboarding, className, getOuraAccessToken, session }: Props) {
-    const {accessToken, setAccessToken} = useOuraToken(session.user.id)
+    const { accessToken, setAccessToken } = useOuraToken(session.user.id)
 
     const handleConnect = () => {
         const clientId = process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID;
@@ -82,6 +82,10 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
 
             </div>
 
+            {/* small text saying that oura features are coming soon */}
+            <div className="text-center text-sm text-gray-500">
+                <p>Oura features coming soon! Feel free to suggest any 🙏</p>
+            </div>
 
         </div>
     );

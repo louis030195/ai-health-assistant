@@ -14,7 +14,7 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 import OuraConnect from '@/components/OuraConnect';
-import { getOuraAccessToken, getOuraPersonalInfo } from '../oura-server';
+import { createOuraWebhookSubscription, deleteOuraWebhookSubscriptionOfType, getOuraAccessToken, getOuraPersonalInfo, listOuraWebhookSubscriptions } from '../oura-server';
 
 export default async function Account() {
   const [session, userDetails, subscription] = await Promise.all([
@@ -23,9 +23,6 @@ export default async function Account() {
     getSubscription()
   ]);
 
-  const user = session?.user;
-
-  session && await setSession(session?.access_token, session?.refresh_token);
 
   if (!session) {
     return redirect('/signin');
@@ -72,6 +69,13 @@ export default async function Account() {
     'use server';
     const { accessToken, refreshToken } = await getOuraAccessToken(code);
     const personalInfo = await getOuraPersonalInfo(accessToken);
+
+    // TODO: for dev
+    // await deleteOuraWebhookSubscriptionOfType('tag').catch(e => console.log(e));
+    // const response = await createOuraWebhookSubscription().catch(e => console.log(e));
+    // console.log('createOuraWebhookSubscription', response);
+    // const subscriptions = await listOuraWebhookSubscriptions().catch(e => console.log(e));
+    // console.log('listOuraWebhookSubscriptions', subscriptions);
     const supabase = createServerActionClient<Database>({ cookies });
     const session = await getSession();
     const user = session?.user;
@@ -115,7 +119,7 @@ export default async function Account() {
       {/* center */}
       <div className="p-4 flex gap-4 flex-col items-center justify-center">
         <NeurosityConnect session={session} className='w-2/5' onboarding={false} />
-        {/* <OuraConnect session={session} onboarding={false} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServer} /> */}
+        <OuraConnect session={session} onboarding={false} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServer} />
         {/* <Card
           title="Your Plan"
           description={

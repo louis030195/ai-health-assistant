@@ -1,24 +1,23 @@
 import { createClient } from "@supabase/supabase-js";
-import { Neurosity } from "@neurosity/sdk";
 import { NextRequest, NextResponse } from "next/server";
-import { OAuthQueryResult } from "@neurosity/sdk/dist/esm/types/oauth";
 import { Database } from "@/types_db";
 
 const supabase = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_KEY!
 );
+export const runtime = 'edge'
 
-const neurosity = new Neurosity({
-    autoSelectDevice: false
-});
+// API endpoint 
+const TOKEN_URL = 'https://api.ouraring.com/oauth/token';
 
 export async function POST(req: NextRequest) {
     try {
         // Get all tokens from the database
         const { data: tokens, error: tokensError } = await supabase
             .from("tokens")
-            .select("*");
+            .select("*")
+            .eq("provider", "oura");
 
         if (tokensError) {
             return NextResponse.json({ error: tokensError.message }, { status: 500 });
@@ -26,13 +25,24 @@ export async function POST(req: NextRequest) {
 
         // Loop over each token and refresh it
         for (let token of tokens) {
-            let oauthResponse: OAuthQueryResult;
+            let newToken = ''
             try {
-                oauthResponse = await neurosity.getOAuthToken({
-                    clientId: process.env.NEUROSITY_OAUTH_CLIENT_ID!,
-                    clientSecret: process.env.NEUROSITY_OAUTH_CLIENT_SECRET!,
-                    userId: token.user_id,
-                });
+                const response = await fetch(TOKEN_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                        'Authorization': `Basic ${Buffer.from(`${process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID!}:${process.env.OURA_OAUTH_CLIENT_SECRET!}`).toString('base64')}`
+                    },
+                    body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(token.token.refresh_token)}`
+                })
+
+                if (!response.ok) {
+                    const text = await response.text();
+                    throw new Error(`Failed to renew OAuth token: ${response.status} ${response.statusText} ${text}`);
+                }
+
+                const data = await response.json();
+                newToken = data.access_token
             } catch (error) {
                 console.log(error)
                 // remove token from table
@@ -52,8 +62,7 @@ export async function POST(req: NextRequest) {
             const { error: updateError } = await supabase
                 .from("tokens")
                 .update({
-                    // BUG keep old token bro
-                    // token: oauthResponse, 
+                    token: newToken,
                     created_at: new Date(),
                     status: {
                         valid: true

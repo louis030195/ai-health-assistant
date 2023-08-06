@@ -18,3 +18,7 @@ export async function GET(req: NextRequest) {
     // Return challenge to prove ownership of endpoint
     return NextResponse.json({ challenge: challenge }, { status: 200 })
 }
+
+export async function POST(req: NextRequest) {
+    
+}
