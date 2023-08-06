@@ -11,7 +11,7 @@ export const runtime = 'edge'
 // API endpoint 
 const TOKEN_URL = 'https://api.ouraring.com/oauth/token';
 
-export async function POST(req: NextRequest) {
+export async function GET(req: NextRequest) {
     try {
         // Get all tokens from the database
         const { data: tokens, error: tokensError } = await supabase
