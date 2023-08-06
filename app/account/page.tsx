@@ -93,7 +93,7 @@ export default async function Account() {
       .from('tokens')
       .insert({
         user_id: personalInfo.id,
-        metadata: personalInfo,
+        metadata: personalInfo as any,
         scopes,
         mediar_user_id: user?.id, token: accessToken, refresh_token: refreshToken, provider: 'oura'
       });
