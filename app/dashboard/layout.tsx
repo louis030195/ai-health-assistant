@@ -7,7 +7,7 @@ import 'styles/main.css';
 
 const meta = {
     title: 'Mediar',
-    description: 'Become laser focused',
+    description: 'Google Maps for your brain health',
     cardImage: '/logo.png',
     robots: 'follow, index',
     favicon: '/favicon.ico',
