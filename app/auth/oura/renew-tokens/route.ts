@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
                         'Content-Type': 'application/x-www-form-urlencoded',
                         'Authorization': `Basic ${Buffer.from(`${process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID!}:${process.env.OURA_OAUTH_CLIENT_SECRET!}`).toString('base64')}`
                     },
-                    body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(token.token.refresh_token)}`
+                    body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(token.refresh_token!)}`
                 })
 
                 if (!response.ok) {
@@ -46,15 +46,15 @@ export async function GET(req: NextRequest) {
             } catch (error) {
                 console.log(error)
                 // remove token from table
-                const { error: deleteError } = await supabase
-                    .from("tokens")
-                    .delete()
-                    .eq("provider", "oura")
-                    .eq("user_id", token.user_id);
+                // const { error: deleteError } = await supabase
+                //     .from("tokens")
+                //     .delete()
+                //     .eq("provider", "oura")
+                //     .eq("user_id", token.user_id);
 
-                if (deleteError) {
-                    console.log(deleteError)
-                }
+                // if (deleteError) {
+                //     console.log(deleteError)
+                // }
 
                 continue;
             }
@@ -64,7 +64,6 @@ export async function GET(req: NextRequest) {
                 .from("tokens")
                 .update({
                     token: newToken,
-                    created_at: new Date(),
                     status: {
                         valid: true
                     }
