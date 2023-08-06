@@ -2,6 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { createClient } from "@supabase/supabase-js";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import {
+    HoverCard,
+    HoverCardContent,
+    HoverCardTrigger,
+} from "@/components/ui/hover-card"
+import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
 
 const NeurosityStatus = () => {
     const [active, setActive] = useState(false);
@@ -34,7 +40,7 @@ const NeurosityStatus = () => {
     }, []);
 
     return (
-        <div className="flex flex-col justify-center items-center gap-2 p-4 bg-white rounded-lg shadow-lg">
+        <div className="relative flex flex-col justify-center items-center gap-2 p-4 bg-white rounded-lg shadow-lg">
             <div className={`w-4 h-4 rounded-full ${active ? 'bg-green-500' : 'bg-gray-500'} animate-pulse`}></div>
             <p className="text-sm text-gray-500 max-w-xs text-center">
                 {
@@ -43,6 +49,17 @@ const NeurosityStatus = () => {
                         'No activity has been received from your Neurosity, please power it, wear it, and make sure your Neurosity account is connected in the account tab'
                 }
             </p>
+            {/* top right in parent */}
+            <div className="absolute top-0 right-0 mt-2 mr-2">
+                <HoverCard>
+                    <HoverCardTrigger>
+                        <QuestionMarkCircleIcon width={16} className="text-gray-500" />
+                    </HoverCardTrigger>
+                    <HoverCardContent className="w-96 h-96">
+                        <iframe src="https://link.excalidraw.com/p/readonly/7cjnnH0EFBiojPwLWFK7" width="100%" height="100%"></iframe>
+                    </HoverCardContent>
+                </HoverCard>
+            </div>
         </div>
     );
 };
