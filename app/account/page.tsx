@@ -4,7 +4,6 @@ import {
   getSession,
   getUserDetails,
   getSubscription,
-  setSession
 } from '@/app/supabase-server';
 import { Database } from '@/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
