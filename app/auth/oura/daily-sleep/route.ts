@@ -40,6 +40,7 @@ export async function GET(req: NextRequest) {
                 .from("states")
                 .upsert(sleep.map(s => ({
                     metadata: {
+                        provider: "oura",
                         sleep: s as any
                     }, user_id: token.mediar_user_id
                 })))
