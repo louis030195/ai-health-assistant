@@ -3,7 +3,8 @@ import ManageSubscriptionButton from './ManageSubscriptionButton';
 import {
   getSession,
   getUserDetails,
-  getSubscription
+  getSubscription,
+  setSession
 } from '@/app/supabase-server';
 import { Database } from '@/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
@@ -12,6 +13,8 @@ import { cookies } from 'next/headers';
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
+import OuraConnect from '@/components/OuraConnect';
+import { getOuraAccessToken, getOuraPersonalInfo } from '../oura-server';
 
 export default async function Account() {
   const [session, userDetails, subscription] = await Promise.all([
@@ -21,6 +24,8 @@ export default async function Account() {
   ]);
 
   const user = session?.user;
+
+  session && await setSession(session?.access_token, session?.refresh_token);
 
   if (!session) {
     return redirect('/signin');
@@ -63,6 +68,38 @@ export default async function Account() {
     revalidatePath('/account');
   };
 
+  const getOuraAccessTokenServer = async (code: string, scopes: string[]) => {
+    'use server';
+    const { accessToken, refreshToken } = await getOuraAccessToken(code);
+    const personalInfo = await getOuraPersonalInfo(accessToken);
+    const supabase = createServerActionClient<Database>({ cookies });
+    const session = await getSession();
+    const user = session?.user;
+    console.log('deleting oura token');
+    // clear existing token
+    const { error: e1 } = await supabase
+      .from('tokens')
+      .delete()
+      .eq('mediar_user_id', user?.id)
+      .eq('provider', 'oura');
+    if (e1) {
+      console.log(e1);
+    }
+    console.log('inserting oura token');
+    const { error } = await supabase
+      .from('tokens')
+      .insert({
+        user_id: personalInfo.id,
+        metadata: personalInfo,
+        scopes,
+        mediar_user_id: user?.id, token: accessToken, refresh_token: refreshToken, provider: 'oura'
+      });
+    if (error) {
+      console.log(error);
+    }
+    return accessToken;
+  }
+
   return (
     <section className="mb-32 bg-white">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
@@ -75,9 +112,10 @@ export default async function Account() {
           </p> */}
         </div>
       </div>
-      <div className="p-4 flex items-center justify-center">
-        <NeurosityConnect session={session} className='w-2/5' />
-
+      {/* center */}
+      <div className="p-4 flex gap-4 flex-col items-center justify-center">
+        <NeurosityConnect session={session} className='w-2/5' onboarding={false} />
+        {/* <OuraConnect session={session} onboarding={false} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServer} /> */}
         {/* <Card
           title="Your Plan"
           description={

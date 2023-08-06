@@ -2,11 +2,13 @@
 
 import { useSupabase } from '@/app/supabase-provider';
 import { getURL } from '@/utils/helpers';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Auth } from '@supabase/auth-ui-react';
 import { ThemeSupa } from '@supabase/auth-ui-shared';
 
 export default function AuthUI() {
-  const { supabase } = useSupabase();
+  // const { supabase } = useSupabase();
+  const supabase = createClientComponentClient();
   return (
     <div className="flex flex-col space-y-4">
       <Auth

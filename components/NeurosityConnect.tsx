@@ -8,29 +8,28 @@ import { Button } from '@/components/ui/button';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import useOAuthResult from './useAuth';
+import { useNeurosityToken } from './useTokens';
 import posthog from 'posthog-js';
 
 interface Props {
     session: Session;
     className?: string;
+    onboarding?: boolean;
 }
 
-export default function NeurosityConnect({ session, className }: Props) {
-    const { customToken } = useOAuthResult(session.user.id);
-    const router = useRouter();
+export default function NeurosityConnect({ session, className, onboarding }: Props) {
+    const { customToken } = useNeurosityToken(session.user.id);
 
     const handleConnect = async () => {
         posthog.capture('neurosity-connect');
 
-        const supabase = createClientComponentClient()
-        await supabase.from('tokens').delete().match({ user_id: session.user.id })
-        const response = await fetch(`/auth/neurosity/url`).then(r => r.json())
+        const response = await fetch(`/auth/neurosity/url`, {
+            method: 'POST',
+            body: JSON.stringify({ onboarding })
+        }).then(r => r.json())
         if ("url" in response) {
             // Takes the url returned by the cloud function and redirects the browser to the Neurosity OAuth sign-in page
-            // window.location.href = response.url;
-            router.push(response.url);
-            // window.location.href = response.url
+            window.location.href = response.url;
         }
     };
 
@@ -53,15 +52,6 @@ export default function NeurosityConnect({ session, className }: Props) {
 
             {/* Form */}
             <div className="space-y-4">
-
-                {/* Connect button */}
-                <Button
-                    className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full rounded-md"
-                    onClick={handleConnect}
-                >
-                    Connect
-                </Button>
-
                 {
                     customToken &&
                     // display green dot and text
@@ -71,14 +61,15 @@ export default function NeurosityConnect({ session, className }: Props) {
                         <span className="text-sm text-gray-400">Connected to Neurosity</span>
                     </div>
                 }
-            </div>
+                {/* Connect button */}
+                <Button
+                    className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full rounded-md"
+                    onClick={handleConnect}
+                >
+                    Connect
+                </Button>
 
-            {/* warn the user that this will disconnect him due to a bug that is going to be fixed */}
-            {/* and that he has to login and come back here */}
-            <div className="text-sm text-gray-500">
-                <p>⚠️ Due to a bug, you will have to login again and come back here.
-                    We apologize for the inconvenience.
-                    This will be fixed soon.</p>
+
             </div>
 
         </div>

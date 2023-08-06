@@ -7,6 +7,20 @@ export const createServerSupabaseClient = cache(() =>
   createServerComponentClient<Database>({ cookies })
 );
 
+export async function setSession(accessToken: string, refreshToken: string) {
+  const supabase = createServerSupabaseClient();
+  try {
+    const response = await supabase.auth.setSession({
+      access_token: accessToken,
+      refresh_token: refreshToken,
+    });
+    console.log('response', response);
+  } catch (error) {
+    console.error('Error:', error);
+  }
+}
+
+
 export async function getSession() {
   const supabase = createServerSupabaseClient();
   try {

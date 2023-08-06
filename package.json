@@ -1,5 +1,5 @@
 {
-  "name": "nextjs-subscription-payments",
+  "name": "mediar",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "stripe:listen": "stripe listen --forward-to=localhost:3000/api/webhooks --project-name=saas-starter",
-    "generate-types": "npx supabase gen types typescript --project-id zfjdysuchblioghfuluq --schema public > types_db.ts"
+    "generate-types": "npx supabase gen types typescript --project-id zfjdysuchblioghfuluq --schema public > types_db.ts",
+    "users": "npx tsx supabase/getUsers.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.5.8",
@@ -62,6 +63,7 @@
     "@types/react-plotly.js": "^2.6.0",
     "@types/react-syntax-highlighter": "^15.5.7",
     "autoprefixer": "^10.4.14",
+    "dotenv": "^16.3.1",
     "eslint": "^8.41.0",
     "eslint-config-next": "13.4.3",
     "eslint-config-prettier": "^8.8.0",
