@@ -26,13 +26,10 @@ const NeurosityStatus = () => {
         };
 
         checkUpdates();
-        const intervalId = setInterval(checkUpdates, 60 * 1000);
+        const intervalId = setInterval(checkUpdates, 5 * 1000);
 
         return () => {
             clearInterval(intervalId);
-            if (intervalId) {
-                clearInterval(intervalId);
-            }
         };
     }, []);
 

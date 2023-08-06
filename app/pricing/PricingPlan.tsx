@@ -103,10 +103,6 @@ export default function Example() {
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            4 hours of therapy with a licensed therapist
-                                        </li>
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
                                             Max 20-min, dedicated support response time
                                         </li>
                                         <li className="flex gap-x-3">
