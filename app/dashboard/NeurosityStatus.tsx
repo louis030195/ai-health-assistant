@@ -69,7 +69,7 @@ const NeurosityStatus = ({ userId }: Props) => {
             <p className="text-sm text-gray-500 max-w-xs text-center">
                 {
                     active ?
-                        'Receiving your brain activity ...' :
+                        'Receiving your brain activity ...You don\'t have to keep Mediar open, we will keep receiving your brain activity in the background.' :
                         'No activity has been received from your Neurosity, please power it, wear it, and make sure your Neurosity account is connected in the account tab. It can take up to 5 minutes to show up here.'
                 }
             </p>
