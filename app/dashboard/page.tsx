@@ -40,7 +40,7 @@ export default async function Dashboard() {
   return (
     <div className="flex flex-col justify-center gap-2 items-center">
       <PosthogMail session={session!} />
-      <NeurosityStatus />
+      <NeurosityStatus userId={session!.user.id} />
 
       <TagBox session={session!}
         className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
