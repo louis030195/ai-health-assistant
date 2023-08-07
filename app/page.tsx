@@ -20,12 +20,12 @@ export default async function Home() {
 
         <div className="text-center space-y-4">
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            Weekly AI insights for better brain health 
+            Elevate Your Mind and Body Performance
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Record your brain activity with <a href="https://neurosity.co"
+            Combine <a href="https://neurosity.co"
               className="text-indigo-700 hover:text-indigo-600 underline"
-              target="_blank">Neurosity</a>, add tags, get insights, get better, weekly.
+              target="_blank">brain activity</a> data with wearable tech for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health.
           </p>
           <div className="inline-flex rounded-md shadow">
             <a href="/signin" className="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-900 bg-gray-100 hover:bg-gray-50">

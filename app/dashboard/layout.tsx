@@ -7,7 +7,7 @@ import 'styles/main.css';
 
 const meta = {
     title: 'Mediar',
-    description: 'Weekly AI insights for better brain health',
+    description: 'Elevate Your Mind and Body Performance',
     cardImage: '/logo.png',
     robots: 'follow, index',
     favicon: '/favicon.ico',

@@ -28,7 +28,7 @@ if (process.env.SENTRY_ENABLED !== 'false' && process.env.ENVIRONMENT && process
 
 const meta = {
   title: 'Mediar',
-  description: 'Optimize your cognition weekly',
+  description: 'Elevate Your Mind and Body Performance',
   cardImage: '/logo.png',
   robots: 'follow, index',
   favicon: '/favicon.ico',
