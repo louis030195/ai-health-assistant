@@ -84,3 +84,5 @@ export async function GET(req: NextRequest) {
 }
 
 // curl https://mediar.ai/auth/oura/renew-tokens
+// or
+// curl http://localhost:3000/auth/oura/renew-tokens

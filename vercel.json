@@ -10,7 +10,7 @@
       },
       {
         "path": "/auth/oura/daily-sleep",
-        "schedule": "59 23 * * *"
+        "schedule": "0 10,14,18,23 * * *"
       }
     ]
   }

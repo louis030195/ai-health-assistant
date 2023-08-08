@@ -13,6 +13,9 @@ export async function GET(req: NextRequest) {
     // for each users, get their daily sleep and insert in the db
 
     try {
+        const currentDate = new Date();
+        const localDate = new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+
         // Get all tokens from the database
         const { data, error: tokensError } = await supabase
             .from("tokens")
@@ -23,8 +26,19 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: tokensError.message }, { status: 500 });
         }
 
-        // Loop over each token and refresh it
         for (const row of data) {
+            // Check if today's entry already exists
+            const { data: sleepData } = await supabase
+                .from("states")
+                .select()
+                .eq("user_id", row.mediar_user_id)
+                .eq("metadata->sleep->>day", localDate);
+
+            // If entry exists, skip to next iteration
+            if (sleepData && sleepData.length > 0) {
+                continue;
+            }
+
             let sleep: OuraSleep[] = []
 
             try {
@@ -37,6 +51,10 @@ export async function GET(req: NextRequest) {
                 continue;
             }
 
+            if (sleep.length === 0) {
+                continue;
+            }
+
 
             const { error: updateError } = await supabase
                 .from("states")
@@ -46,7 +64,6 @@ export async function GET(req: NextRequest) {
                         sleep: s as any
                     }, user_id: row.mediar_user_id!
                 })))
-                .eq("user_id", row.user_id);
 
             console.log("Sleep updated for user: " + row.user_id, "at: " + new Date());
             if (updateError) {
@@ -62,4 +79,6 @@ export async function GET(req: NextRequest) {
 
 
 // curl https://mediar.ai/auth/oura/daily-sleep
+// or
+// curl http://localhost:3000/auth/oura/daily-sleep
 

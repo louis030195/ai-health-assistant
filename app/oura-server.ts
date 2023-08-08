@@ -234,22 +234,21 @@ export async function listOuraSleep(token: string, startDate: string, endDate: s
     }
 
     const data = await response.json()
-    console.log("erhfjkwfherw", Object.keys(data))
     return data as OuraSleepResponse
 }
 
 export async function listDailySleep(token: string) {
     // curl -X GET "https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=$(date +'%Y-%m-%d')&end_date=$(date +'%Y-%m-%d')" \
     // today formatted like 2023-08-06
-    const startDate = new Date().toISOString().split('T')[0]
-    const endDate = new Date().toISOString().split('T')[0]
+    const currentDate = new Date();
+    const localDate = new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
     const sleep: OuraSleep[] = []
 
-    let response = await listOuraSleep(token, startDate, endDate)
-
+    let response = await listOuraSleep(token, localDate, localDate)
+    console.log('response', localDate, localDate, response)
     while (response.next_token) {
         sleep.push(...response.data)
-        response = await listOuraSleep(token, startDate, endDate)
+        response = await listOuraSleep(token, localDate, localDate)
     }
 
     sleep.push(...response.data)
