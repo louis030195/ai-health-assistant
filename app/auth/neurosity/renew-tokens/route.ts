@@ -55,9 +55,12 @@ export async function GET(req: NextRequest) {
                 .from("tokens")
                 .update({
                     // BUG keep old token bro
-                    // token: oauthResponse, 
+                    // @ts-ignore
+                    token: oauthResponse, 
+                    // @ts-ignore
                     status: {
-                        valid: true
+                        valid: true,
+                        updated_at: new Date()
                     }
                 })
                 .eq("provider", "neurosity")
