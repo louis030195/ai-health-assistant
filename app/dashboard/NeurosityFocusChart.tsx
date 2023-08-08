@@ -20,13 +20,16 @@ export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
     const [tags, setTags] = useState<any[]>([]);
 
     // Modify your data to include an 'hour' field
+    // This line transforms each avg_score in states to be between 0 and 100
     states = states.map(state => {
         const date = new Date(state.start_ts);
         return {
             ...state,
+            avg_score: (state.avg_score + 1) / 2 * 100, // Transformation added here
             hour: date.getUTCHours() + date.getMinutes() / 60
         };
     });
+
 
     const refreshState = async () => {
         if (!session?.user?.id) return
@@ -57,12 +60,13 @@ export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
     // Create the "Focus" data series
     const focusData = {
         x: states.map(state => state.start_ts),
-        y: states.map(state => state.avg_score),
+        y: states.map(state => state.avg_score), // avg_score is now between 0 and 100
         type: 'scatter',
         mode: 'markers',
         marker: { color: '#8884d8' },
         name: 'Focus'
     };
+
 
     // If tags are not empty, create the "Tags" data series and annotations
     let tagsData: any = {};
@@ -130,10 +134,11 @@ export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
         },
         yaxis: {
             title: 'Score',
-            range: [-1, 1] // Adjust the y-axis to show the tags at the bottom
+            range: [-1, 100] // Adjusted range from [-1, 1] to [0, 100]
         },
-        annotations: annotations, // Add the annotations to the layout
+        annotations: annotations,
     };
+
 
     return (
         <div className="relative flex flex-col p-4 rounded-lg shadow-lg">

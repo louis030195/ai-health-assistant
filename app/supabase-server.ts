@@ -176,3 +176,21 @@ export const getTags = async (userId: string) => {
   }
   return data || [];
 };
+
+export const getSleep = async (userId: string) => {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase
+    .from('states')
+    .select()
+    // .eq('metadata->>sleep', 'sleep')
+    // .contains('metadata', 'sleep')
+    // .gt('metadata->>sleep', 0)
+    // .is('metadata->>sleep', 'not.null')
+    .eq('metadata->>provider', 'oura') // TODO: hack
+    .eq('user_id', userId)
+
+  if (error) {
+    console.log(error.message);
+  }
+  return data || [];
+};

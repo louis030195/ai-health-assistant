@@ -5,7 +5,7 @@ import GitHub from '@/components/icons/GitHub';
 import Image from 'next/image';
 export default function Footer() {
   return (
-    <footer className="mx-auto max-w-[1920px] px-6 bg-white">
+    <footer className="mx-auto max-w-[1920px] px-6 bg-white position: absolute; bottom: 0; left: 0; right: 0;">
       <div className="grid grid-cols-1 gap-8 py-12 text-gray-700 transition-colors duration-150 border-b border-gray-200 lg:grid-cols-12">
         <div className="col-span-1 lg:col-span-2">
           <Link

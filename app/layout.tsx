@@ -77,8 +77,9 @@ export default function RootLayout({
       <body className="bg-white loading">
         <PHProvider>
           <Toaster />
+          <Example />
+
           <SupabaseProvider>
-            <Example />
             <Navbar />
             <main
               id="skip"

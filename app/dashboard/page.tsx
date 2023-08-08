@@ -4,7 +4,8 @@ import {
   getProcessedBrainwaves,
   GetStatesWithFunctionOptions,
   GetProcessedBrainwavesOptions,
-  getTags
+  getTags,
+  getSleep
 } from '@/app/supabase-server';
 import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
@@ -13,6 +14,7 @@ import { PosthogMail } from './PosthogMail';
 import TagBox from './TagBox';
 import { redirect } from 'next/navigation';
 import NeurosityStatus from './NeurosityStatus';
+import { OuraSleepChart } from './OuraSleepChart';
 
 
 export default async function Dashboard() {
@@ -20,7 +22,7 @@ export default async function Dashboard() {
   if (!session) {
     return redirect('/signin');
   }
-  
+
   const getStatesServer = async (userId: string, options?: GetStatesWithFunctionOptions) => {
     'use server'
     return getStatesWithFunction(userId, options)
@@ -36,6 +38,12 @@ export default async function Dashboard() {
     return getTags(userId)
   }
 
+  const getSleepServer = async (userId: string) => {
+    'use server'
+    return getSleep(userId)
+  }
+
+  const hasSleep = (await getSleep(session.user.id)).length > 0
 
   return (
     <div className="flex flex-col justify-center gap-2 items-center">
@@ -46,6 +54,10 @@ export default async function Dashboard() {
         className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
       />
       <NeurosityFocusChart session={session!} getStates={getStatesServer} getTags={getTagsServer} />
+      {
+        hasSleep &&
+        <OuraSleepChart session={session!} getStates={getSleepServer} getTags={getTagsServer} />
+      }
       {/* <NeurosityBrainwaveChart session={session!} getBrainwaves={getBrainwavesServer} getTags={getTagsServer} /> */}
     </div>
   );
