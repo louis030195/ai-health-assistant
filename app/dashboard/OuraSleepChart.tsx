@@ -55,10 +55,12 @@ export const OuraSleepChart = ({ session, getStates, getTags }: Props) => {
         const sleepData = state.metadata?.['sleep'];
         if (!sleepData) return null;
         return {
+            date: sleepData.day, // this will be used for sorting
             day: formatDate(sleepData.day),
             score: sleepData.score,
         };
-    }).filter((s) => s !== null);
+    }).filter((s) => s !== null)
+        .sort((a: any, b: any) => new Date(a.date).getTime() - new Date(b.date).getTime()); // sort by the date
 
 
     // Sleep score data series

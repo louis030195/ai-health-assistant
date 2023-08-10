@@ -222,6 +222,7 @@ export async function listOuraSleep(token: string, startDate: string, endDate: s
         method: 'GET',
         headers: {
             'Authorization': `Bearer ${token}`,
+            Accept: 'application/json',
             'Content-Type': 'application/json'
         }
     }
