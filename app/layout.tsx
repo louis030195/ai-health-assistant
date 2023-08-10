@@ -77,7 +77,7 @@ export default function RootLayout({
       <body className="bg-white loading">
         <PHProvider>
           <Toaster />
-          <Example />
+          {/* <Example /> */}
 
           <SupabaseProvider>
             <Navbar />

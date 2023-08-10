@@ -27,7 +27,7 @@ const SignUpForm: FC<Props> = () => {
             password: password,
             options: {
                 // make this redirect to a page that interprets the token so that it signs in automatically
-                // emailRedirectTo: `${getRedirectURL()}/login`,
+                // emailRedirectTo: `${getRedirectURL()}/signin`,
                 emailRedirectTo: `${getURL()}/auth/callback`
             }
         })
