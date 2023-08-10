@@ -20,7 +20,7 @@ export default async function Home() {
 
         <div className="text-center space-y-4">
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            Elevate Your Mind and Body Performance
+            Insights about your brain activity.
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
             Combine <a href="https://neurosity.co"

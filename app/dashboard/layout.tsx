@@ -7,7 +7,7 @@ import 'styles/main.css';
 
 const meta = {
     title: 'Mediar',
-    description: 'Elevate Your Mind and Body Performance',
+    description: 'Insights about your brain activity.',
     cardImage: '/logo.png',
     robots: 'follow, index',
     favicon: '/favicon.ico',
