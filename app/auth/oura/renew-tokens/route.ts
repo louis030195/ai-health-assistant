@@ -27,6 +27,7 @@ export async function GET(req: NextRequest) {
         for (let token of tokens) {
             let newToken = ''
             try {
+                console.log("Going to renew token for user: " + token.user_id, "at: " + new Date());
                 const response = await fetch(TOKEN_URL, {
                     method: 'POST',
                     headers: {

@@ -26,6 +26,8 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: tokensError.message }, { status: 500 });
         }
 
+        console.log("Going to renew sleep for " + data.length + " users.");
+
         for (const row of data) {
             // Check if today's entry already exists
             const { data: sleepData } = await supabase
@@ -36,6 +38,7 @@ export async function GET(req: NextRequest) {
 
             // If entry exists, skip to next iteration
             if (sleepData && sleepData.length > 0) {
+                console.log("Sleep already exists for user: " + row.user_id, "at: " + new Date());
                 continue;
             }
 
@@ -52,6 +55,7 @@ export async function GET(req: NextRequest) {
             }
 
             if (sleep.length === 0) {
+                console.log("No sleep data for user: " + row.user_id, "data: " + sleep, "at: " + new Date());
                 continue;
             }
 
