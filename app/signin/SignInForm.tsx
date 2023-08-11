@@ -73,7 +73,7 @@ const SignInForm: FC<Props> = () => {
 
             <div className="flex flex-col">
 
-                <form className="w-full">
+                {/* <form className="w-full">
 
                     <div className="flex flex-col space-y-2">
 
@@ -133,8 +133,10 @@ const SignInForm: FC<Props> = () => {
                             Or continue with
                         </span>
                     </div>
-                </div>
-                <Button variant="outline" type="button" disabled={isLoading} onClick={signInWithGoogle}>
+                </div> */}
+                <Button
+                    className="text-black"
+                    variant="outline" type="button" disabled={isLoading} onClick={signInWithGoogle}>
                     {isLoading ? (
                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
