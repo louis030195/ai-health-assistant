@@ -35,7 +35,7 @@ export default function Example() {
             <div className="flow-root bg-white pb-24 sm:pb-32">
                 <div className="-mt-80">
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:max-w-4xl lg:grid-cols-3">
+                        <div className="mx-auto grid max-w-md grid-cols-1 gap-8 lg:max-w-6xl lg:grid-cols-3">
 
                             {/* Hobby Plan */}
                             <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
