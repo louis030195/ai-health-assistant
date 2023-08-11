@@ -11,10 +11,12 @@ export default function Example() {
                         whoever you are
                     </p>
                 </div>
+
                 <div className="relative mt-6">
                     <p className="mx-auto max-w-2xl text-lg leading-8 text-white/60">
-                        Regain control of your attention, quit autopilot, become focused, beat distractions and achieve flow state
+                        Achieve peak performance with Mediar, your personal AI coach based on your brain data.
                     </p>
+
                     <svg
                         viewBox="0 0 1208 1024"
                         className="absolute -top-10 left-1/2 -z-10 h-[64rem] -translate-x-1/2 [mask-image:radial-gradient(closest-side,white,transparent)] sm:-top-12 md:-top-20 lg:-top-12 xl:top-0"
@@ -29,22 +31,28 @@ export default function Example() {
                     </svg>
                 </div>
             </div>
+
             <div className="flow-root bg-white pb-24 sm:pb-32">
                 <div className="-mt-80">
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
-                        <div className="mx-auto grid max-w-md grid-cols-1 gap-8 lg:max-w-4xl lg:grid-cols-2">
+                        <div className="mx-auto grid max-w-5xl grid-cols-1 gap-8 lg:max-w-4xl lg:grid-cols-3">
 
-                            <div className="flex flex-col justify-between rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
+                            {/* Hobby Plan */}
+                            <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
                                 <div>
                                     <h3 id="tier-hobby" className="text-base font-semibold leading-7 text-indigo-600">
                                         Hobby
                                     </h3>
+
                                     <div className="mt-4 flex items-baseline gap-x-2">
                                         <span className="text-5xl font-bold tracking-tight text-gray-900">Free</span>
                                     </div>
+
                                     <p className="mt-6 text-base leading-7 text-gray-600">
                                         For those looking to dip their toes into attention training
                                     </p>
+
+                                    {/* Features */}
                                     <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
@@ -68,6 +76,7 @@ export default function Example() {
                                         </li>
                                     </ul>
                                 </div>
+
                                 <a
                                     href="/signin"
                                     aria-describedby="tier-hobby"
@@ -77,18 +86,28 @@ export default function Example() {
                                 </a>
                             </div>
 
-                            <div className="flex flex-col justify-between rounded-3xl bg-white p-8 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
-
+                            {/* Executive Plan */}
+                            <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
                                 <div>
                                     <h3 id="tier-executive" className="text-base font-semibold leading-7 text-indigo-600">
                                         Executive
                                     </h3>
+
                                     <div className="mt-4 flex items-baseline gap-x-2">
                                         <span className="text-5xl font-bold tracking-tight text-gray-900">$499</span>
                                         <span className="text-base font-semibold leading-7 text-gray-600">/week</span>
                                     </div>
-                                    <p className="mt-6 text-base leading-7 text-gray-600">For the busy and ambitious executive that want to upgrade his mind</p>
+
+                                    <p className="mt-6 text-base leading-7 text-gray-600">
+                                        For the busy and ambitious executive that want to upgrade his mind
+                                    </p>
+
+                                    {/* Features */}
                                     <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Device agnostic - use any device you want - we take care of the logistics
+                                        </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
                                             Weekly dedicated hours of brain consulting from the founder
@@ -106,23 +125,66 @@ export default function Example() {
                                             Max 20-min, dedicated support response time
                                         </li>
                                         <li className="flex gap-x-3">
-                                            <CheckIcon className="h-
-                        <h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
                                             Phone number of the founder & San Francisco 1:1 meetup
                                         </li>
                                     </ul>
                                 </div>
+
                                 <a
                                     href="https://cal.com/louis030195/executive"
                                     aria-describedby="tier-executive"
                                     className="mt-8 block rounded-md bg-indigo-600 px-3.5 py-2 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 >
-                                    Learn more through a call
+                                    Grab a coffee with the founder in San Francisco
                                 </a>
-                                {/* small grey text below - "we can also have a cofee irl.." */}
-                                <p className="mt-3 text-xs text-gray-500">
-                                    We can also have a coffee in person if you are in San Francisco
-                                </p>
+
+                            </div>
+
+                            {/* Biohacker Plan */}
+                            <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
+                                <div>
+                                    <h3 id="tier-biohacker" className="text-base font-semibold leading-7 text-indigo-600">
+                                        Biohacker
+                                    </h3>
+
+                                    <div className="mt-4 flex items-baseline gap-x-2">
+                                        <span className="text-5xl font-bold tracking-tight text-gray-900">$50+</span>
+                                        <span className="text-sm font-semibold leading-7 text-gray-600">One-time</span>
+                                    </div>
+
+                                    <p className="mt-6 text-base leading-7 text-gray-600">
+                                        Support Mediar development and get early access
+                                    </p>
+
+                                    {/* Features */}
+                                    <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Support development
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Early access to beta features (WhatsApp integration, etc.)
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            20% discount on future paid plans
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Founder phone number
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <a
+                                    href="/signin"
+                                    aria-describedby="tier-biohacker"
+                                    className="mt-8 block rounded-md bg-indigo-600 px-3.5 py-2 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                                >
+                                    Support Mediar
+                                </a>
                             </div>
 
                         </div>

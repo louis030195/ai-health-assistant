@@ -77,7 +77,7 @@ export default function RootLayout({
       <body className="bg-white loading">
         <PHProvider>
           <Toaster />
-          {/* <Example /> */}
+          <DiscountBanner />
 
           <SupabaseProvider>
             <Navbar />
@@ -98,7 +98,7 @@ export default function RootLayout({
 
 import { XMarkIcon } from '@heroicons/react/20/solid'
 
-export function Example() {
+export function DiscountBanner() {
   return (
     <div className="relative isolate flex items-center gap-x-6 overflow-hidden bg-gray-50 px-6 py-2.5 sm:px-3.5 sm:before:flex-1">
       <div

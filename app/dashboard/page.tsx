@@ -15,6 +15,8 @@ import TagBox from './TagBox';
 import { redirect } from 'next/navigation';
 import NeurosityStatus from './NeurosityStatus';
 import { OuraSleepChart } from './OuraSleepChart';
+import Chat from './Chat';
+import { CommandDialogDemo } from './Command';
 
 
 export default async function Dashboard() {
@@ -58,6 +60,8 @@ export default async function Dashboard() {
         hasSleep &&
         <OuraSleepChart session={session!} getStates={getSleepServer} getTags={getTagsServer} />
       }
+      {/* <CommandDialogDemo /> */}
+      {/* <Chat /> */}
       {/* <NeurosityBrainwaveChart session={session!} getBrainwaves={getBrainwavesServer} getTags={getTagsServer} /> */}
     </div>
   );
