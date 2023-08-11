@@ -3,12 +3,12 @@ import { FC, useState } from 'react'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useToast } from '../../components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { Label } from '../../components/ui/label'
 import { getURL } from '@/utils/helpers'
 import posthog from 'posthog-js'
 import { Icons } from '@/components/ui/icons'
+import toast from 'react-hot-toast'
 
 interface Props { }
 
@@ -19,7 +19,6 @@ const SignUpForm: FC<Props> = () => {
     const [checkMail, setCheckMail] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
-    const { toast } = useToast()
     const router = useRouter()
     const signUp = async () => {
         const { data, error } = await supabase.auth.signUp({
@@ -33,14 +32,10 @@ const SignUpForm: FC<Props> = () => {
         })
         if (error) {
             console.log(error)
-            return toast({
-                title: 'Error',
-                description: error.message,
-                // status: 'error',
-                duration: 5000,
-                // isClosable: true,
-            })
+            return toast.error(error.message)
         }
+
+        toast.success('Signed up successfully, check your email for confirmation')
 
         setCheckMail(true)
 
@@ -48,6 +43,17 @@ const SignUpForm: FC<Props> = () => {
             email: data.user?.email,
         })
 
+    }
+
+    const signInWithGoogle = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'google',
+            // options: { redirectTo: `${getURL()}/dashboard` }
+        })
+
+        if (error) {
+            return toast.error(error.message)
+        }
     }
 
     return (
@@ -58,60 +64,60 @@ const SignUpForm: FC<Props> = () => {
 
             <div className="flex flex-col">
 
-                <form className="w-full">
+                {/* <form className="w-full"> */}
 
-                    <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2">
 
-                        <div className="flex flex-col space-y-1">
-                            <Label className="block font-medium text-gray-600">Email</Label>
-                            <Input
-                                type="email"
-                                placeholder="Email"
-                                className="border p-2 rounded w-full text-black"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="flex flex-col space-y-1">
-                            <Label className="block font-medium text-gray-600">Password</Label>
-                            <Input
-                                type="password"
-                                placeholder="Password"
-                                className="border p-2 rounded w-full text-black"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-
+                    <div className="flex flex-col space-y-1">
+                        <Label className="block font-medium text-gray-600">Email</Label>
+                        <Input
+                            type="email"
+                            placeholder="Email"
+                            className="border p-2 rounded w-full text-black"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
 
-                    <Button
-                        type="submit"
-                        className='w-full mt-4'
-                        onClick={signUp}
-                    >
-                        Sign Up
-                    </Button>
-
-                    <div className="flex items-center justify-between">
-                        <div className="border-b w-full" />
-                        <div className="text-xs text-gray-500 px-2">or</div>
-                        <div className="border-b w-full" />
+                    <div className="flex flex-col space-y-1">
+                        <Label className="block font-medium text-gray-600">Password</Label>
+                        <Input
+                            type="password"
+                            placeholder="Password"
+                            className="border p-2 rounded w-full text-black"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
 
-                    <a
-                        href="/signin"
-                        className="block text-center text-gray-500 hover:underline"
-                    >
-                        Already have an account? Sign in
-                    </a>
-                    {checkMail &&
-                        <p className="text-sm text-gray-500">
-                            Check email for confirmation
-                        </p>
-                    }
-                </form>
+                </div>
+
+                <Button
+                    type="submit"
+                    className='w-full mt-4'
+                    onClick={signUp}
+                >
+                    Sign Up
+                </Button>
+
+                <div className="flex items-center justify-between">
+                    <div className="border-b w-full" />
+                    <div className="text-xs text-gray-500 px-2">or</div>
+                    <div className="border-b w-full" />
+                </div>
+
+                <a
+                    href="/signin"
+                    className="block text-center text-gray-500 hover:underline"
+                >
+                    Already have an account? Sign in
+                </a>
+                {checkMail &&
+                    <p className="text-sm text-center text-red-500">
+                        Check email for confirmation
+                    </p>
+                }
+                {/* </form> */}
 
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">
@@ -123,7 +129,10 @@ const SignUpForm: FC<Props> = () => {
                         </span>
                     </div>
                 </div>
-                <Button variant="outline" type="button" disabled={isLoading}>
+                <Button
+                    className="text-black"
+                    variant="outline"
+                    disabled={isLoading} onClick={signInWithGoogle}>
                     {isLoading ? (
                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (

@@ -28,8 +28,8 @@ export default async function SignIn() {
           />
         </div>
         {/* <Login /> */}
-        <AuthUI />
-        {/* <SignInForm />  */}
+        {/* <AuthUI /> */}
+        <SignInForm /> 
       </div>
     </div>
   );

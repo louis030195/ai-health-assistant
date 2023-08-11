@@ -3,12 +3,12 @@ import { FC, useState } from 'react'
 import { Button } from '../../components/ui/button'
 import { Input } from '../../components/ui/input'
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs'
-import { useToast } from '../../components/ui/use-toast'
 import { useRouter } from 'next/navigation'
 import { Label } from '../../components/ui/label'
 import { getURL } from '@/utils/helpers'
 import posthog from 'posthog-js'
 import { Icons } from '@/components/ui/icons'
+import toast from 'react-hot-toast'
 
 interface Props { }
 
@@ -17,7 +17,6 @@ const SignInForm: FC<Props> = () => {
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
-    const { toast } = useToast()
     const router = useRouter()
     const signIn = async () => {
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -25,21 +24,9 @@ const SignInForm: FC<Props> = () => {
             password: password,
         })
         if (error) {
-            return toast({
-                title: 'Error',
-                description: error.message,
-                // status: 'error',
-                duration: 5000,
-                // isClosable: true,
-            })
+            return toast.error(error.message)
         }
-        toast({
-            title: 'Success',
-            description: 'Signed in successfully',
-            // status: 'success',
-            duration: 5000,
-            // isClosable: true,
-        })
+        toast.success('Signed in successfully')
         posthog.capture('sign in', {
             email: data.user?.email,
         })
@@ -50,17 +37,11 @@ const SignInForm: FC<Props> = () => {
     const signInWithGoogle = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: `${getURL()}/dashboard` }
+            // options: { redirectTo: `${getURL()}/dashboard` }
         })
 
         if (error) {
-            return toast({
-                title: 'Error',
-                description: error.message,
-                // status: 'error',
-                duration: 5000,
-                // isClosable: true,
-            })
+            return toast.error(error.message)
         }
     }
 
@@ -73,7 +54,7 @@ const SignInForm: FC<Props> = () => {
 
             <div className="flex flex-col">
 
-                {/* <form className="w-full">
+                <form className="w-full">
 
                     <div className="flex flex-col space-y-2">
 
@@ -133,10 +114,11 @@ const SignInForm: FC<Props> = () => {
                             Or continue with
                         </span>
                     </div>
-                </div> */}
+                </div>
                 <Button
                     className="text-black"
-                    variant="outline" type="button" disabled={isLoading} onClick={signInWithGoogle}>
+                    variant="outline"
+                    disabled={isLoading} onClick={signInWithGoogle}>
                     {isLoading ? (
                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
