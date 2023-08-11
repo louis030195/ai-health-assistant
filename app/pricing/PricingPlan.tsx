@@ -106,7 +106,7 @@ export default function Example() {
                                     <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Device agnostic (the best for your goals) and we take care of the logistics
+                                            Device agnostic, we send you the best accordting to your goals
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
