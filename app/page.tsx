@@ -34,7 +34,7 @@ export default async function Home() {
                 Get started - free
               </a>
             </div>
-            <div className="relative inline-flex rounded-md shadow">
+            {/*<div className="relative inline-flex rounded-md shadow">
               <a href="https://buy.stripe.com/4gw7tb31Q6ZIckoaEE" className="flex-col items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-gray-100 bg-indigo-600 hover:bg-indigo-500">
                 Support Mediar
               </a>
@@ -48,7 +48,7 @@ export default async function Home() {
                   </HoverCardContent>
                 </HoverCard>
               </div>
-            </div>
+            </div>*/}
           </div>
           <iframe src="https://link.excalidraw.com/p/readonly/HPHqJw8yfgFU0lEHDblD" width="100%" height="800px"></iframe>
 

@@ -72,7 +72,7 @@ export default function Example() {
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Anthropic-AI powered insights
+                                            Limited AI usage
                                         </li>
                                     </ul>
                                 </div>
