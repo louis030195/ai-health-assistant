@@ -103,7 +103,7 @@ export const getStatesWithFunction = async (userId: string, options?: GetStatesW
       // bucket_size: options?.bucketSize || 300,
       timezone: options?.timezone || 'America/Los_Angeles',
       // @ts-ignore
-      day: formatDate(options?.day || new Date()),
+      // day: formatDate(options?.day || new Date()),
     })
   if (error) {
     console.log(error.message);
@@ -170,6 +170,8 @@ export const getTags = async (userId: string) => {
     .from('tags')
     .select('text, created_at')
     .eq('user_id', userId)
+    // only five last days
+    .gt('created_at', new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString())
 
   if (error) {
     console.log(error.message);
