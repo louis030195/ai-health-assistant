@@ -15,7 +15,7 @@ export default async function Onboarding() {
         // center stuff vertically and horizontally
         <div className="flex flex-col items-center mt-20 h-screen gap-4">
             <NeurosityConnect session={session} onboarding={true} />
-            <GoToButton text="Next" path="/dashboard" />
+            <GoToButton text="End the tour" path="/dashboard" />
         </div>
     )
 }
