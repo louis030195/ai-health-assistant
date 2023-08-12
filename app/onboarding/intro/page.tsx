@@ -6,11 +6,11 @@ import { LLMStoryDistraction } from "./LLMStoryDistraction";
 export default async function Onboarding() {
     const session = await getSession();
     if (!session) return redirect('/signin');
-    // const hasOnboarded = await getOnboarding(session.user.id);
-    // if (hasOnboarded) {
-    //     return redirect('/dashboard');
-    // }
-    // const { error } = await saveOnboarding(session.user.id);
+    const hasOnboarded = await getOnboarding(session.user.id);
+    if (hasOnboarded) {
+        return redirect('/dashboard');
+    }
+    const { error } = await saveOnboarding(session.user.id);
     return (
         <div className="p-8 flex pb-16 md:pb-0 gap-6">
             <div className="bg-white z-10 w-full rounded-xl border p-4 shadow text-black">
