@@ -5,7 +5,8 @@ import {
   GetStatesWithFunctionOptions,
   GetProcessedBrainwavesOptions,
   getTags,
-  getSleep
+  getSleep,
+  getOnboarding
 } from '@/app/supabase-server';
 import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
@@ -23,6 +24,11 @@ export default async function Dashboard() {
   const session = await getSession();
   if (!session) {
     return redirect('/signin');
+  }
+
+  const hasOnboarded = await getOnboarding(session.user.id);
+  if (!hasOnboarded) {
+    return redirect('/onboarding/intro');
   }
 
   const getStatesServer = async (userId: string, options: GetStatesWithFunctionOptions) => {
