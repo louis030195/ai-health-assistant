@@ -9,6 +9,7 @@ import { getURL } from '@/utils/helpers'
 import posthog from 'posthog-js'
 import { Icons } from '@/components/ui/icons'
 import toast from 'react-hot-toast'
+import { Loader2 } from 'lucide-react'
 
 interface Props { }
 
@@ -19,6 +20,7 @@ const SignInForm: FC<Props> = () => {
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
     const signIn = async () => {
+        setIsLoading(true)
         const { data, error } = await supabase.auth.signInWithPassword({
             email: email,
             password: password,
@@ -26,6 +28,7 @@ const SignInForm: FC<Props> = () => {
         if (error) {
             return toast.error(error.message)
         }
+        setIsLoading(false)
         toast.success('Signed in successfully')
         posthog.capture('sign in', {
             email: data.user?.email,
@@ -37,7 +40,7 @@ const SignInForm: FC<Props> = () => {
     const signInWithGoogle = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            // options: { redirectTo: `${getURL()}/dashboard` }
+            options: { redirectTo: `${getURL()}/dashboard` }
         })
 
         if (error) {
@@ -54,56 +57,59 @@ const SignInForm: FC<Props> = () => {
 
             <div className="flex flex-col">
 
-                <form className="w-full">
+                {/* <form className="w-full"> */}
 
-                    <div className="flex flex-col space-y-2">
+                <div className="flex flex-col space-y-2">
 
-                        <div className="flex flex-col space-y-1">
-                            <Label className="block font-medium text-gray-600">Email</Label>
-                            <Input
-                                type="email"
-                                placeholder="Email"
-                                className="border p-2 rounded w-full text-black"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-
-                        <div className="flex flex-col space-y-1">
-                            <Label className="block font-medium text-gray-600">Password</Label>
-                            <Input
-                                type="password"
-                                placeholder="Password"
-                                className="border p-2 rounded w-full text-black"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-
+                    <div className="flex flex-col space-y-1">
+                        <Label className="block font-medium text-gray-600">Email</Label>
+                        <Input
+                            type="email"
+                            placeholder="Email"
+                            className="border p-2 rounded w-full text-black"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
                     </div>
 
-                    <Button
-                        type="submit"
-                        className='w-full mt-4'
-                        onClick={signIn}
-                    >
-                        Sign In
-                    </Button>
-
-                    <div className="flex items-center justify-between">
-                        <div className="border-b w-full" />
-                        <div className="text-xs text-gray-500 px-2">or</div>
-                        <div className="border-b w-full" />
+                    <div className="flex flex-col space-y-1">
+                        <Label className="block font-medium text-gray-600">Password</Label>
+                        <Input
+                            type="password"
+                            placeholder="Password"
+                            className="border p-2 rounded w-full text-black"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
                     </div>
 
-                    <a
-                        href="/signup"
-                        className="block text-center text-gray-500 hover:underline"
-                    >
-                        Don't have an account? Sign up
-                    </a>
+                </div>
 
-                </form>
+                <Button
+                    type="submit"
+                    className='w-full mt-4'
+                    onClick={signIn}
+                >
+                    {
+                        isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    }
+                    Sign In
+                </Button>
+
+                <div className="flex items-center justify-between">
+                    <div className="border-b w-full" />
+                    <div className="text-xs text-gray-500 px-2">or</div>
+                    <div className="border-b w-full" />
+                </div>
+
+                <a
+                    href="/signup"
+                    className="block text-center text-gray-500 hover:underline"
+                >
+                    Don't have an account? Sign up
+                </a>
+
+                {/* </form> */}
 
                 <div className="relative">
                     <div className="absolute inset-0 flex items-center">

@@ -9,6 +9,7 @@ import { getURL } from '@/utils/helpers'
 import posthog from 'posthog-js'
 import { Icons } from '@/components/ui/icons'
 import toast from 'react-hot-toast'
+import { Loader2 } from 'lucide-react'
 
 interface Props { }
 
@@ -21,6 +22,7 @@ const SignUpForm: FC<Props> = () => {
 
     const router = useRouter()
     const signUp = async () => {
+        setIsLoading(true)
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
@@ -34,6 +36,7 @@ const SignUpForm: FC<Props> = () => {
             console.log(error)
             return toast.error(error.message)
         }
+        setIsLoading(false)
 
         toast.success('Signed up successfully, check your email for confirmation')
 
@@ -97,6 +100,9 @@ const SignUpForm: FC<Props> = () => {
                     className='w-full mt-4'
                     onClick={signUp}
                 >
+                    {
+                        isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    }
                     Sign Up
                 </Button>
 
