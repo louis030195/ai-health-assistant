@@ -5,10 +5,10 @@ import { GoToButton } from "./GoToButton";
 export default async function Onboarding() {
     const session = await getSession();
     if (!session) return redirect('/signin');
-    // const hasOnboarded = await getOnboarding(session.user.id);
-    // if (hasOnboarded) {
-    //     return redirect('/dashboard');
-    // }
+    const hasOnboarded = await getOnboarding(session.user.id);
+    if (hasOnboarded) {
+        return redirect('/dashboard');
+    }
     const { error } = await saveOnboarding(session.user.id);
     return (
         <div className="p-8 col-span-full flex-1 pb-16 md:pb-0">
