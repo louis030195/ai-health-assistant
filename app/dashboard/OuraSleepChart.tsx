@@ -11,28 +11,25 @@ import { State, Tag } from '@/utils/extended-types';
 
 interface Props {
     session: Session;
-    getStates: (userId: string, options: GetStatesWithFunctionOptions) => Promise<State[]>;
+    getSleeps: (userId: string) => Promise<State[]>;
     getTags: (userId: string) => Promise<{
         text: string | null;
         created_at: string | null;
     }[]>
 }
 
-export const OuraSleepChart = ({ session, getStates, getTags }: Props) => {
+export const OuraSleepChart = ({ session, getSleeps, getTags }: Props) => {
     let [states, setStates] = useState<State[]>([]);
     const [tags, setTags] = useState<{
         text: string | null;
         created_at: string | null;
     }[]>([]);
 
-    console.log('states', states);
+    console.log('sleeps', states);
     const refreshState = async () => {
         if (!session?.user?.id) return
 
-        const ns = await getStates(session.user.id, {
-            timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            day: new Date(),
-        });
+        const ns = await getSleeps(session.user.id);
         setStates(ns);
         const nt = await getTags(session.user.id);
         setTags(nt);

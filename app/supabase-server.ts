@@ -86,7 +86,8 @@ export const getStates = async () => {
 export interface GetStatesWithFunctionOptions {
   bucketSize?: number;
   timezone?: string;
-  day?: Date;
+  startDate?: Date;
+  endDate?: Date;
 }
 function formatDate(date: Date) {
   const year = date.getFullYear();
@@ -95,6 +96,7 @@ function formatDate(date: Date) {
 
   return `${year}-${month}-${day}`;
 }
+
 export const getStatesWithFunction = async (userId: string, options?: GetStatesWithFunctionOptions) => {
   const supabase = createServerSupabaseClient();
   const { data, error } = await supabase
@@ -102,14 +104,18 @@ export const getStatesWithFunction = async (userId: string, options?: GetStatesW
       user_id: userId,
       // bucket_size: options?.bucketSize || 300,
       timezone: options?.timezone || 'America/Los_Angeles',
+      // five days ago
       // @ts-ignore
-      // day: formatDate(options?.day || new Date()),
+      // startDate: formatDate(options?.startDate || new Date(new Date().setDate(new Date().getDate() - 3))),
+      // endDate: formatDate(options?.endDate || new Date()),
     })
   if (error) {
     console.log(error.message);
   }
   return data ?? [];
 };
+
+
 
 export const getOnboarding = async (userId: string) => {
   const supabase = createServerSupabaseClient();
@@ -171,7 +177,7 @@ export const getTags = async (userId: string) => {
     .select('text, created_at')
     .eq('user_id', userId)
     // only five last days
-    .gt('created_at', new Date(Date.now() - 5 * 24 * 60 * 60 * 1000).toISOString())
+    .gt('created_at', new Date(Date.now() - 3 * 24 * 60 * 60 * 1000).toISOString())
 
   if (error) {
     console.log(error.message);

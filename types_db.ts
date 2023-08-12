@@ -340,9 +340,10 @@ export interface Database {
       get_states: {
         Args: {
           user_id: string
-          bucket_size?: number
+          p_bucket_size?: number
           timezone?: string
-          day?: string
+          start_date_input?: string
+          end_date_input?: string
         }
         Returns: {
           start_ts: string

@@ -9,6 +9,7 @@ import { GetStatesWithFunctionOptions } from '../supabase-server';
 import { Skeleton } from '@/components/ui/skeleton';
 import { useCompletion } from 'ai/react'
 import Markdown from '@/components/ui/Markdown';
+import { Loader2 } from 'lucide-react';
 
 interface Props {
     states: any[];
@@ -39,6 +40,7 @@ Here are a few rules:
 - Your answers are very concise and straight to the point
 - Your answers are based on the data provided
 - Your answers are only the bullet points, and potentially some advices for the user at the end if you find any
+- Do not say bullshit health advice, just infer from the data
 
 Assistant:`)
     }, [states, tags])
@@ -52,7 +54,11 @@ Assistant:`)
                 disabled={isLoading || !tags.length || !states.length}
                 className="w-full"
                 type='submit'
-            >Get Insights</Button>
+            >
+                {
+                    isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                }
+                Get Insights</Button>
             <div className="max-w-[600px]">
                 <Markdown>
                     {completion}

@@ -25,7 +25,7 @@ export default async function Dashboard() {
     return redirect('/signin');
   }
 
-  const getStatesServer = async (userId: string, options?: GetStatesWithFunctionOptions) => {
+  const getStatesServer = async (userId: string, options: GetStatesWithFunctionOptions) => {
     'use server'
     return getStatesWithFunction(userId, options)
   }
@@ -58,7 +58,7 @@ export default async function Dashboard() {
       <NeurosityFocusChart session={session!} getStates={getStatesServer} getTags={getTagsServer} />
       {
         hasSleep &&
-        <OuraSleepChart session={session!} getStates={getSleepServer} getTags={getTagsServer} />
+        <OuraSleepChart session={session!} getSleeps={getSleepServer} getTags={getTagsServer} />
       }
       {/* <CommandDialogDemo /> */}
       {/* <Chat /> */}

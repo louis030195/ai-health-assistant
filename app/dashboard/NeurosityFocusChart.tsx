@@ -30,13 +30,14 @@ export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
         };
     });
 
+    console.log('states', states);
 
     const refreshState = async () => {
         if (!session?.user?.id) return
 
         const ns = await getStates(session.user.id, {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
-            day: new Date(),
+            // day: new Date(),
         });
         setStates(ns);
         const nt = await getTags(session.user.id);
