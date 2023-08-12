@@ -12,7 +12,7 @@ export default async function PricingPage() {
   const session = await getSession()
 
   return (
-    <PricingPlan session={session} />
+    <PricingPlan session={session || undefined} />
   );
 }
 
