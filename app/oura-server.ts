@@ -256,3 +256,29 @@ export async function listDailySleep(token: string) {
     return sleep
 }
 
+
+
+export const renewOuraAccessToken = async (refreshToken: string) => {
+    const clientId = process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID!;
+    const clientSecret = process.env.OURA_OAUTH_CLIENT_SECRET!;
+    const tokenUrl = 'https://api.ouraring.com/oauth/token';
+
+    const response = await fetch(tokenUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`
+        },
+        body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(refreshToken)}`
+    });
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Failed to renew OAuth token: ${response.status} ${response.statusText} ${text}`);
+    }
+
+    const data = await response.json();
+    console.log('data', data)
+    return { accessToken: data.access_token, refreshToken: data.refresh_token };
+};
+

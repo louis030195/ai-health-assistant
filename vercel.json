@@ -1,16 +1,8 @@
 {
-    "crons": [
-      {
-        "path": "/auth/neurosity/renew-tokens",
-        "schedule": "*/50 * * * *"
-      },
-      {
-        "path": "/auth/oura/renew-tokens",
-        "schedule": "*/50 * * * *"
-      },
-      {
-        "path": "/auth/oura/daily-sleep",
-        "schedule": "0 10,14,18,23 * * *"
-      }
-    ]
-  }
+  "crons": [
+    {
+      "path": "/auth/oura/daily-sleep",
+      "schedule": "0 10,14,18,23 * * *"
+    }
+  ]
+}

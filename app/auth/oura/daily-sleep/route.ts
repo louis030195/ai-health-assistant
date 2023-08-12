@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { Database } from "@/types_db";
-import { OuraSleep, listDailySleep } from "@/app/oura-server";
+import { OuraSleep, listDailySleep, renewOuraAccessToken } from "@/app/oura-server";
 
 export const runtime = 'edge'
 const supabase = createClient<Database>(
@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
         // Get all tokens from the database
         const { data, error: tokensError } = await supabase
             .from("tokens")
-            .select()
+            .select("refresh_token,mediar_user_id,user_id")
             .eq("provider", "oura");
 
         if (tokensError) {
@@ -29,6 +29,9 @@ export async function GET(req: NextRequest) {
         console.log("Going to renew sleep for " + data.length + " users.");
 
         for (const row of data) {
+            const { accessToken, refreshToken } = await renewOuraAccessToken(row.refresh_token!)
+            console.log("Access token renewed for user: " + row.user_id, "at: " + new Date());
+
             // Check if today's entry already exists
             const { data: sleepData } = await supabase
                 .from("states")
@@ -45,7 +48,7 @@ export async function GET(req: NextRequest) {
             let sleep: OuraSleep[] = []
 
             try {
-                sleep = await listDailySleep(row.token)
+                sleep = await listDailySleep(accessToken)
             } catch (error) {
                 console.log(error)
 
