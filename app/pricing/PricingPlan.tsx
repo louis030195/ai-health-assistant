@@ -3,7 +3,7 @@ import { CheckIcon } from '@heroicons/react/20/solid'
 import { getSession } from '../supabase-server'
 import { Session } from '@supabase/supabase-js'
 
-export default function Example({ session }: { session: Session }) {
+export default function Example({ session }: { session?: Session }) {
     return (
         <div className="isolate overflow-hidden bg-gray-900">
             <div className="mx-auto max-w-7xl px-6 pb-96 pt-24 text-center sm:pt-32 lg:px-8">
