@@ -9,24 +9,10 @@ import PricingPlan from './PricingPlan';
 
 
 export default async function PricingPage() {
-  // const [session, products, subscription] = await Promise.all([
-  //   getSession(),
-  //   getActiveProductsWithPrices(),
-  //   getSubscription()
-  // ]);
+  const session = await getSession()
 
-  // console.log('session', session)
-  // console.log('products', products)
-  // console.log('subscription', subscription)
   return (
-    <PricingPlan />
-    // <Pricing
-    //   session={session}
-    //   user={session?.user}
-    //   products={products}
-    //   subscription={subscription}
-    // />
-    // <Banner />
+    <PricingPlan session={session} />
   );
 }
 
