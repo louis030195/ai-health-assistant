@@ -16,7 +16,7 @@ export async function POST(req: Request) {
     body: JSON.stringify({
       prompt: prompt,
       model: 'claude-2',
-      max_tokens_to_sample: 300,
+      max_tokens_to_sample: 1000,
       stream: true
     })
   })

@@ -202,3 +202,13 @@ export const getSleep = async (userId: string) => {
   }
   return data || [];
 };
+
+export const addTags = async (userId: string, tag: string) => {
+  const supabase = createServerSupabaseClient();
+  const { data, error } = await supabase.from('tags').insert({
+    text: tag,
+    user_id: userId,
+  });
+
+  return { data, error };
+}
