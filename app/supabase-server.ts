@@ -99,18 +99,21 @@ function formatDate(date: Date) {
 
 export const getStatesWithFunction = async (userId: string, options?: GetStatesWithFunctionOptions) => {
   const supabase = createServerSupabaseClient();
+  console.log(formatDate(options?.startDate || new Date(new Date().setDate(new Date().getDate() - 3))))
   const { data, error } = await supabase
     .rpc('get_states', {
       user_id: userId,
-      // bucket_size: options?.bucketSize || 300,
+      // @ts-ignore
+      bucket_size: options?.bucketSize || 600,
       timezone: options?.timezone || 'America/Los_Angeles',
       // five days ago
       // @ts-ignore
-      // startDate: formatDate(options?.startDate || new Date(new Date().setDate(new Date().getDate() - 3))),
-      // endDate: formatDate(options?.endDate || new Date()),
+      start_date: formatDate(options?.startDate || new Date(new Date().setDate(new Date().getDate() - 3))),
+      end_date: formatDate(options?.endDate || new Date()),
     })
   if (error) {
     console.log(error.message);
+    throw error
   }
   return data ?? [];
 };
