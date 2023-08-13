@@ -182,7 +182,7 @@ export default function Example({ session }: { session?: Session }) {
                                 </div>
 
                                 <a
-                                    href={"https://buy.stripe.com/4gw7tb31Q6ZIckoaEE" + session?.user?.email ? `?prefilled_email=${encodeURIComponent(session!.user!.email!)}` : ""}
+                                    href={"https://buy.stripe.com/4gw7tb31Q6ZIckoaEE" + session?.user?.email ? `?prefilled_email=${encodeURIComponent(session?.user?.email || "")}` : ""}
                                     aria-describedby="tier-biohacker"
                                     className="mt-8 block rounded-md bg-indigo-600 px-3.5 py-2 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 >
