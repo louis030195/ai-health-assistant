@@ -64,6 +64,13 @@ export default function Footer() {
         <div>
           <span>
             &copy; {new Date().getFullYear()} Mediar, Inc. All rights reserved.
+            <br />
+            <Link
+              href="https://louis030195.com"
+              className="transition duration-150 ease-in-out hover:text-gray-900"
+            >
+              🔨 louis030195
+            </Link>
           </span>
         </div>
       </div>
