@@ -102,7 +102,7 @@ export default function Example({ session }: { session?: Session }) {
                                     </div>
 
                                     <p className="mt-6 text-base leading-7 text-gray-600">
-                                        For the busy and ambitious executive that want to upgrade his mind
+                                        For the busy and ambitious executive that want to reach peak performance
                                     </p>
 
                                     {/* Features */}
