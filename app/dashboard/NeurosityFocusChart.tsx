@@ -32,12 +32,12 @@ export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
     const refreshState = async () => {
         if (!session?.user?.id) return
 
-        const ns = await getStates(session.user.id, {
+        const [ns, nt] = await Promise.all([getStates(session.user.id, {
             timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
             // day: new Date(),
-        });
+        }), getTags(session.user.id)]);
+
         setStates(ns);
-        const nt = await getTags(session.user.id);
         setTags(nt);
 
         posthog.capture('refresh-state');
