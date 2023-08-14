@@ -24,7 +24,7 @@ export default async function Navbar() {
               <Image
                 // center 
                 className="mx-auto"
-                src="/logo.png" alt="neurosity" width="64" height="64"
+                src="/logo.png" alt="mediar" width="50" height="50"
               />
             </Link>
             <nav className="hidden ml-6 space-x-2 lg:block">
