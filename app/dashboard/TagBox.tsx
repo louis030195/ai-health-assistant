@@ -5,7 +5,7 @@ import { Session, createClientComponentClient } from '@supabase/auth-helpers-nex
 import React, { useState } from 'react';
 import toast, { Toaster } from 'react-hot-toast';
 
-// const tags = ['anxiety', 'happy', 'tag3', 'tag4']; // Replace with your tags
+const emotions = ['Happy', 'Sad', 'Energetic', 'Relaxed', 'Anxious', 'Excited', 'Bored', 'Neutral', 'Meditation', 'Just drank coffee', 'Drank tea'];
 
 const randomPlaceholders = [
     "i am a bit down today...",
@@ -24,18 +24,16 @@ const TagBox = ({ session, className }: Props) => {
     const supabase = createClientComponentClient<Database>()
 
     const [inputValue, setInputValue] = useState("");
-    // const [selectedTags, setSelectedTags] = useState([]);
 
-    const handleInputChange = (event: any) => {
-        setInputValue(event.target.value);
+    const handleEmotionClick = (emotion: string) => {
+        setInputValue(`i feel ${emotion.toLowerCase()} today`);
     };
 
-    // const handleTagClick = (tag) => {
-    //     setSelectedTags((prevTags) => [...prevTags, tag]);
-    // };
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setInputValue(e.target.value);
+    };
 
     const handleSubmit = async () => {
-        // Process the selected tags and input here
         const data = {
             text: inputValue,
             user_id: session.user.id,
@@ -53,29 +51,28 @@ const TagBox = ({ session, className }: Props) => {
     };
 
     return (
-        <div className={`${className} p-4 bg-white rounded shadow-md`}>
+        <div className={`${className} p-4 bg-white rounded shadow-md max-w-sm`}>
             <Toaster />
-            <h1 className="text-black text-2xl font-bold mb-4">What you are up to?</h1>
+            <h1 className="text-black text-2xl font-bold mb-4">What are you up to?</h1>
             <p className="text-gray-500 mb-2 text-sm">
-                It will be associated to your brain records and let our AI know you better</p>
-            {/* <div className="flex flex-wrap gap-2 mb-4">
-                {tags.map((tag) => (
-                    <button
-                        key={tag}
-                        onClick={() => handleTagClick(tag)}
-                        className={`py-1 px-2 rounded bg-blue-500 text-white ${selectedTags.includes(tag) ? 'opacity-50' : ''}`}
+                It will be associated to your health records and let our AI know you better</p>
+            <div className="flex flex-wrap overflow-x-auto gap-2 mb-4 whitespace-nowrap">
+                {emotions.map((emotion) => (
+                    <span
+                        key={emotion}
+                        onClick={() => handleEmotionClick(emotion)}
+                        className="cursor-pointer inline-flex items-center rounded-full bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10"
                     >
-                        {tag}
-                    </button>
+                        {emotion}
+                    </span>
                 ))}
-            </div> */}
+            </div>
             <Input
                 type="text"
                 value={inputValue}
                 onChange={handleInputChange}
                 className="w-full p-2 border border-gray-300 rounded mb-4 text-black"
                 placeholder={
-                    // random pick
                     randomPlaceholders[Math.floor(Math.random() * randomPlaceholders.length)]
                 }
             />

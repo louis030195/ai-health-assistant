@@ -307,6 +307,9 @@ export interface Database {
           billing_address: Json | null
           full_name: string | null
           id: string
+          metadata: Json | null
+          neurosity: Json | null
+          oura: Json | null
           payment_method: Json | null
         }
         Insert: {
@@ -314,6 +317,9 @@ export interface Database {
           billing_address?: Json | null
           full_name?: string | null
           id: string
+          metadata?: Json | null
+          neurosity?: Json | null
+          oura?: Json | null
           payment_method?: Json | null
         }
         Update: {
@@ -321,6 +327,9 @@ export interface Database {
           billing_address?: Json | null
           full_name?: string | null
           id?: string
+          metadata?: Json | null
+          neurosity?: Json | null
+          oura?: Json | null
           payment_method?: Json | null
         }
         Relationships: [
@@ -340,10 +349,10 @@ export interface Database {
       get_states: {
         Args: {
           user_id: string
-          p_bucket_size?: number
+          bucket_size?: number
           timezone?: string
-          start_date_input?: string
-          end_date_input?: string
+          start_date?: string
+          end_date?: string
         }
         Returns: {
           start_ts: string

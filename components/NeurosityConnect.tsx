@@ -1,5 +1,5 @@
 'use client'
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { Toaster } from 'react-hot-toast';
 
@@ -70,8 +70,72 @@ export default function NeurosityConnect({ session, className, onboarding }: Pro
                 </Button>
 
 
+                <CheckboxWithText userId={session?.user?.id} />
             </div>
 
         </div>
     );
+}
+
+
+import { Checkbox } from "@/components/ui/checkbox"
+import { Database } from '@/types_db';
+
+export function CheckboxWithText({ userId }: { userId: string }) {
+    const supabase = createClientComponentClient<Database>()
+    const [checked, setChecked] = useState(false)
+    const [userDetails, setUserDetails] = useState<any>(null)
+
+    // on change, update supabase.users.metadata.neurosity.enabled settings for the current user
+    const onCheckedChange = (checked: boolean) => {
+        setChecked(checked)
+        if (userId) {
+            supabase
+                .from('users')
+                .update({ neurosity: { disabled: checked } })
+                .eq('id', userId)
+                .then(({ error }) => {
+                    console.log('sat neurosity disabled to', checked)
+                    if (error) {
+                        console.error(error)
+                    }
+                })
+        }
+    }
+
+    useEffect(() => {
+        supabase
+            .from('users')
+            .select('*')
+            .single().then(({ data, error }) => {
+                if (error) {
+                    console.error(error)
+                }
+                if (data) {
+                    setUserDetails(data)
+                    console.log(data)
+                    // @ts-ignore
+                    setChecked(data?.oura?.disabled === true)
+                }
+            })
+    }, [])
+
+    return (
+        <div className="items-top justify-center flex space-x-2 text-black">
+            <Checkbox
+                disabled={!userId}
+                id="neurosity-check" checked={checked} onCheckedChange={onCheckedChange} />
+            <div className="grid gap-1.5 leading-none">
+                <label
+                    htmlFor="neurosity-check"
+                    className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+                >
+                    I don't use Neurosity
+                </label>
+                <p className="text-sm text-muted-foreground text-gray-500">
+                    If you don't plan to use a Neurosity device you can hide everything related to it on the dashboard.
+                </p>
+            </div>
+        </div>
+    )
 }

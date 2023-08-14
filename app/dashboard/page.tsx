@@ -6,7 +6,8 @@ import {
   GetProcessedBrainwavesOptions,
   getTags,
   getSleep,
-  getOnboarding
+  getOnboarding,
+  getUserDetails
 } from '@/app/supabase-server';
 import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
@@ -30,6 +31,7 @@ export default async function Dashboard() {
   if (!hasOnboarded) {
     return redirect('/onboarding/intro');
   }
+  const userDetails = await getUserDetails();
 
   const getStatesServer = async (userId: string, options: GetStatesWithFunctionOptions) => {
     'use server'
@@ -56,14 +58,23 @@ export default async function Dashboard() {
   return (
     <div className="flex flex-col justify-center gap-2 items-center">
       <PosthogMail session={session!} />
-      <NeurosityStatus userId={session!.user.id} />
+      {
+        // @ts-ignore
+        userDetails?.neurosity?.disabled !== true &&
+        <NeurosityStatus userId={session!.user.id} />
+      }
 
       <TagBox session={session!}
         className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
       />
-      <NeurosityFocusChart session={session!} getStates={getStatesServer} getTags={getTagsServer} />
       {
-        hasSleep &&
+        // @ts-ignore
+        userDetails?.neurosity?.disabled !== true &&
+        <NeurosityFocusChart session={session!} getStates={getStatesServer} getTags={getTagsServer} />
+      }
+      {
+        // @ts-ignore
+        userDetails?.oura?.disabled !== true &&
         <OuraSleepChart session={session!} getSleeps={getSleepServer} getTags={getTagsServer} />
       }
       {/* <CommandDialogDemo /> */}
