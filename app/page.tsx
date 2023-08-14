@@ -23,10 +23,10 @@ export default async function Home() {
 
         <div className="text-center space-y-4">
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            Insights about your brain activity.
+            One health assistant for all your wearables
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Combine brain activity data from sensors with wearable tech for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health.
+            Combine brain activity data from Neurosity and/or biometric data from wearables like Oura ring for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health.
           </p>
           <div className="inline-flex gap-4">
             <div className="inline-flex rounded-md shadow">

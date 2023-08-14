@@ -6,7 +6,7 @@ import MobileWarning from './MobileWarning';
 
 const meta = {
     title: 'Mediar',
-    description: 'Insights about your brain activity.',
+    description: 'One health assistant for all your wearables',
     cardImage: '/logo.png',
     robots: 'follow, index',
     favicon: '/favicon.ico',
