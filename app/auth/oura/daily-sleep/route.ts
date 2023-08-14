@@ -2,6 +2,7 @@ import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { Database } from "@/types_db";
 import { OuraSleep, listDailySleep, renewOuraAccessToken } from "@/app/oura-server";
+import * as Sentry from "@sentry/nextjs";
 
 export const runtime = 'edge'
 const supabase = createClient<Database>(
@@ -51,8 +52,7 @@ export async function GET(req: NextRequest) {
                 sleep = await listDailySleep(accessToken)
             } catch (error) {
                 console.log(error)
-
-                // TODO SOMETHING
+                Sentry.captureException(error);
 
                 continue;
             }
