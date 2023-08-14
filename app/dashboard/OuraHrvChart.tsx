@@ -142,7 +142,10 @@ export const OuraHrvChart = ({ session }: Props) => {
                         modeBarButtons: [['zoom2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d']],
                     }}
                 />
-                <LLMInsights states={states} tags={tags} />
+                <LLMInsights states={
+                    // mostly hrv scores
+                    states.map((state) => JSON.parse(state.sleep)?.[0]?.hrv)
+                } tags={tags} />
             </div>
         </div>
     );

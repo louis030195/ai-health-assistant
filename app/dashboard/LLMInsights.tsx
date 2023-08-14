@@ -28,11 +28,11 @@ export const LLMInsights = ({ states, tags }: Props) => {
     })
 
     useEffect(() => {
-        setInput(`Human: Generate a list of insights about how the user's activities (tags) influence their health, given these tags:
+        setInput(`Human: Generate a list of insights about how the user's activities (tags) influence their health and cognitive performance, given these tags:
 
 ${JSON.stringify(tags)}
 
-And these states (sleep scores or focus scores) over time: 
+And these states (sleep, heart or focus scores) over time: 
 
 ${JSON.stringify(states)}
 

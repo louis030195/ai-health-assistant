@@ -1,4 +1,3 @@
-import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js'
 import * as dotenv from 'dotenv'
 import * as fs from 'fs'
@@ -8,7 +7,7 @@ dotenv.config();
 const getAllUsersAsCsv = async () => {
     console.log("Getting all users as csv...")
 
-    const supabase = createClient<Database>(
+    const supabase = createClient(
         process.env.SUPABASE_URL!,
         process.env.SUPABASE_KEY!
     )
@@ -20,7 +19,7 @@ const getAllUsersAsCsv = async () => {
 
     if (error) return console.log("Error fetching profiles:", error)
 
-    let users = []
+    let users: string[] = []
     let count = 0;
     const total = data.length;
 
@@ -29,7 +28,7 @@ const getAllUsersAsCsv = async () => {
         console.log(`Progress: ${count}/${total}`);
         const { data: { user }, error } = await supabase.auth.admin.getUserById(e["id"])
         if (error || !user) return console.log("Error fetching user:", error)
-        users.push(user.email)
+        users.push(user.email!)
     }
 
     // convert to csv
