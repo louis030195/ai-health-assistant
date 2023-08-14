@@ -278,7 +278,6 @@ export const renewOuraAccessToken = async (refreshToken: string) => {
     }
 
     const data = await response.json();
-    console.log('data', data)
     return { accessToken: data.access_token, refreshToken: data.refresh_token };
 };
 
