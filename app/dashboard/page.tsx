@@ -19,6 +19,7 @@ import NeurosityStatus from './NeurosityStatus';
 import { OuraSleepChart } from './OuraSleepChart';
 import Chat from './Chat';
 import { CommandDialogDemo } from './Command';
+import { OuraHrvChart } from './OuraHrvChart';
 
 
 export default async function Dashboard() {
@@ -76,6 +77,11 @@ export default async function Dashboard() {
         // @ts-ignore
         userDetails?.oura?.disabled !== true &&
         <OuraSleepChart session={session!} getSleeps={getSleepServer} getTags={getTagsServer} />
+      }
+      {
+        // @ts-ignore
+        userDetails?.oura?.disabled !== true &&
+        <OuraHrvChart session={session!} />
       }
       {/* <CommandDialogDemo /> */}
       {/* <Chat /> */}
