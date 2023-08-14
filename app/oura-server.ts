@@ -216,12 +216,33 @@ export interface OuraSleep {
     type: string;
 }
 
+export interface OuraDailySleep {
+    id: string;
+    contributors: {
+        deep_sleep: number;
+        efficiency: number;
+        latency: number;
+        rem_sleep: number;
+        restfulness: number;
+        timing: number;
+        total_sleep: number;
+    };
+    day: string;
+    score: number;
+    timestamp: string;
+}
+
 interface OuraSleepResponse {
     data: OuraSleep[];
     next_token: string;
 }
 
-export async function listOuraSleep(token: string, startDate: string, endDate: string) {
+interface OuraDailySleepResponse {
+    data: OuraDailySleep[];
+    next_token: string;
+}
+
+export async function listOuraDailySleep(token: string, startDate: string, endDate: string) {
     const url = `https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=${startDate}&end_date=${endDate}`
     const options = {
         method: 'GET',
@@ -240,30 +261,70 @@ export async function listOuraSleep(token: string, startDate: string, endDate: s
     }
 
     const data = await response.json()
-    return data as OuraSleepResponse
+    return data as OuraDailySleepResponse
 }
 
+export async function listOuraSleep(token: string, startDate: string, endDate: string) {
+    const url = `https://api.ouraring.com/v2/usercollection/sleep?start_date=${startDate}&end_date=${endDate}`
+    const options = {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const response = await fetch(url, options)
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Failed to list sleep: ${response.status} ${response.statusText} ${text}`);
+    }
+    const data = await response.json()
+    if (!data) {
+        throw new Error('No data received from the API');
+    }
+    return data as OuraSleepResponse;
+}
+
+
 export async function listDailySleep(token: string) {
-    // curl -X GET "https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=$(date +'%Y-%m-%d')&end_date=$(date +'%Y-%m-%d')" \
-    // today formatted like 2023-08-06
     const currentDate = new Date();
     const localDate = new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
-    const sleep: OuraSleep[] = []
+    const sleep: OuraDailySleep[] = []
 
-    let response = await listOuraSleep(token, localDate, localDate)
+    let response = await listOuraDailySleep(token, localDate, localDate)
     console.log('response', localDate, localDate, response)
     while (response.next_token) {
         sleep.push(...response.data)
-        response = await listOuraSleep(token, localDate, localDate)
+        response = await listOuraDailySleep(token, localDate, localDate)
     }
 
     sleep.push(...response.data)
     return sleep
 }
 
+export async function listSleep(token: string) {
+    const currentDate = new Date();
+    const localToday = new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    const localYesterday = new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000 - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const sleepData: OuraSleep[] = []
+
+    let response = await listOuraSleep(token, localYesterday, localToday)
+    console.log('response', localYesterday, localToday, response)
+    while (response.next_token) {
+        sleepData.push(...response.data)
+        response = await listOuraSleep(token, localYesterday, localToday)
+    }
+
+    sleepData.push(...response.data)
+    return sleepData
+}
 
 
-export const renewOuraAccessToken = async (refreshToken: string) => {
+
+export const renewOuraAccessToken = async (refreshToken: string, mediarUserId: string) => {
     const clientId = process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID!;
     const clientSecret = process.env.OURA_OAUTH_CLIENT_SECRET!;
     const tokenUrl = 'https://api.ouraring.com/oauth/token';
@@ -283,6 +344,18 @@ export const renewOuraAccessToken = async (refreshToken: string) => {
     }
 
     const data = await response.json();
+
+    // The refresh token is single-use, meaning it is invalidated after being used. So we will save the new refresh token
+    // to supabase and use it next time.
+    const supabase = createServerActionClient<Database>({ cookies });
+    const { error } = await supabase.from('tokens').update({ refresh_token: data.refresh_token })
+        .eq('provider', 'oura')
+        .eq('mediar_user_id', mediarUserId);
+
+    if (error) {
+        throw error;
+    }
+
     return { accessToken: data.access_token, refreshToken: data.refresh_token };
 };
 
@@ -302,24 +375,24 @@ export const getOuraAccessTokenServer = async (code: string, scopes: string[], r
     console.log('deleting oura token');
     // clear existing token
     const { error: e1 } = await supabase
-      .from('tokens')
-      .delete()
-      .eq('mediar_user_id', user?.id)
-      .eq('provider', 'oura');
+        .from('tokens')
+        .delete()
+        .eq('mediar_user_id', user?.id)
+        .eq('provider', 'oura');
     if (e1) {
-      console.log(e1);
+        console.log(e1);
     }
     console.log('inserting oura token');
     const { error } = await supabase
-      .from('tokens')
-      .insert({
-        user_id: personalInfo.id,
-        metadata: personalInfo as any,
-        scopes,
-        mediar_user_id: user?.id, token: accessToken, refresh_token: refreshToken, provider: 'oura'
-      });
+        .from('tokens')
+        .insert({
+            user_id: personalInfo.id,
+            metadata: personalInfo as any,
+            scopes,
+            mediar_user_id: user?.id, token: accessToken, refresh_token: refreshToken, provider: 'oura'
+        });
     if (error) {
-      console.log(error);
+        console.log(error);
     }
     return accessToken;
-  }
+}

@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { Database } from "@/types_db";
-import { OuraSleep, listDailySleep, renewOuraAccessToken } from "@/app/oura-server";
+import { OuraDailySleep, OuraSleep, listDailySleep, listSleep, renewOuraAccessToken } from "@/app/oura-server";
 import * as Sentry from "@sentry/nextjs";
 
 export const runtime = 'edge'
@@ -27,10 +27,18 @@ export async function GET(req: NextRequest) {
             return NextResponse.json({ error: tokensError.message }, { status: 500 });
         }
 
-        console.log("Going to renew sleep for " + data.length + " users.");
+        console.log("Going to renew oura data for " + data.length + " users.");
 
         for (const row of data) {
-            const { accessToken, refreshToken } = await renewOuraAccessToken(row.refresh_token!)
+            let accessToken: string;
+            try {
+                const tokens = await renewOuraAccessToken(row.refresh_token!, row.mediar_user_id!);
+                accessToken = tokens.accessToken;
+            } catch (error) {
+                console.log(error)
+                Sentry.captureException(error);
+                continue;
+            }
             console.log("Access token renewed for user: " + row.user_id, "at: " + new Date());
 
             // Check if today's entry already exists
@@ -38,18 +46,19 @@ export async function GET(req: NextRequest) {
                 .from("states")
                 .select()
                 .eq("user_id", row.mediar_user_id)
-                .eq("metadata->sleep->>day", localDate);
+                .eq("oura->>day", localDate);
 
             // If entry exists, skip to next iteration
             if (sleepData && sleepData.length > 0) {
-                console.log("Sleep already exists for user: " + row.user_id, "at: " + new Date());
+                console.log("Oura already exists for user: " + row.user_id, "at: " + new Date());
                 continue;
             }
 
+            let dailySleep: OuraDailySleep[] = []
             let sleep: OuraSleep[] = []
 
             try {
-                sleep = await listDailySleep(accessToken)
+                dailySleep = await listDailySleep(accessToken)
             } catch (error) {
                 console.log(error)
                 Sentry.captureException(error);
@@ -57,25 +66,35 @@ export async function GET(req: NextRequest) {
                 continue;
             }
 
-            if (sleep.length === 0) {
-                console.log("No sleep data for user: " + row.user_id, "data: " + sleep, "at: " + new Date());
+            try {
+                sleep = await listSleep(accessToken)
+            } catch (error) {
+                console.log(error)
+                Sentry.captureException(error);
+
                 continue;
             }
 
+            if (sleep.length === 0 && dailySleep.length === 0) {
+                console.log("No Oura data for user: " + row.user_id, "at: " + new Date());
+                continue;
+            }
 
             const { error: updateError } = await supabase
                 .from("states")
-                .upsert(sleep.map(s => ({
-                    metadata: {
-                        provider: "oura",
-                        sleep: s as any
-                    }, user_id: row.mediar_user_id!
-                })))
+                .upsert({
+                    user_id: row.mediar_user_id!,
+                    oura: {
+                        day: localDate,
+                        daily_sleep: dailySleep,
+                        sleep: sleep
+                    } as any
+                })
 
-            console.log("Sleep updated for user: " + row.user_id, "at: " + new Date());
             if (updateError) {
                 console.log(updateError)
             }
+            console.log("Oura updated for user: " + row.user_id, "at: " + new Date());
         }
 
         return NextResponse.json({ message: "Sleeps renewed successfully." });

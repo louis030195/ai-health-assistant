@@ -165,6 +165,10 @@ export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
                             window.innerWidth < 640 ? "200px" :
                                 "300px"
                     }}
+                    config={{
+                        displayModeBar: true,
+                        modeBarButtons: [['zoom2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d']],
+                    }}
                 />
                 <LLMInsights states={states} tags={tags} />
             </div>

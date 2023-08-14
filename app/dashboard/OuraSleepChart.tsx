@@ -47,13 +47,15 @@ export const OuraSleepChart = ({ session, getSleeps, getTags }: Props) => {
         return `${monthNames[date.getMonth()]} ${date.getDate()}, ${date.getFullYear()}`;
     };
 
-    const sleepScores = states.map(state => {
+    const sleepScores = states.map((state) => {
         // @ts-ignore
-        const sleepData = state.metadata?.['sleep'];
+        const sleepData = state.oura?.['daily_sleep'][0];
+        // @ts-ignore
+        const sleepDay = state.oura?.['day'];
         if (!sleepData) return null;
         return {
-            date: sleepData.day, // this will be used for sorting
-            day: formatDate(sleepData.day),
+            date: sleepDay, // this will be used for sorting
+            day: formatDate(sleepDay),
             score: sleepData.score,
         };
     }).filter((s) => s !== null)
@@ -109,6 +111,10 @@ export const OuraSleepChart = ({ session, getSleeps, getTags }: Props) => {
                         height:
                             window.innerWidth < 640 ? "200px" :
                                 "300px"
+                    }}
+                    config={{
+                        displayModeBar: true,
+                        modeBarButtons: [['zoom2d', 'zoomIn2d', 'zoomOut2d', 'autoScale2d', 'resetScale2d']],
                     }}
                 />
                 <LLMInsights states={states} tags={tags} />

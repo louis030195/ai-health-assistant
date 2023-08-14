@@ -137,6 +137,7 @@ export interface Database {
           created_at: string
           id: number
           metadata: Json | null
+          oura: Json | null
           probability: number | null
           user_id: string
         }
@@ -144,6 +145,7 @@ export interface Database {
           created_at?: string
           id?: number
           metadata?: Json | null
+          oura?: Json | null
           probability?: number | null
           user_id: string
         }
@@ -151,6 +153,7 @@ export interface Database {
           created_at?: string
           id?: number
           metadata?: Json | null
+          oura?: Json | null
           probability?: number | null
           user_id?: string
         }

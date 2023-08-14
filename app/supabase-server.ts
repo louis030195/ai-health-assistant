@@ -69,20 +69,6 @@ export const getActiveProductsWithPrices = async () => {
   return data ?? [];
 };
 
-export const getStates = async () => {
-  const supabase = createServerSupabaseClient();
-  const { data, error } = await supabase
-    .from('states')
-    .select('*')
-    // .order('metadata->index')
-    .order('created_at', { ascending: false });
-
-  if (error) {
-    console.log(error.message);
-  }
-  return data ?? [];
-};
-
 export interface GetStatesWithFunctionOptions {
   bucketSize?: number;
   timezone?: string;
@@ -193,11 +179,7 @@ export const getSleep = async (userId: string) => {
   const { data, error } = await supabase
     .from('states')
     .select()
-    // .eq('metadata->>sleep', 'sleep')
-    // .contains('metadata', 'sleep')
-    // .gt('metadata->>sleep', 0)
-    // .is('metadata->>sleep', 'not.null')
-    .eq('metadata->>provider', 'oura') // TODO: hack
+    .gte('oura->>day', '')
     .eq('user_id', userId)
 
   if (error) {
