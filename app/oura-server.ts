@@ -1,4 +1,9 @@
-export const getOuraAccessToken = async (code: string) => {
+import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
+import { getSession } from "./supabase-server";
+import { Database } from "@/types_db";
+import { cookies } from 'next/headers';
+
+export const getOuraAccessToken = async (code: string, redirectUri: string) => {
     const clientId = process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID!;
     const clientSecret = process.env.OURA_OAUTH_CLIENT_SECRET!;
 
@@ -11,7 +16,7 @@ export const getOuraAccessToken = async (code: string) => {
             'Content-Type': 'application/x-www-form-urlencoded',
             'Authorization': `Basic ${Buffer.from(`${clientId}:${clientSecret}`).toString('base64')}`
         },
-        body: `grant_type=authorization_code&code=${encodeURIComponent(code)}&redirect_uri=${encodeURIComponent(process.env.OURA_OAUTH_CLIENT_REDIRECT_URI!)}`
+        body: `grant_type=authorization_code&code=${encodeURIComponent(code)}&redirect_uri=${encodeURIComponent(redirectUri)}`
     })
 
     if (!response.ok) {
@@ -281,3 +286,40 @@ export const renewOuraAccessToken = async (refreshToken: string) => {
     return { accessToken: data.access_token, refreshToken: data.refresh_token };
 };
 
+export const getOuraAccessTokenServer = async (code: string, scopes: string[], redirectUri: string) => {
+    const { accessToken, refreshToken } = await getOuraAccessToken(code, redirectUri);
+    const personalInfo = await getOuraPersonalInfo(accessToken);
+
+    // TODO: for dev
+    // await deleteOuraWebhookSubscriptionOfType('tag').catch(e => console.log(e));
+    // const response = await createOuraWebhookSubscription().catch(e => console.log(e));
+    // console.log('createOuraWebhookSubscription', response);
+    // const subscriptions = await listOuraWebhookSubscriptions().catch(e => console.log(e));
+    // console.log('listOuraWebhookSubscriptions', subscriptions);
+    const supabase = createServerActionClient<Database>({ cookies });
+    const session = await getSession();
+    const user = session?.user;
+    console.log('deleting oura token');
+    // clear existing token
+    const { error: e1 } = await supabase
+      .from('tokens')
+      .delete()
+      .eq('mediar_user_id', user?.id)
+      .eq('provider', 'oura');
+    if (e1) {
+      console.log(e1);
+    }
+    console.log('inserting oura token');
+    const { error } = await supabase
+      .from('tokens')
+      .insert({
+        user_id: personalInfo.id,
+        metadata: personalInfo as any,
+        scopes,
+        mediar_user_id: user?.id, token: accessToken, refresh_token: refreshToken, provider: 'oura'
+      });
+    if (error) {
+      console.log(error);
+    }
+    return accessToken;
+  }

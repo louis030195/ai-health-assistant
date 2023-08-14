@@ -10,6 +10,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { useCompletion } from 'ai/react'
 import Markdown from '@/components/ui/Markdown';
 import { Loader2 } from 'lucide-react';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 
 // export const LLMStoryDistraction = () => {
@@ -51,55 +52,57 @@ Back in the day, computers were giant machines that took up entire rooms! 😮 P
 
 Steve Jobs envisioned computers as "**bicycles for the mind**" - tools that could leverage the most complex object in the universe, the human brain! And the tech kept getting smaller and smarter over the years, bringing us closer to that vision. Laptops, smartphones, wireless earbuds - each generation was a **huge leap** forward in what technology could do! 📱🎧
 
-Now, we're entering a **new era** - one where technology **interact directly with our very minds**! 🧠 Mediar are developing mind-modelling AI algorithms to give you **insights** into your own brain activity. 🤯
+Now, we're entering a **new era** - one where technology **interact directly with our very bodies**! 🧠 Mediar is developing mind-body-modelling AI algorithms to give you **insights** into your own body. 🤯
 
-It's easy to get started with Mediar:
+It's easy to get started with Mediar.
 
-1. First, get your own Neurosity headset and create an account. This lightweight device **senses your brainwaves** as you go about your day. 📟
+You will need to connect your accounts to Mediar to allow **access to your data** and **to train its AI** to give you **personalized insights**. 📈
 
-2. Next, **connect** your Neurosity account to the Mediar app. This allows Mediar to **access your brain activity data**. 📲
+1. If you own a [Neurosity](https://neurosity.co) headset, connect it to Mediar. This lightweight device **senses your brainwaves 🧠** as you go about your days. 📟
+  
+2. If you own an [Ouraring](https://ouraring.com), connect it to Mediar. This amazing device **senses your heart 💗 and sleep 😴** as you go about your days.
+   
+3. As you wear Neurosity, **use Mediar** to add tags - mark down how you were feeling, what you were doing, etc. This **trains** Mediar's AI over time. 🏷
 
-3. As you wear Neurosity, **use the Mediar app** to add tags - mark down how you were feeling, what you were doing, etc. This **trains** Mediar's AI over time. 🏷
-
-Soon, you'll start getting **personalized weekly insights** and recommendations from Mediar to **boost your focus**, lower anxiety, and **optimize your mind**! 🧠 The future is now - your mind **augmented by AI**! 🤯
+Soon, you'll start getting **personalized insights** and recommendations from Mediar to **boost your focus**, lower anxiety 🥰, and **upgrade your health 💪**!
 `
 
-export function LLMStoryDistraction() {
+export function LLMStoryDistraction({className}: {className?: string}) {
 
-    const [fullStory, setFullStory] = useState('') 
-    const [displayedStory, setDisplayedStory] = useState('')
-  
-    useEffect(() => {
-        let index = 0
-        let isCancelled = false; // Add this line
-      
-        const stream = () => {
-            if (isCancelled) return; // Add this line
-            const nextChar = story[index]
-            setFullStory(prevFullStory => prevFullStory + nextChar)
-            index++
-            if (index < story.length) {
-                setTimeout(stream, 6)
-            }
-        }
-      
-        stream()
-      
-        return () => { isCancelled = true; }  // Add this line
-    }, [])
-    
-  
-    useEffect(() => {
-      // Only display a few of the latest characters
-      const previewLength = 5000000
-      setDisplayedStory(
-        fullStory.slice(-previewLength) 
-      )
-  
-    }, [fullStory])
+  const [fullStory, setFullStory] = useState('')
+  const [displayedStory, setDisplayedStory] = useState('')
+
+  useEffect(() => {
+    let index = 0
+    let isCancelled = false; // Add this line
+
+    const stream = () => {
+      if (isCancelled) return; // Add this line
+      const nextChar = story[index]
+      setFullStory(prevFullStory => prevFullStory + nextChar)
+      index++
+      if (index < story.length) {
+        setTimeout(stream, 6)
+      }
+    }
+
+    stream()
+
+    return () => { isCancelled = true; }  // Add this line
+  }, [])
+
+
+  useEffect(() => {
+    // Only display a few of the latest characters
+    const previewLength = 5000000
+    setDisplayedStory(
+      fullStory.slice(-previewLength)
+    )
+
+  }, [fullStory])
 
   return (
-    <Markdown>
+    <Markdown className={"" + className}>
       {displayedStory}
     </Markdown>
   )

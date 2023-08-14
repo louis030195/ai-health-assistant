@@ -23,7 +23,7 @@ import rangeParser from 'parse-numeric-range'
 import { oneDark } from 'react-syntax-highlighter/dist/cjs/styles/prism'
 
 
-const Markdown = ({ children }) => {
+const Markdown = ({ children, className }: { children: string, className?: string }) => {
   const syntaxTheme = oneDark
 
   const MarkdownComponents: object = {
@@ -102,7 +102,7 @@ const Markdown = ({ children }) => {
   return (
     <ReactMarkdown
       remarkPlugins={[footnotes]}
-      className="prose"
+      className={"prose overflow-y-scroll " + className}
       components={MarkdownComponents}
     >
       {children}

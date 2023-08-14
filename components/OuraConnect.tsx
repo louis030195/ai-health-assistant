@@ -11,20 +11,21 @@ import { Session } from '@supabase/supabase-js';
 interface Props {
     onboarding?: boolean;
     className?: string;
-    getOuraAccessToken: (code: string, scopes: string[]) => Promise<string>;
+    getOuraAccessToken: (code: string, scopes: string[], redirectUri: string) => Promise<string>;
     session: Session;
 }
 export default function OuraConnect({ onboarding, className, getOuraAccessToken, session }: Props) {
     const { accessToken, setAccessToken } = useOuraToken(session.user.id)
-
+    const redirectUri = getURL() +
+        (
+            onboarding === true ?
+                "onboarding/oura" :
+                "account"
+        );
     const handleConnect = () => {
         const clientId = process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID;
-        const redirectUri = getURL() +
-            (
-                onboarding === true ?
-                    "onboarding/oura" :
-                    "account"
-            );
+
+        console.log('redirectUri', redirectUri)
         // Step 1: Redirect user to Oura authorize URL
         const authorizeUrl = `https://cloud.ouraring.com/oauth/authorize?client_id=${clientId}&redirect_uri=${redirectUri}&response_type=code`;
         window.location.href = authorizeUrl;
@@ -35,10 +36,9 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
         const url = new URL(window.location.href);
         const code = url.searchParams.get("code");
         const scopes = url.searchParams.get("scope")?.split(" ") || [];
-        console.log('code', code);
         if (code) {
             // Step 2: Exchange code for access token
-            getOuraAccessToken(code, scopes).then((accessToken) => {
+            getOuraAccessToken(code, scopes, redirectUri).then((accessToken) => {
                 setAccessToken(accessToken);
             });
         }
@@ -80,11 +80,6 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
                     Connect
                 </Button>
 
-            </div>
-
-            {/* small text saying that oura features are coming soon */}
-            <div className="text-center text-sm text-gray-500">
-                <p>Oura features coming soon! Feel free to suggest any 🙏</p>
             </div>
 
         </div>
