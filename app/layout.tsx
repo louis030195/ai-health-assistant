@@ -8,6 +8,7 @@ import * as Sentry from '@sentry/browser'
 import posthog from 'posthog-js'
 import dynamic from 'next/dynamic'
 import { Toaster } from '@/components/ui/toaster';
+import { HighlightInit } from '@highlight-run/next/client'
 
 if (process.env.SENTRY_ENABLED !== 'false' && process.env.ENVIRONMENT && process.env.ENVIRONMENT !== 'development') {
   console.log('init sentry')
@@ -72,31 +73,47 @@ export default function RootLayout({
     () => import('@/components/ui/CrispChat'),
   )
   return (
-    <html lang="en">
-      <CrispWithNoSSR />
-      <body className="bg-white loading">
-        <PHProvider>
-          <Toaster />
-          <DiscountBanner />
+    <>
+      <HighlightInit
+        manualStart
+        projectId={'mem2wjg2'}
+        tracingOrigins
+        networkRecording={{
+          enabled: true,
+          recordHeadersAndBody: true,
+          urlBlocklist: [],
+        }}
+        excludedHostnames={['localhost']}
+      />
+      <CustomHighlightStart />
 
-          <SupabaseProvider>
-            <Navbar />
-            <main
-              id="skip"
-              className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
-            >
-              {children}
-            </main>
-            <Footer />
-          </SupabaseProvider>
-        </PHProvider>
-      </body>
-    </html>
+      <html lang="en">
+        <CrispWithNoSSR />
+        <body className="bg-white loading">
+          <PHProvider>
+            <Toaster />
+            <DiscountBanner />
+
+            <SupabaseProvider>
+              <Navbar />
+              <main
+                id="skip"
+                className="min-h-[calc(100dvh-4rem)] md:min-h[calc(100dvh-5rem)]"
+              >
+                {children}
+              </main>
+              <Footer />
+            </SupabaseProvider>
+          </PHProvider>
+        </body>
+      </html>
+    </>
   );
 }
 
 
 import { XMarkIcon } from '@heroicons/react/20/solid'
+import { CustomHighlightStart } from './custom-highlight-start';
 
 export function DiscountBanner() {
   return (

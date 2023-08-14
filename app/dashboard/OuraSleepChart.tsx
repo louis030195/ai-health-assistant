@@ -111,7 +111,7 @@ export const OuraSleepChart = ({ session, getSleeps, getTags }: Props) => {
                                 "300px"
                     }}
                 />
-                {/* <LLMInsights states={states} tags={tags} /> */}
+                <LLMInsights states={states} tags={tags} />
             </div>
         </div>
     );

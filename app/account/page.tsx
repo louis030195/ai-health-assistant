@@ -14,6 +14,7 @@ import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 import OuraConnect from '@/components/OuraConnect';
 import { createOuraWebhookSubscription, deleteOuraWebhookSubscriptionOfType, getOuraAccessToken, getOuraPersonalInfo, listOuraWebhookSubscriptions } from '../oura-server';
+import WhatsappConnect from '@/components/ui/WhatsappConnect';
 
 export default async function Account() {
   const [session, userDetails, subscription] = await Promise.all([
@@ -119,6 +120,7 @@ export default async function Account() {
       <div className="p-4 flex gap-4 flex-col items-center justify-center">
         <NeurosityConnect session={session} className='w-2/5' onboarding={false} />
         <OuraConnect session={session} onboarding={false} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServer} />
+        {/* <WhatsappConnect /> */}
         {/* <Card
           title="Your Plan"
           description={

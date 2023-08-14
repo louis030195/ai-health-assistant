@@ -19,14 +19,11 @@ export const NeurosityFocusChart = ({ session, getStates, getTags }: Props) => {
     let [states, setStates] = useState<any[]>([]);
     const [tags, setTags] = useState<any[]>([]);
 
-    // Modify your data to include an 'hour' field
     // This line transforms each avg_score in states to be between 0 and 100
     states = states.map(state => {
-        const date = new Date(state.start_ts);
         return {
             ...state,
             avg_score: (state.avg_score + 1) / 2 * 100, // Transformation added here
-            hour: date.getUTCHours() + date.getMinutes() / 60
         };
     });
 

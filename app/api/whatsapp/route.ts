@@ -83,6 +83,7 @@ export async function POST(req: Request) {
   posthog.capture('whatsapp message received', {
     from: parsed.From,
   });
+  console.log(parsed);
   try {
     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
 
