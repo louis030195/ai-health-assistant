@@ -2,10 +2,10 @@
 import { useEffect, useState } from "react"
 
 const defaultSteps = [
-    { id: '1. Intro', name: 'Job details', href: '/onboarding/intro', status: 'current' },
+    { id: '1. Intro', name: 'Intro', href: '/onboarding/intro', status: 'current' },
     { id: '2. Setup Neurosity', name: 'Neurosity', href: '/onboarding/neurosity', status: 'upcoming' },
     { id: '3. Setup Ouraring', name: 'Ouraring', href: '/onboarding/oura', status: 'upcoming' },
-    { id: 'Finish', name: 'Finish', href: '/dashboard', status: 'upcoming' },
+    { id: '4. Finish', name: 'Finish', href: '/dashboard', status: 'upcoming' },
 ]
 
 export default function Example({ className }: { className?: string }) {
@@ -13,10 +13,11 @@ export default function Example({ className }: { className?: string }) {
     // when the path change, update the steps
     useEffect(() => {
         const currentPath = window.location.pathname;
-        const updatedSteps = steps.map(step => {
+        const updatedSteps = steps.map((step, i) => {
             if (step.href === currentPath) {
                 return { ...step, status: 'current' };
-            } else if (step.href < currentPath) {
+                // inferior in the list index
+            } else if (i < steps.findIndex(step => step.href === currentPath)) {
                 return { ...step, status: 'complete' };
             } else {
                 return { ...step, status: 'upcoming' };
