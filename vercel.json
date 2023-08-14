@@ -3,10 +3,6 @@
     {
       "path": "/auth/oura/daily-sleep",
       "schedule": "*/30 * * * *"
-    },
-    {
-      "path": "/metrics",
-      "schedule": "5 * * *"
     }
   ]
 }
