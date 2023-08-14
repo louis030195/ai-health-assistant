@@ -94,7 +94,7 @@ export const OuraHrvChart = ({ session }: Props) => {
         type: 'scatter',
         mode: 'lines+markers',
         marker: { color: '#48bb78' },
-        name: 'Sleep Score'
+        name: 'Heart Rate Variability'
     };
 
     const layout = {
@@ -104,7 +104,7 @@ export const OuraHrvChart = ({ session }: Props) => {
             tickformat: "%b %d, %Y"
         },
         yaxis: {
-            title: 'Sleep Score',
+            title: 'HRV',
             range: [0, 100]
         }
     };

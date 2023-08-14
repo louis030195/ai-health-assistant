@@ -26,7 +26,7 @@ export default async function Home() {
             One health assistant for all your wearables
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Combine brain activity data from Neurosity and/or biometric data from wearables like Oura ring for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health.
+            Combine your brain activity data from Neurosity and/or biometric data from wearables like Oura ring for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health.
           </p>
           <div className="inline-flex gap-4">
             <div className="inline-flex rounded-md shadow">
