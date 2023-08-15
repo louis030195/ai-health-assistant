@@ -188,7 +188,7 @@ export default function Example({ session, user, products, subscription }: Props
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            20% discount on future paid plans
+                                            20% discount on future paid features
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
