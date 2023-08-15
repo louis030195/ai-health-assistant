@@ -51,7 +51,18 @@ const SignUpForm: FC<Props> = () => {
     const signInWithGoogle = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: `${getURL()}/dashboard` }
+            options: { redirectTo: `${getURL()}/auth/callback` }
+        })
+
+        if (error) {
+            return toast.error(error.message)
+        }
+    }
+
+    const signInWithTwitter = async () => {
+        const { data, error } = await supabase.auth.signInWithOAuth({
+            provider: 'twitter',
+            options: { redirectTo: `${getURL()}/auth/callback` }
         })
 
         if (error) {
@@ -125,7 +136,7 @@ const SignUpForm: FC<Props> = () => {
                 }
                 {/* </form> */}
 
-                {/* <div className="relative">
+                <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t" />
                     </div>
@@ -145,8 +156,22 @@ const SignUpForm: FC<Props> = () => {
                         <Icons.google className="mr-2 h-4 w-4" />
                     )}{" "}
                     Google
-                </Button> */}
+                </Button>
 
+                {/* twitter */}
+
+
+                <Button
+                    className="text-black"
+                    variant="outline"
+                    disabled={isLoading} onClick={signInWithTwitter}>
+                    {isLoading ? (
+                        <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
+                    ) : (
+                        <Icons.twitter className="mr-2 h-4 w-4" />
+                    )}{" "}
+                    Twitter
+                </Button>
 
 
                 {/* <p className="text-sm text-red-500">
