@@ -7,6 +7,24 @@ import { Toaster } from "./toaster";
 import toast from "react-hot-toast";
 import { CloudArrowDownIcon } from "@heroicons/react/20/solid";
 
+const retryFetch = async (
+    url: string,
+    options: RequestInit,
+    maxRetries: number = 3
+) => {
+    for (let i = 0; i < maxRetries; i++) {
+        try {
+            const response = await fetch(url, options);
+            if (response.ok) return response; // If response is successful, return it
+        } catch (error) {
+            // If we've reached the last retry and still have an error, throw it
+            if (i === maxRetries - 1) throw error;
+        }
+    }
+    throw new Error("Max retries reached for fetch request."); // If all retries are exhausted and no response
+};
+
+
 const OuraImport = ({ session }: { session: Session }) => {
     const userId = session.user.id;
 
@@ -28,7 +46,7 @@ const OuraImport = ({ session }: { session: Session }) => {
                 .toISOString()
                 .split("T")[0];
             console.log("Importing sleep data for date: " + date);
-            const response = await fetch("/auth/oura/import-sleep", {
+            const response = await retryFetch("/auth/oura/import-sleep", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
