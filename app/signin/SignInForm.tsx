@@ -8,7 +8,7 @@ import { Label } from '../../components/ui/label'
 import { getURL } from '@/utils/helpers'
 import posthog from 'posthog-js'
 import { Icons } from '@/components/ui/icons'
-import toast from 'react-hot-toast'
+import toast, { Toaster } from 'react-hot-toast'
 import { Loader2 } from 'lucide-react'
 
 interface Props { }
@@ -54,6 +54,7 @@ const SignInForm: FC<Props> = () => {
             {/* <div className="flex justify-center pb-12">
                 <img src="/logo.png" alt="logo" className="mx-auto w-16 h-16" />
             </div> */}
+            <Toaster />
 
             <div className="flex flex-col">
 
