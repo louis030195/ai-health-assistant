@@ -141,7 +141,7 @@ const SignUpForm: FC<Props> = () => {
                         <span className="w-full border-t" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-background px-2 text-muted-foreground">
+                        <span className="bg-background px-2 text-muted-foreground text-grey-500">
                             Or continue with
                         </span>
                     </div>
@@ -161,7 +161,7 @@ const SignUpForm: FC<Props> = () => {
                 {/* twitter */}
 
 
-                <Button
+                {/* <Button
                     className="text-black"
                     variant="outline"
                     disabled={isLoading} onClick={signInWithTwitter}>
@@ -171,7 +171,7 @@ const SignUpForm: FC<Props> = () => {
                         <Icons.twitter className="mr-2 h-4 w-4" />
                     )}{" "}
                     Twitter
-                </Button>
+                </Button> */}
 
 
                 {/* <p className="text-sm text-red-500">
