@@ -7,7 +7,7 @@ const MobileWarning: React.FC = () => {
 
   // Check if user is on mobile device
   useEffect(() => {
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent) || window.innerWidth < 768;
     if (isMobile) {
       setOpen(true);
     }
