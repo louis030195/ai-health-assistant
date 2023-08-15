@@ -349,7 +349,8 @@ export const renewOuraAccessToken = async (refreshToken: string, mediarUserId: s
 
     if (!response.ok) {
         // set invalid token in the db
-        const { error } = await supabase.from('tokens').update({ status: { valid: false } })
+        const { error } = await supabase.from('tokens').update({ status: { valid: false } }).eq('provider', 'oura').eq('mediar_user_id', mediarUserId);
+        console.log('error', error)
         const text = await response.text();
         throw new Error(`Failed to renew OAuth token: ${response.status} ${response.statusText} ${text}`);
     }

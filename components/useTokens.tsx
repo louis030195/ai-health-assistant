@@ -86,8 +86,10 @@ export function useOuraToken(userId: string) {
                 if (data?.length) {
                     setAccessToken(data[0].token)
                     try {
-                        setStatus(JSON.parse(data[0].status).valid)
-                    } catch (e) { }
+                        setStatus(data[0].status.valid)
+                    } catch (e) { 
+                        console.log(e)
+                    }
                 }
                 setError(e?.message || null)
             })

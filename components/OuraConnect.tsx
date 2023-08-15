@@ -72,7 +72,7 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
                         <span className="text-sm">Connection invalid. Please reconnect.</span>
                     </div>
                 }
-                {accessToken &&
+                {status !== false && accessToken &&
                     // Show connected state
                     <div className='flex items-center space-x-2 justify-center'>
                         <div className="w-3 h-3 bg-green-500 rounded-full animate-ping" />
