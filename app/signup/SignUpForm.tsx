@@ -136,7 +136,7 @@ const SignUpForm: FC<Props> = () => {
                 }
                 {/* </form> */}
 
-                <div className="relative">
+                <div className="relative my-3">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t" />
                     </div>
