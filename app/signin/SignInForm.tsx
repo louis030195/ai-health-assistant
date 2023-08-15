@@ -112,7 +112,7 @@ const SignInForm: FC<Props> = () => {
 
                 {/* </form> */}
 
-                <div className="relative">
+                {/* <div className="relative">
                     <div className="absolute inset-0 flex items-center">
                         <span className="w-full border-t" />
                     </div>
@@ -132,7 +132,7 @@ const SignInForm: FC<Props> = () => {
                         <Icons.google className="mr-2 h-4 w-4" />
                     )}{" "}
                     Google
-                </Button>
+                </Button> */}
             </div>
         </div>
     )
