@@ -28,10 +28,10 @@ export default async function Dashboard() {
     return redirect('/signin');
   }
 
-  const hasOnboarded = await getOnboarding(session.user.id);
-  if (!hasOnboarded) {
-    return redirect('/onboarding/intro');
-  }
+  // const hasOnboarded = await getOnboarding(session.user.id);
+  // if (!hasOnboarded) {
+  //   return redirect('/onboarding/intro');
+  // }
   const userDetails = await getUserDetails();
 
   const getStatesServer = async (userId: string, options: GetStatesWithFunctionOptions) => {
