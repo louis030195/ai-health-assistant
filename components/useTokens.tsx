@@ -75,6 +75,7 @@ export function useOuraToken(userId: string) {
     const supabase = createClientComponentClient()
     const [accessToken, setAccessToken] = useState<string | undefined>(undefined)
     const [error, setError] = useState<string | null>(null)
+    const [status, setStatus] = useState<boolean | null>(null)
 
 
     useEffect(() => {
@@ -84,6 +85,9 @@ export function useOuraToken(userId: string) {
             .then(({ data, error: e }) => {
                 if (data?.length) {
                     setAccessToken(data[0].token)
+                    try {
+                        setStatus(JSON.parse(data[0].status).valid)
+                    } catch (e) { }
                 }
                 setError(e?.message || null)
             })
@@ -92,6 +96,7 @@ export function useOuraToken(userId: string) {
     return {
         error: error,
         accessToken: accessToken,
-        setAccessToken: setAccessToken
+        setAccessToken: setAccessToken,
+        status: status,
     };
 }

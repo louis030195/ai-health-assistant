@@ -15,7 +15,7 @@ interface Props {
     session: Session;
 }
 export default function OuraConnect({ onboarding, className, getOuraAccessToken, session }: Props) {
-    const { accessToken, setAccessToken } = useOuraToken(session.user.id)
+    const { accessToken, setAccessToken, status } = useOuraToken(session.user.id)
     const redirectUri = getURL() +
         (
             onboarding === true ?
@@ -41,6 +41,8 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
             getOuraAccessToken(code, scopes, redirectUri).then((accessToken) => {
                 setAccessToken(accessToken);
             });
+            // remove code from url to prevent reusing it
+            window.history.replaceState({}, document.title, redirectUri);
         }
     }, []);
 
@@ -65,7 +67,11 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
             </div>
 
             <div className="space-y-4">
-
+                {status === false &&
+                    <div className='flex items-center space-x-2 justify-center text-red-500'>
+                        <span className="text-sm">Connection invalid. Please reconnect.</span>
+                    </div>
+                }
                 {accessToken &&
                     // Show connected state
                     <div className='flex items-center space-x-2 justify-center'>
@@ -101,7 +107,7 @@ export function CheckboxWithText({ userId }: { userId: string }) {
         if (userId) {
             supabase
                 .from('users')
-                .update({ oura: { disabled: checked} })
+                .update({ oura: { disabled: checked } })
                 .eq('id', userId)
                 .then(({ error }) => {
                     console.log('sat oura disabled to', checked)

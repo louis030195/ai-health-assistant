@@ -289,26 +289,34 @@ export async function listOuraSleep(token: string, startDate: string, endDate: s
 }
 
 
-export async function listDailySleep(token: string) {
+export async function listDailySleep(token: string, startDate?: string, endDate?: string) {
     const currentDate = new Date();
     const localDate = new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
     const sleep: OuraDailySleep[] = []
 
-    let response = await listOuraDailySleep(token, localDate, localDate)
-    console.log('response', localDate, localDate, response)
+    let response = await listOuraDailySleep(token,
+        startDate || localDate,
+        endDate || localDate)
     while (response.next_token) {
         sleep.push(...response.data)
-        response = await listOuraDailySleep(token, localDate, localDate)
+        response = await listOuraDailySleep(token,
+            startDate || localDate,
+            endDate || localDate)
     }
 
     sleep.push(...response.data)
     return sleep
 }
 
-export async function listSleep(token: string) {
+export async function listSleep(token: string, startDate?: string, endDate?: string) {
     const currentDate = new Date();
-    const localToday = new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
-    const localYesterday = new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000 - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+    const localToday =
+        endDate ||
+        new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    const localYesterday =
+        startDate ||
+        new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000 - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
     const sleepData: OuraSleep[] = []
 
     let response = await listOuraSleep(token, localYesterday, localToday)
@@ -337,8 +345,11 @@ export const renewOuraAccessToken = async (refreshToken: string, mediarUserId: s
         },
         body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(refreshToken)}`
     });
+    const supabase = createServerActionClient<Database>({ cookies });
 
     if (!response.ok) {
+        // set invalid token in the db
+        const { error } = await supabase.from('tokens').update({ status: { valid: false } })
         const text = await response.text();
         throw new Error(`Failed to renew OAuth token: ${response.status} ${response.statusText} ${text}`);
     }
@@ -347,13 +358,12 @@ export const renewOuraAccessToken = async (refreshToken: string, mediarUserId: s
 
     // The refresh token is single-use, meaning it is invalidated after being used. So we will save the new refresh token
     // to supabase and use it next time.
-    const supabase = createServerActionClient<Database>({ cookies });
     const { error } = await supabase.from('tokens').update({ refresh_token: data.refresh_token })
         .eq('provider', 'oura')
         .eq('mediar_user_id', mediarUserId);
 
     if (error) {
-        throw error;
+        throw new Error(`Failed to update in db refresh token: ${error.message}`);
     }
 
     return { accessToken: data.access_token, refreshToken: data.refresh_token };
