@@ -51,7 +51,7 @@ const SignUpForm: FC<Props> = () => {
     const signInWithGoogle = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            // options: { redirectTo: `${getURL()}/dashboard` }
+            options: { redirectTo: `${getURL()}/dashboard` }
         })
 
         if (error) {
