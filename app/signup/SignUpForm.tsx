@@ -68,7 +68,6 @@ const SignUpForm: FC<Props> = () => {
             <div className="flex flex-col">
 
                 {/* <form className="w-full"> */}
-
                 <div className="flex flex-col space-y-2">
 
                     <div className="flex flex-col space-y-1">
