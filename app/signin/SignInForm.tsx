@@ -126,7 +126,7 @@ const SignInForm: FC<Props> = () => {
                         <span className="w-full border-t" />
                     </div>
                     <div className="relative flex justify-center text-xs uppercase">
-                        <span className="bg-background px-2 text-muted-foreground text-grey-500">
+                        <span className="bg-background px-2 text-muted-foreground text-gray-500">
                             Or continue with
                         </span>
                     </div>
