@@ -1,9 +1,30 @@
 'use client'
 import { CheckIcon } from '@heroicons/react/20/solid'
 import { getSession } from '../supabase-server'
-import { Session } from '@supabase/supabase-js'
+import { Session, User } from '@supabase/supabase-js'
+import { Database } from '@/types_db';
 
-export default function Example({ session }: { session?: Session }) {
+type Subscription = Database['public']['Tables']['subscriptions']['Row'];
+type Product = Database['public']['Tables']['products']['Row'];
+type Price = Database['public']['Tables']['prices']['Row'];
+interface ProductWithPrices extends Product {
+    prices: Price[];
+}
+interface PriceWithProduct extends Price {
+    products: Product | null;
+}
+interface SubscriptionWithProduct extends Subscription {
+    prices: PriceWithProduct | null;
+}
+interface Props {
+    session: Session | null;
+    user: User | null | undefined;
+    products: ProductWithPrices[];
+    subscription: SubscriptionWithProduct | null;
+}
+
+export default function Example({ session, user, products, subscription }: Props) {
+    console.log('products', products);
     return (
         <div className="isolate overflow-hidden bg-gray-900">
             <div className="mx-auto max-w-7xl px-6 pb-96 pt-24 text-center sm:pt-32 lg:px-8">
@@ -109,15 +130,11 @@ export default function Example({ session }: { session?: Session }) {
                                     <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Device agnostic, we send you the best accordting to your goals
+                                            We handle it all - we'll ship you the perfect wearable device and seamlessly integrate the data.
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Weekly dedicated hours of brain consulting from the founder
-                                        </li>
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Custom integrations to the products you use (e.g. ouraring, fitbit, etc.)
+                                            Custom integrations to the products you use (e.g. apple, blood test, fitbit, etc.)
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
@@ -152,23 +169,23 @@ export default function Example({ session }: { session?: Session }) {
                                     </h3>
 
                                     <div className="mt-4 flex items-baseline gap-x-2">
-                                        <span className="text-5xl font-bold tracking-tight text-gray-900">$50+</span>
+                                        <span className="text-5xl font-bold tracking-tight text-gray-900">$150</span>
                                         <span className="text-sm font-semibold leading-7 text-gray-600">One-time</span>
                                     </div>
 
                                     <p className="mt-6 text-base leading-7 text-gray-600">
-                                        Support Mediar development and get early access
+                                    VIP Access - Lifetime access to premium features
                                     </p>
 
                                     {/* Features */}
                                     <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Support development
+                                            WhatsApp integration
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Early access to beta features (WhatsApp integration, etc.)
+                                            Early access to beta features
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
@@ -186,7 +203,7 @@ export default function Example({ session }: { session?: Session }) {
                                     aria-describedby="tier-biohacker"
                                     className="mt-8 block rounded-md bg-indigo-600 px-3.5 py-2 text-center text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
                                 >
-                                    Support Mediar
+                                    Invest in yourself
                                 </a>
                             </div>
 
