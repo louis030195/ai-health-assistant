@@ -1,4 +1,4 @@
-import { createServerActionClient } from "@supabase/auth-helpers-nextjs";
+import { createRouteHandlerClient, createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { getSession } from "./supabase-server";
 import { Database } from "@/types_db";
 import { cookies } from 'next/headers';
@@ -345,7 +345,8 @@ export const renewOuraAccessToken = async (refreshToken: string, mediarUserId: s
         },
         body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(refreshToken)}`
     });
-    const supabase = createServerActionClient<Database>({ cookies });
+    // const supabase = createServerActionClient<Database>({ cookies });
+    const supabase = createRouteHandlerClient({ cookies })
 
     if (!response.ok) {
         // set invalid token in the db
