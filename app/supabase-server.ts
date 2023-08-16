@@ -197,3 +197,20 @@ export const addTags = async (userId: string, tag: string) => {
 
   return { data, error };
 }
+
+export const saveUserTimezone = async (userId: string, timezone: string) => {
+  const supabase = createServerSupabaseClient();
+  try {
+    const { error } = await supabase
+      .from('users')
+      .update({ timezone })
+      .eq('id', userId);
+    if (error) {
+      console.error('Error:', error);
+      return null;
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+

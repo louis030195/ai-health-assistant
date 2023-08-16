@@ -7,7 +7,8 @@ import {
   getTags,
   getSleep,
   getOnboarding,
-  getUserDetails
+  getUserDetails,
+  saveUserTimezone
 } from '@/app/supabase-server';
 import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
@@ -20,6 +21,7 @@ import { OuraSleepChart } from './OuraSleepChart';
 import Chat from './Chat';
 import { CommandDialogDemo } from './Command';
 import { OuraHrvChart } from './OuraHrvChart';
+import SaveTimezone from './SaveTimezone';
 
 
 export default async function Dashboard() {
@@ -33,6 +35,11 @@ export default async function Dashboard() {
   //   return redirect('/onboarding/intro');
   // }
   const userDetails = await getUserDetails();
+
+  const saveUserTimezoneServer = async (userId: string, timezone: string) => {
+    'use server'
+    await saveUserTimezone(userId, timezone)
+  }
 
   const getStatesServer = async (userId: string, options: GetStatesWithFunctionOptions) => {
     'use server'
@@ -58,6 +65,7 @@ export default async function Dashboard() {
 
   return (
     <div className="flex flex-col justify-center gap-2 items-center">
+      <SaveTimezone userId={session?.user?.id} saveUserTimezoneServer={saveUserTimezoneServer} />
       <PosthogMail session={session!} />
       {
         // @ts-ignore

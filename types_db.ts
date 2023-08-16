@@ -314,6 +314,7 @@ export interface Database {
           neurosity: Json | null
           oura: Json | null
           payment_method: Json | null
+          timezone: string
         }
         Insert: {
           avatar_url?: string | null
@@ -324,6 +325,7 @@ export interface Database {
           neurosity?: Json | null
           oura?: Json | null
           payment_method?: Json | null
+          timezone?: string
         }
         Update: {
           avatar_url?: string | null
@@ -334,6 +336,7 @@ export interface Database {
           neurosity?: Json | null
           oura?: Json | null
           payment_method?: Json | null
+          timezone?: string
         }
         Relationships: [
           {
