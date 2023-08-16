@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
 
         let accessToken: string;
         try {
-            const tokens = await renewOuraAccessToken(row.refresh_token!, row.mediar_user_id!);
+            const tokens = await renewOuraAccessToken(supabase, row.refresh_token!, row.mediar_user_id!);
             accessToken = tokens.accessToken;
         } catch (error) {
             console.log(error)

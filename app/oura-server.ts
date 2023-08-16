@@ -1,4 +1,4 @@
-import { createRouteHandlerClient, createServerActionClient } from "@supabase/auth-helpers-nextjs";
+import { SupabaseClient, createRouteHandlerClient, createServerActionClient } from "@supabase/auth-helpers-nextjs";
 import { getSession } from "./supabase-server";
 import { Database } from "@/types_db";
 import { cookies } from 'next/headers';
@@ -332,7 +332,7 @@ export async function listSleep(token: string, startDate?: string, endDate?: str
 
 
 
-export const renewOuraAccessToken = async (refreshToken: string, mediarUserId: string) => {
+export const renewOuraAccessToken = async (supabase: SupabaseClient, refreshToken: string, mediarUserId: string) => {
     const clientId = process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID!;
     const clientSecret = process.env.OURA_OAUTH_CLIENT_SECRET!;
     const tokenUrl = 'https://api.ouraring.com/oauth/token';
@@ -345,8 +345,6 @@ export const renewOuraAccessToken = async (refreshToken: string, mediarUserId: s
         },
         body: `grant_type=refresh_token&refresh_token=${encodeURIComponent(refreshToken)}`
     });
-    // const supabase = createServerActionClient<Database>({ cookies });
-    const supabase = createRouteHandlerClient({ cookies })
 
     if (!response.ok) {
         // set invalid token in the db
