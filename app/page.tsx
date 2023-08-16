@@ -55,11 +55,6 @@ export default async function Home() {
           <p className="mt-1 text-3xl font-extrabold text-gray-900 sm:text-4xl sm:tracking-tight lg:text-5xl">
             How does it work?
           </p>
-          <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Mediar uses brain activity data from<a href="https://neurosity.co"
-              className="text-indigo-700 hover:text-indigo-600 underline"
-              target="_blank"> Neurosity Crown</a> to provide charts and insights about your brain activity.
-          </p>
           <iframe src="https://link.excalidraw.com/p/readonly/x2iA4KZYDy8hdse5ltLu" width="100%" height="800px"></iframe>
         </div>
 
