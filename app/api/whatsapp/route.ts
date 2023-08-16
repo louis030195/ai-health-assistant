@@ -1,6 +1,23 @@
 import { addTags } from "@/app/supabase-server";
 import posthog from "posthog-js";
 
+
+const quotes = [
+  "✨ Small daily improvements add up to big results over time. Keep logging your health data with Mediar!",
+
+  "💫 The journey of a thousand miles begins with a single step. Start optimizing your wellbeing today!",
+
+  "🌼 Your health data is beautiful and unique. Mediar will help you understand your patterns better.",
+
+  "💯 Progress requires patience. Stick with tracking your health, you've got this!",
+
+  "🤝 Mediar is here to help you unlock your best self. We're in this together!",
+
+  "🌻 Wellbeing takes work, but it's worth it. Keep striving for health!",
+
+  "🙌 The body and mind achieve what they believe. Believe in yourself and your health goals!"
+]
+
 // Define the type for the incoming request
 interface IncomingRequest {
   SmsMessageSid: string;
@@ -91,13 +108,17 @@ export async function POST(req: Request) {
 
     if (isATagResponse) {
       await addTags(parsed.From, parsed.Body)
-      return new Response('Just added a tag to your brain. Your 🧠 is so beautiful ❤️!')
+      return new Response(`Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
+By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
+
+${quotes[Math.floor(Math.random() * quotes.length)]}`)
     }
 
     return new Response(`My sole purpose at the moment is to associate tags related to what is happening in your life to your brain activity.
 You can send me messages like "just ate an apple", or "just had a fight with my wife", or "im sad", or "so low energy tday..".
 This way I will better understand your brain and how it works, and give you better insights about it.
-Your 🧠 is so beautiful ❤️!`)
+
+${quotes[Math.floor(Math.random() * quotes.length)]}`)
   } catch (error) {
     console.log(error);
     return new Response(

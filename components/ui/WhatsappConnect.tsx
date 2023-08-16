@@ -1,11 +1,16 @@
 'use client'
 import { useState } from 'react';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
+import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Button } from './button';
 import { Loader2 } from 'lucide-react';
 import { Input } from './input';
+import { Toaster } from './toaster';
+import toast from 'react-hot-toast';
 
-export default function WhatsappConnect() {
+interface Prop {
+    session: Session;
+}
+export default function WhatsappConnect({ session }: Prop) {
     const supabase = createClientComponentClient();
 
     const [loading, setLoading] = useState(false);
@@ -14,17 +19,19 @@ export default function WhatsappConnect() {
     const handleConnect = async () => {
         setLoading(true);
 
-        try {
-            const { data, error } = await supabase.auth.signInWithOtp({
-                phone: phoneNumber,
-                options: {
-                    // shouldCreateUser: false,
-                    channel: 'whatsapp'
-                }
-            });
+        const toastId = toast.loading('Sending you a WhatsApp message...');
 
-            console.log(data, error);
-            if (error) throw error;
+        try {
+            // const { data, error } = await supabase.auth.signInWithOtp({
+            //     phone: phoneNumber,
+            //     options: {
+            //         // shouldCreateUser: false,
+            //         channel: 'whatsapp'
+            //     }
+            // });
+
+            // console.log(data, error);
+            // if (error) throw error;
 
             // const otp = prompt('Enter the OTP you received on WhatsApp');
 
@@ -38,6 +45,13 @@ export default function WhatsappConnect() {
 
             // alert('WhatsApp connected successfully!');
 
+            const { error } = await supabase.from('users').update({
+                phone: phoneNumber
+            }).eq('id', session.user?.id);
+
+            if (error) throw error;
+
+            toast.success('WhatsApp connected successfully!', { id: toastId });
         } catch (error: any) {
             // alert(error.message);
         } finally {
@@ -47,11 +61,12 @@ export default function WhatsappConnect() {
 
     return (
         <div className="bg-white rounded-lg shadow p-6">
+            <Toaster />
 
             <h2 className="text-2xl font-bold mb-4">Connect WhatsApp</h2>
 
             <p className="text-gray-500 mb-4">
-                Connect your WhatsApp account to enable OTP login.
+                Connect your WhatsApp account to receive insights and send tags directly on WhatsApp.
             </p>
             {/* Phone number input */}
             <Input
@@ -63,7 +78,9 @@ export default function WhatsappConnect() {
             />
             <Button
                 onClick={handleConnect}
-                disabled={loading}
+                // disabled={loading}
+                disabled={true} // TODO: temporary hack
+                className="w-full"
             >
                 {
                     loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />

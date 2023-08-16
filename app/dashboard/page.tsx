@@ -61,7 +61,6 @@ export default async function Dashboard() {
     return getSleep(userId)
   }
 
-  const hasSleep = (await getSleep(session.user.id)).length > 0
 
   return (
     <div className="flex flex-col justify-center gap-2 items-center">
