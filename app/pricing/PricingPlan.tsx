@@ -24,6 +24,10 @@ interface Props {
 }
 
 export default function Example({ session, user, products, subscription }: Props) {
+    console.log("session", session);
+    console.log("user", user);
+    console.log("products", products);
+    console.log("subscription", subscription);
     return (
         <div className="isolate overflow-hidden bg-gray-900">
             <div className="mx-auto max-w-7xl px-6 pb-96 pt-24 text-center sm:pt-32 lg:px-8">

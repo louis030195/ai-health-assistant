@@ -2,7 +2,6 @@ import { addTags } from "@/app/supabase-server";
 import { sendWhatsAppMessage } from "@/app/whatsapp-server";
 import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
-import posthog from "posthog-js";
 export const runtime = 'edge'
 
 const supabase = createClient<Database>(
@@ -126,6 +125,22 @@ Assistant:`
   return response.trim().includes('1')
 }
 
+const track = async (userId: string) => {
+  await fetch(
+    'https://app.posthog.com/capture/',
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        api_key: 'phc_V7co1flWmfnd9Hd6LSyPRau9sARsxMEiOrmNvGeUhbJ',
+        event: 'whatsapp message received',
+        distinct_id: userId,
+      }),
+    }
+  )
+}
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -143,10 +158,7 @@ export async function POST(req: Request) {
   }
   const userId = data.id
   const phoneVerified = data?.phone_verified || false
-  posthog.identify(userId)
-  posthog.capture('whatsapp message received', {
-    from: parsed.From,
-  });
+  await track(userId)
   if (!phoneVerified) {
     return new Response(`Your phone has not been verified!`);
   }
