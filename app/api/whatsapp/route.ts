@@ -42,7 +42,7 @@ interface IncomingRequest {
   ApiVersion: string;
 }
 
-const llm = async (message: string) => {
+const llm = async (message: string, maxTokens = 5) => {
   const response = await fetch('https://api.anthropic.com/v1/complete', {
     method: 'POST',
     headers: {
@@ -52,7 +52,7 @@ const llm = async (message: string) => {
     body: JSON.stringify({
       prompt: message,
       model: 'claude-instant-1.2', // 'claude-2',
-      max_tokens_to_sample: 5,
+      max_tokens_to_sample: maxTokens,
       stream: false
     })
   })
@@ -175,7 +175,7 @@ export async function POST(req: Request) {
       await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏.")
       const prompt = await generatePromptForUser(userId)
       console.log("Prompt:", prompt);
-      const response = await llm(prompt)
+      const response = await llm(prompt, 500)
       console.log("Response:", response);
       return new Response(response);
     } else if (isATagResponse) {
@@ -217,12 +217,23 @@ async function generatePromptForUser(userId: string): Promise<string> {
   const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone });
 
   // 3. Retrieve Neurosity data for the user
-  const { data: neuros } = await supabase
+  const { data } = await supabase
     .from('states')
-    .select()
+    .select('created_at, probability')
     .eq('metadata->>label', 'focus')
     .gte('created_at', yesterday)
     .order('created_at', { ascending: false });
+
+  // Group by 300 samples and average the probability
+  const neuros = data?.reduce((acc: any, curr, index, array) => {
+    if (index % 300 === 0) {
+      const slice = array.slice(index, index + 300);
+      const avgProbability = slice.reduce((sum, item) => sum + (item.probability || 0), 0) / slice.length;
+      acc.push({ created_at: curr.created_at, probability: avgProbability });
+    }
+    return acc;
+  }, []);
+
 
   // 4. Retrieve Oura data for the user
   const { data: ouras } = await supabase
