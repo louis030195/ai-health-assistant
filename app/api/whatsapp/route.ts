@@ -3,6 +3,7 @@ import { sendWhatsAppMessage } from "@/app/whatsapp-server";
 import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
 import posthog from "posthog-js";
+export const runtime = 'edge'
 
 const supabase = createClient<Database>(
   process.env.SUPABASE_URL!,
