@@ -22,7 +22,12 @@ Of course, just write on the go without emojis, I can also deal with grammar mis
 
 I'll use these tags to provide personalized daily insights on how to improve your focus, sleep, stress and general health! 🧘‍♀️🥰
 
-If you have any feedback or questions ❓, just join the Discord community: https://discord.gg/pFKpxYpZEa or email 💌 louis@mediar.ai.
+If you want to know more about your health, just ask me questions like:
+- How can I improve my sleep?
+- How can I reduce my stress?
+- What's my focus score?
+
+If you have any feedback or questions ❓ about Mediar, just join the Discord community: https://discord.gg/pFKpxYpZEa or email 💌 louis@mediar.ai.
 
 Let's unlock your full potential together! Sending tags is quick and easy - I'm excited to start learning more about you! ✨`
 

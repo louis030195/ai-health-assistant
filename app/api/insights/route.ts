@@ -35,13 +35,26 @@ export async function POST(req: Request) {
       const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone })
       console.log("Yesterday's date for user:", yesterday);
 
-      const { data: neuros } = await supabase
+      const { data } = await supabase
         .from('states')
         .select()
         .eq('metadata->>label', 'focus')
         .gte('created_at', yesterday)
         .order('created_at', { ascending: false })
-      console.log("Retrieved Neurosity data:", neuros?.length);
+      console.log("Retrieved Neurosity data:", data?.length);
+
+      // Group by 300 samples and average the probability
+      const neuros = data
+        // filter out < 0.3 probability
+        ?.filter((item) => item.probability && item.probability! > 0.3)
+        ?.reduce((acc: any, curr, index, array) => {
+          if (index % 300 === 0) {
+            const slice = array.slice(index, index + 300);
+            const avgProbability = slice.reduce((sum, item) => sum + (item.probability || 0), 0) / slice.length;
+            acc.push({ created_at: curr.created_at, probability: avgProbability });
+          }
+          return acc;
+        }, []);
 
       const { data: ouras } = await supabase
         .from('states')

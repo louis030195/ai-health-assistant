@@ -225,14 +225,17 @@ async function generatePromptForUser(userId: string): Promise<string> {
     .order('created_at', { ascending: false });
 
   // Group by 300 samples and average the probability
-  const neuros = data?.reduce((acc: any, curr, index, array) => {
-    if (index % 300 === 0) {
-      const slice = array.slice(index, index + 300);
-      const avgProbability = slice.reduce((sum, item) => sum + (item.probability || 0), 0) / slice.length;
-      acc.push({ created_at: curr.created_at, probability: avgProbability });
-    }
-    return acc;
-  }, []);
+  const neuros = data
+    // filter out < 0.3 probability
+    ?.filter((item) => item.probability && item.probability! > 0.3)
+    ?.reduce((acc: any, curr, index, array) => {
+      if (index % 300 === 0) {
+        const slice = array.slice(index, index + 300);
+        const avgProbability = slice.reduce((sum, item) => sum + (item.probability || 0), 0) / slice.length;
+        acc.push({ created_at: curr.created_at, probability: avgProbability });
+      }
+      return acc;
+    }, []);
 
 
   // 4. Retrieve Oura data for the user

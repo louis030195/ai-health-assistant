@@ -4,6 +4,7 @@ import {
   getSession,
   getUserDetails,
   getSubscription,
+  getActiveProductsWithPrices,
 } from '@/app/supabase-server';
 import { Database } from '@/types_db';
 import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
@@ -24,7 +25,11 @@ export default async function Account() {
   if (!session) {
     return redirect('/signin');
   }
-
+  const [subscription, products, userDetails] = await Promise.all([
+    getSubscription(),
+    getActiveProductsWithPrices(),
+    getUserDetails()
+  ]);
   const getOuraAccessTokenServerServer = async (code: string, scopes: string[], redirectUri: string) => {
     'use server'
     return getOuraAccessTokenServer(code, scopes, redirectUri)
@@ -41,10 +46,13 @@ export default async function Account() {
       {/* center */}
       <div className="p-4 flex gap-4 flex-col items-center justify-center">
         <PlanRibbon
-          stripeLink="https://buy.stripe.com/aEU9Bj8ma3Nw3NS7st"
           displayText="Biohacker Plan"
-          userEmail={session.user.email}>
-          <WhatsappConnect session={session} />
+          price={products?.find((product) => product.name === 'Biohacker')?.prices[0]!}
+          subscription={subscription || undefined}
+          session={session}
+        >
+
+          <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails} />
         </PlanRibbon>
         <NeurosityConnect session={session} className='w-2/5' onboarding={false} />
         <OuraConnect session={session} onboarding={false} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServerServer} />

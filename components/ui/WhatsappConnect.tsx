@@ -6,15 +6,20 @@ import { Loader2 } from 'lucide-react';
 import { Input } from './input';
 import { Toaster } from './toaster';
 import toast from 'react-hot-toast';
+import { Database } from '@/types_db';
+type Subscription = Database['public']['Tables']['subscriptions']['Row'];
+type UserDetails = Database['public']['Tables']['users']['Row'];
 
 interface Prop {
     session: Session;
+    subscription?: Subscription;
+    userDetails?: UserDetails
 }
-export default function WhatsappConnect({ session }: Prop) {
+export default function WhatsappConnect({ session, subscription, userDetails }: Prop) {
     const supabase = createClientComponentClient();
 
     const [loading, setLoading] = useState(false);
-    const [phoneNumber, setPhoneNumber] = useState('');
+    const [phoneNumber, setPhoneNumber] = useState(userDetails?.phone || '');
 
     const handleConnect = async () => {
         setLoading(true);
@@ -46,12 +51,15 @@ export default function WhatsappConnect({ session }: Prop) {
             // alert('WhatsApp connected successfully!');
 
             const { error } = await supabase.from('users').update({
-                phone: phoneNumber
+                phone: phoneNumber,
+                phone_verified: true // TODO: real verif
             }).eq('id', session.user?.id);
 
             if (error) throw error;
 
             toast.success('WhatsApp connected successfully!', { id: toastId });
+            toast.success('Thank you for trying the beta integration of WhatsApp. Any issues, please contact us 🙏')
+
         } catch (error: any) {
             // alert(error.message);
         } finally {
@@ -78,8 +86,7 @@ export default function WhatsappConnect({ session }: Prop) {
             />
             <Button
                 onClick={handleConnect}
-                // disabled={loading}
-                disabled={true} // TODO: temporary hack
+                disabled={loading || !subscription}
                 className="w-full"
             >
                 {
