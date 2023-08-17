@@ -52,7 +52,7 @@ export default async function Account() {
           session={session}
         >
 
-          <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails} />
+          <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined} />
         </PlanRibbon>
         <NeurosityConnect session={session} className='w-2/5' onboarding={false} />
         <OuraConnect session={session} onboarding={false} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServerServer} />
