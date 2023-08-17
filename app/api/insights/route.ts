@@ -1,4 +1,5 @@
 // ./app/api/insights/route.ts
+import { sendWhatsAppMessage } from '@/app/whatsapp-server';
 import { Database } from '@/types_db';
 import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@supabase/supabase-js';
@@ -7,30 +8,7 @@ import { NextResponse } from 'next/server';
 
 export const runtime = 'edge'
 
-const sendWhatsAppMessage = async (from: string, to: string, body: string) => {
-  const accountSid = process.env.TWILIO_ACCOUNT_SID;
-  const authToken = process.env.TWILIO_AUTH_TOKEN;
 
-  const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/x-www-form-urlencoded',
-      'Authorization': `Basic ${Buffer.from(`${accountSid}:${authToken}`).toString('base64')}`
-    },
-    body: new URLSearchParams({
-      From: `whatsapp:${from}`,
-      Body: body,
-      To: `whatsapp:${to}`,
-    }).toString()
-  });
-
-  if (!response.ok) {
-    const text = await response.text();
-    throw new Error(`Failed to send WhatsApp message: ${response.status} ${response.statusText} ${text}`);
-  }
-
-  return response;
-}
 
 const supabase = createClient<Database>(
   process.env.SUPABASE_URL!,
@@ -95,7 +73,7 @@ export async function POST(req: Request) {
 
       console.log("Generated insights:", insights);
 
-      const response = await sendWhatsAppMessage(process.env.TWILIO_PHONE_NUMBER!, user.phone!, insights);
+      const response = await sendWhatsAppMessage(user.phone!, insights);
       console.log("Message sent to:", user.phone, "with response status:", response.status);
     })
 

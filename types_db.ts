@@ -315,6 +315,7 @@ export interface Database {
           oura: Json | null
           payment_method: Json | null
           phone: string | null
+          phone_verified: boolean
           timezone: string
         }
         Insert: {
@@ -327,6 +328,7 @@ export interface Database {
           oura?: Json | null
           payment_method?: Json | null
           phone?: string | null
+          phone_verified?: boolean
           timezone?: string
         }
         Update: {
@@ -339,6 +341,7 @@ export interface Database {
           oura?: Json | null
           payment_method?: Json | null
           phone?: string | null
+          phone_verified?: boolean
           timezone?: string
         }
         Relationships: [
