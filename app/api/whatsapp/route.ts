@@ -149,8 +149,9 @@ export async function POST(req: Request) {
   const parsed = Object.fromEntries(params) as IncomingRequest;
 
   console.log(parsed);
+  const phoneNumber = parsed.From.replace('whatsapp:', '')
   // get userId
-  const { data, error } = await supabase.from('users').select().eq('phone', parsed.From.replace('whatsapp:', '')).maybeSingle();
+  const { data, error } = await supabase.from('users').select().eq('phone', phoneNumber).maybeSingle();
   if (error || !data) {
     console.log(error, data)
     return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 400 });
@@ -171,7 +172,7 @@ export async function POST(req: Request) {
       isQuestion(parsed.Body)
     ]);
     if (isQuestionResponse) {
-      await sendWhatsAppMessage(parsed.From, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏.")
+      await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏.")
       const prompt = await generatePromptForUser(userId)
       console.log("Prompt:", prompt);
       const response = await llm(prompt)
