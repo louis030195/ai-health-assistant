@@ -132,9 +132,7 @@ export async function POST(req: Request) {
   const params = new URLSearchParams(body);
   // @ts-ignore
   const parsed = Object.fromEntries(params) as IncomingRequest;
-  posthog.capture('whatsapp message received', {
-    from: parsed.From,
-  });
+
   console.log(parsed);
   // get userId
   const { data, error } = await supabase.from('users').select().eq('phone', parsed.From.replace('whatsapp:', '')).maybeSingle();
@@ -145,7 +143,10 @@ export async function POST(req: Request) {
   }
   const userId = data.id
   const phoneVerified = data?.phone_verified || false
-
+  posthog.identify(userId)
+  posthog.capture('whatsapp message received', {
+    from: parsed.From,
+  });
   if (!phoneVerified) {
     return new Response(`Your phone has not been verified!`);
   }
