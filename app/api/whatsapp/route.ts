@@ -1,8 +1,7 @@
-import { addTags, createServerSupabaseClient } from "@/app/supabase-server";
+import { addTags } from "@/app/supabase-server";
 import { sendWhatsAppMessage } from "@/app/whatsapp-server";
 import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
-import { NextResponse } from "next/server";
 import posthog from "posthog-js";
 
 const supabase = createClient<Database>(
@@ -137,11 +136,10 @@ export async function POST(req: Request) {
   });
   console.log(parsed);
   // get userId
-  const { data, error } = await supabase.from('users').select().eq('phone', parsed.From.replace('whatsapp:', '')
-  ).maybeSingle();
+  const { data, error } = await supabase.from('users').select().eq('phone', parsed.From.replace('whatsapp:', '')).maybeSingle();
   if (error || !data) {
     console.log(error, data)
-    return NextResponse.json({ message: `Error fetching user or user not found. Error: ${error?.message}` }, { status: 400 });
+    return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 400 });
 
   }
   const userId = data.id
@@ -181,10 +179,9 @@ This way I will better understand your brain and how it works, and give you bett
 ${quotes[Math.floor(Math.random() * quotes.length)]}`);
   } catch (error) {
     console.log(error);
-    return NextResponse.json({
-      message:
-        'Webhook handler failed. View your nextjs function logs.',
-    }, { status: 500 });
+    return new Response(
+      'Webhook handler failed. View your nextjs function logs.',
+      { status: 500 });
   }
 }
 
