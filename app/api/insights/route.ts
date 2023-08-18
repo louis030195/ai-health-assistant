@@ -10,9 +10,11 @@ export const runtime = 'edge'
 
 
 
-export async function POST(req: Request) {
-  console.log("Starting POST request...");
-  const supabase = createRouteHandlerClient({ cookies });
+const supabase = createClient<Database>(
+  process.env.SUPABASE_URL!,
+  process.env.SUPABASE_KEY!
+);
+export async function GET(req: Request) {
 
   const { error, data: users } = await supabase
     .from('users')
@@ -159,7 +161,6 @@ const llm = async (message: string) => {
 
 const getTags = async (userId: string, date: string) => {
   console.log("Getting tags for user:", userId, "since date:", date);
-  const supabase = createRouteHandlerClient({ cookies });
 
   const { data, error } = await supabase
     .from('tags')
