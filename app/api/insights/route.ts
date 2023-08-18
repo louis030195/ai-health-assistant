@@ -76,6 +76,8 @@ export async function POST(req: Request) {
 
       let insights = ''
 
+      console.log("Generating insights for user:", user);
+
       if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
         insights = await llm(buildBothDataPrompt(neuros, ouras, tags, user.full_name));
       } else if (neuros && neuros.length > 0) {
@@ -102,6 +104,7 @@ const generalInstructions = `Here are a few rules:
 - Your answers are only the bullet points, and potentially some advices for the user at the end if you find any 
 - Do not say bullshit health advice, just infer from the data 
 - Your response will directly be sent to the user so change your language accordingly
+- Do not talk about you missing information, just don't say if you don't have enough data
 - Do not talk about tags if you don't see any clear correlation with the wearable data`
 
 function buildBothDataPrompt(neuros: object[], ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
