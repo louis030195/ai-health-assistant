@@ -10,8 +10,8 @@ export const runtime = 'edge'
 
 export async function GET(req: Request) {
   const supabase = createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_KEY!
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!
   )
   const { error, data: users } = await supabase
     .from('users')
@@ -169,8 +169,8 @@ const llm = async (message: string) => {
 const getTags = async (userId: string, date: string) => {
   console.log("Getting tags for user:", userId, "since date:", date);
   const supabase = createClient<Database>(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_KEY!
+    process.env.SUPABASE_URL!,
+    process.env.SUPABASE_KEY!
   )
   const { data, error } = await supabase
     .from('tags')
