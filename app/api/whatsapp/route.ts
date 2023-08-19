@@ -146,7 +146,7 @@ export async function POST(req: Request) {
   const parsed = Object.fromEntries(params) as IncomingRequest;
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_KEY!
   )
   console.log(parsed);
   const phoneNumber = parsed.From.replace('whatsapp:', '')
@@ -203,7 +203,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
 async function generatePromptForUser(userId: string): Promise<string> {
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_KEY!
   )
 
   // 1. Fetch the user's information
@@ -308,7 +308,7 @@ const getTags = async (userId: string, date: string) => {
   console.log("Getting tags for user:", userId, "since date:", date);
   const supabase = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    process.env.NEXT_PUBLIC_SUPABASE_KEY!
   )
   const { data, error } = await supabase
     .from('tags')
