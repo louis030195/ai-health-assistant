@@ -1,7 +1,6 @@
 // ./app/api/insights/route.ts
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
 import { Database } from '@/types_db';
-import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -10,10 +9,10 @@ export const runtime = 'edge'
 
 
 export async function GET(req: Request) {
-  const supabase = createRouteHandlerClient({ cookies }, {
-    supabaseUrl: process.env.SUPABASE_URL!,
-    supabaseKey: process.env.SUPABASE_KEY!,
-  })
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
   const { error, data: users } = await supabase
     .from('users')
     .select('id, phone, timezone, full_name')
@@ -169,10 +168,10 @@ const llm = async (message: string) => {
 
 const getTags = async (userId: string, date: string) => {
   console.log("Getting tags for user:", userId, "since date:", date);
-  const supabase = createRouteHandlerClient({ cookies }, {
-    supabaseUrl: process.env.SUPABASE_URL!,
-    supabaseKey: process.env.SUPABASE_KEY!,
-  })
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
   const { data, error } = await supabase
     .from('tags')
     .select('text, created_at')

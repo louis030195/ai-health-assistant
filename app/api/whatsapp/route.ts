@@ -1,7 +1,6 @@
 import { addTags } from "@/app/supabase-server";
 import { sendWhatsAppMessage } from "@/app/whatsapp-server";
 import { Database } from "@/types_db";
-import { createRouteHandlerClient } from "@supabase/auth-helpers-nextjs";
 import { createClient } from "@supabase/supabase-js";
 export const runtime = 'edge'
 import { cookies } from 'next/headers';
@@ -145,10 +144,10 @@ export async function POST(req: Request) {
   const params = new URLSearchParams(body);
   // @ts-ignore
   const parsed = Object.fromEntries(params) as IncomingRequest;
-  const supabase = createRouteHandlerClient({ cookies }, {
-    supabaseUrl: process.env.SUPABASE_URL!,
-    supabaseKey: process.env.SUPABASE_KEY!,
-  })
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
   console.log(parsed);
   const phoneNumber = parsed.From.replace('whatsapp:', '')
   // get userId
@@ -202,10 +201,10 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
 }
 
 async function generatePromptForUser(userId: string): Promise<string> {
-  const supabase = createRouteHandlerClient({ cookies }, {
-    supabaseUrl: process.env.SUPABASE_URL!,
-    supabaseKey: process.env.SUPABASE_KEY!,
-  })
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
 
   // 1. Fetch the user's information
   const { error, data: users } = await supabase
@@ -307,10 +306,10 @@ Assistant:`;
 }
 const getTags = async (userId: string, date: string) => {
   console.log("Getting tags for user:", userId, "since date:", date);
-  const supabase = createRouteHandlerClient({ cookies }, {
-    supabaseUrl: process.env.SUPABASE_URL!,
-    supabaseKey: process.env.SUPABASE_KEY!,
-  })
+  const supabase = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  )
   const { data, error } = await supabase
     .from('tags')
     .select('text, created_at')
