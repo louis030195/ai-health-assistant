@@ -179,7 +179,12 @@ export async function POST(req: Request) {
       console.log("Response:", response);
       return new Response(response);
     } else if (isATagResponse) {
-      await addTags(userId, parsed.Body)
+      const { data, error } = await supabase.from('tags').insert({
+        text: parsed.Body,
+        user_id: userId,
+      });
+      console.log("Tag added:", data, error);
+    
       return new Response(`Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
 
