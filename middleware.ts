@@ -3,9 +3,27 @@ import { NextResponse } from 'next/server'
 
 import type { NextRequest } from 'next/server'
 import type { Database } from '@/types_db'
-
+export const CORS_HEADERS = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': '*',
+}
+const apiRoutes = [
+  '/api/whatsapp',
+  '/api/insights',
+]
 export async function middleware(req: NextRequest) {
+  if (req.method === 'OPTIONS') {
+    return new Response(null, {
+      headers: CORS_HEADERS,
+    })
+  }
   const res = NextResponse.next()
+
+  if (
+    apiRoutes.some((route) => req.nextUrl.pathname.includes(route))
+  ) {
+    return res
+  }
   const supabase = createMiddlewareClient<Database>({ req, res })
   const { data: { session } } = await supabase.auth.getSession()
 
