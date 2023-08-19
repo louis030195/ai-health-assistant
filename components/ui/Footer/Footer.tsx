@@ -37,26 +37,26 @@ export default function Footer() {
           </ul>
         </div> */}
 
-        {/* <div className="col-span-1 lg:col-span-2">
+        <div className="col-span-1 lg:col-span-2 jutify-end items-end">
           <ul className="flex flex-col flex-initial md:flex-1">
             <li className="py-3 md:py-0 md:pb-4">
               <Link
-                href="/"
+                href="/privacy"
                 className="text-gray-700 transition duration-150 ease-in-out hover:text-gray-900"
               >
                 Privacy Policy
               </Link>
             </li>
-            <li className="py-3 md:py-0 md:pb-4">
+            {/* <li className="py-3 md:py-0 md:pb-4">
               <Link
                 href="/"
                 className="text-gray-700 transition duration-150 ease-in-out hover:text-gray-900"
               >
                 Terms of Use
               </Link>
-            </li>
+            </li> */}
           </ul>
-        </div> */}
+        </div>
 
       </div>
 
