@@ -138,9 +138,8 @@ const SignInForm: FC<Props> = () => {
                     {isLoading ? (
                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
-                        <Icons.google className="mr-2 h-4 w-4" />
+                        <Icons.google className="h-4 w-4" />
                     )}{" "}
-                    Google
                 </Button>
 
                 {/* <Button

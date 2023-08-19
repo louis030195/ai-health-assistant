@@ -147,15 +147,14 @@ const SignUpForm: FC<Props> = () => {
                     </div>
                 </div>
                 <Button
-                    className="text-black"
+                    className="text-black p-0 m-0 bg-white"
                     variant="outline"
                     disabled={isLoading} onClick={signInWithGoogle}>
                     {isLoading ? (
                         <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
                     ) : (
-                        <Icons.google className="mr-2 h-4 w-4" />
+                        <Icons.google className="h-4 w-4" />
                     )}{" "}
-                    Google
                 </Button>
 
                 {/* twitter */}
