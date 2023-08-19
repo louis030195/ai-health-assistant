@@ -9,10 +9,10 @@ import { NextResponse } from 'next/server';
 export const runtime = 'edge'
 
 
-
 const supabase = createClient<Database>(
   process.env.SUPABASE_URL!,
-  process.env.SUPABASE_KEY!
+  process.env.SUPABASE_KEY!,
+  { auth: { persistSession: false } }
 );
 export async function GET(req: Request) {
 
