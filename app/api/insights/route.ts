@@ -9,13 +9,11 @@ import { NextResponse } from 'next/server';
 export const runtime = 'edge'
 
 
-const supabase = createClient<Database>(
-  process.env.SUPABASE_URL!,
-  process.env.SUPABASE_KEY!,
-  { auth: { persistSession: false } }
-);
 export async function GET(req: Request) {
-
+  const supabase = createRouteHandlerClient({ cookies }, {
+    supabaseUrl: process.env.SUPABASE_URL!,
+    supabaseKey: process.env.SUPABASE_KEY!,
+  })
   const { error, data: users } = await supabase
     .from('users')
     .select('id, phone, timezone, full_name')
@@ -171,7 +169,10 @@ const llm = async (message: string) => {
 
 const getTags = async (userId: string, date: string) => {
   console.log("Getting tags for user:", userId, "since date:", date);
-
+  const supabase = createRouteHandlerClient({ cookies }, {
+    supabaseUrl: process.env.SUPABASE_URL!,
+    supabaseKey: process.env.SUPABASE_KEY!,
+  })
   const { data, error } = await supabase
     .from('tags')
     .select('text, created_at')

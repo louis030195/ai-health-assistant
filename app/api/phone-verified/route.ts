@@ -60,9 +60,9 @@ export async function POST(req: Request) {
         const response = await sendWhatsAppMessage(phone, welcomeMessage(full_name));
         console.log("Message sent to:", userId, "with response status:", response.status);
 
-        return NextResponse.json({ message: "Success" }, { status: 200 });
+        return NextResponse.json({ message: "Sent welcome message" }, { status: 200 });
     }
-    return NextResponse.json({ message: "Invalid request" }, { status: 400 });
+    return NextResponse.json({ message: "Phone still verified!" }, { status: 200 });
 
 }
 
