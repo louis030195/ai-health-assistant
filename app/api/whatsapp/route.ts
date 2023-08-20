@@ -4,6 +4,7 @@ import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
 export const runtime = 'edge'
 import { cookies } from 'next/headers';
+import { kv } from '@vercel/kv';
 
 const quotes = [
   "✨ Small daily improvements add up to big results over time. Keep logging your health data with Mediar!",
@@ -138,6 +139,8 @@ const track = async (userId: string) => {
     }
   )
 }
+const QUESTION_PREFIX = 'question_';
+const TAG_PREFIX = 'tag_';
 
 export async function POST(req: Request) {
   const body = await req.text();
@@ -163,7 +166,13 @@ export async function POST(req: Request) {
   if (!phoneVerified) {
     return new Response(`Your phone has not been verified!`);
   }
+  const date = new Date();
+  const questionKey = QUESTION_PREFIX + userId + '_' + date;
+  const tagKey = TAG_PREFIX + userId + '_' + date;
 
+  const questionCount = await kv.get(questionKey);
+  const tagCount = await kv.get(tagKey);
+  console.log("Question count:", questionCount, "Tag count:", tagCount);
   try {
     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
 
@@ -172,6 +181,7 @@ export async function POST(req: Request) {
       isQuestion(parsed.Body)
     ]);
     if (isQuestionResponse) {
+      await kv.incr(questionKey);
       await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏.")
       const prompt = await generatePromptForUser(userId)
       console.log("Prompt:", prompt);
@@ -179,6 +189,7 @@ export async function POST(req: Request) {
       console.log("Response:", response);
       return new Response(response);
     } else if (isATagResponse) {
+      await kv.incr(tagKey);
       const { data, error } = await supabase.from('tags').insert({
         text: parsed.Body,
         user_id: userId,
