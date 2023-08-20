@@ -166,6 +166,11 @@ export async function POST(req: Request) {
   if (!phoneVerified) {
     return new Response(`Your phone has not been verified!`);
   }
+  const { data: d2, error: e2 } = await supabase.from('chats').insert({
+    text: parsed.Body,
+    user_id: userId,
+  });
+  console.log("Chat added:", d2, e2);
   const date = new Date().toLocaleDateString('en-US');
   const questionKey = QUESTION_PREFIX + userId + '_' + date;
   const tagKey = TAG_PREFIX + userId + '_' + date;
@@ -183,7 +188,7 @@ export async function POST(req: Request) {
     if (isQuestionResponse) {
       await kv.incr(questionKey);
       await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️")
-      const prompt = await generatePromptForUser(userId)
+      const prompt = await generatePromptForUser(userId, parsed.Body)
       console.log("Prompt:", prompt);
       const response = await llm(prompt, 500)
       console.log("Response:", response);
@@ -221,7 +226,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
   }
 }
 
-async function generatePromptForUser(userId: string): Promise<string> {
+async function generatePromptForUser(userId: string, question: string): Promise<string> {
   const supabase = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_KEY!
@@ -283,13 +288,13 @@ async function generatePromptForUser(userId: string): Promise<string> {
   let prompt = '';
   if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
     console.log("Both neuros and ouras data available");
-    prompt = buildBothDataPrompt(neuros, ouras, tags, user.full_name);
+    prompt = buildBothDataPrompt(neuros, ouras, tags, user.full_name, question);
   } else if (neuros && neuros.length > 0) {
     console.log("Only neuros data available");
-    prompt = buildOnlyNeurosityPrompt(neuros, tags, user.full_name);
+    prompt = buildOnlyNeurosityPrompt(neuros, tags, user.full_name, question);
   } else if (ouras && ouras.length > 0) {
     console.log("Only ouras data available");
-    prompt = buildOnlyOuraRingPrompt(ouras, tags, user.full_name);
+    prompt = buildOnlyOuraRingPrompt(ouras, tags, user.full_name, question);
   }
 
   return prompt;
@@ -301,32 +306,36 @@ const generalInstructions = `Here are a few rules:
 - Your answers are only the bullet points, and potentially some advices for the user at the end if you find any 
 - Do not say bullshit health advice, just infer from the data 
 - Your response will directly be sent to the user so change your language accordingly
-- Do not talk about tags if you don't see any clear correlation with the wearable data`
+- Do not talk about tags if you don't see any clear correlation with the wearable data
+- Do not mention 'User' or 'Human' in your response, it's implied'`
 
-function buildBothDataPrompt(neuros: object[], ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
+function buildBothDataPrompt(neuros: object[], ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
   const userReference = fullName ? ` for ${fullName}` : '';
   return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
 and these OuraRing states: ${JSON.stringify(ouras)} 
+That answer the user's question: ${question}
 ${generalInstructions}
 Assistant:`;
 }
 
-function buildOnlyNeurosityPrompt(neuros: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
+function buildOnlyNeurosityPrompt(neuros: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
   const userReference = fullName ? ` for ${fullName}` : '';
   return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
+That answer the user's question: ${question}
 ${generalInstructions}
 Assistant:`;
 }
 
-function buildOnlyOuraRingPrompt(ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
+function buildOnlyOuraRingPrompt(ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
   const userReference = fullName ? ` for ${fullName}` : '';
   return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
 given these tags: ${JSON.stringify(tags)} 
 And these OuraRing states: ${JSON.stringify(ouras)} 
+That answer the user's question: ${question}
 ${generalInstructions}
 Assistant:`;
 }
