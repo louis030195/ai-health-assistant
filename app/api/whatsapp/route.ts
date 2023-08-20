@@ -190,10 +190,10 @@ export async function POST(req: Request) {
 
     await kv.incr(tagKey);
     console.log("Image received, sending to inference API");
-    
+
     const response = await inference.imageToText({
       data: await (await fetch(parsed.MediaUrl0)).blob(),
-      model: 'nlpconnect/vit-gpt2-image-captioning',  
+      model: 'nlpconnect/vit-gpt2-image-captioning',
     })
 
     const caption = response.generated_text;
@@ -209,7 +209,9 @@ export async function POST(req: Request) {
     console.log("Tag added:", data, error);
 
     // Return response
-    return new Response(`I see in your image "${caption}". I've recorded that tag for you. Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️`);
+    return new Response(`I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
+Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️!
+${quotes[Math.floor(Math.random() * quotes.length)]}`);
   }
   try {
     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
