@@ -229,8 +229,8 @@ export function WhatsAppBanner() {
         />
       </div>
       <p className="text-sm leading-6 text-gray-900">
-        <b>Announcement:</b> We're excited to introduce WhatsApp integration on the Biohacker plan!{' '}
-        <a href="/pricing" className="whitespace-nowrap font-semibold">
+        <b>Announcement:</b> We're excited to introduce the WhatsApp integration!{' '}
+        <a href="/whatsapp" className="whitespace-nowrap font-semibold">
           Learn more&nbsp;<span aria-hidden="true">&rarr;</span>
         </a>
       </p>
