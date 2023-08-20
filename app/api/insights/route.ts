@@ -23,9 +23,9 @@ export async function GET(req: Request) {
     return NextResponse.json({ message: "Error fetching users" }, { status: 500 });
   }
 
-  users
+  await Promise.all(users
     ?.filter((user) => user.timezone && user.phone)
-    ?.forEach(async (user) => {
+    ?.map(async (user) => {
       console.log("Processing user:", user);
 
       const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone })
@@ -105,7 +105,7 @@ export async function GET(req: Request) {
 
       const response = await sendWhatsAppMessage(user.phone!, insights);
       console.log("Message sent to:", user.phone, "with response status:", response.status);
-    })
+    }));
 
   return NextResponse.json({ message: "Success" }, { status: 200 });
 }
