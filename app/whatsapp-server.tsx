@@ -3,6 +3,7 @@ export const sendWhatsAppMessage = async (to: string, body: string) => {
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken = process.env.TWILIO_AUTH_TOKEN;
 
+    console.log(`Sending WhatsApp message from ${from} to ${to}`);
     const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
         method: 'POST',
         headers: {

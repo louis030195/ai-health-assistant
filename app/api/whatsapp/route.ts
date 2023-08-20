@@ -6,6 +6,12 @@ export const runtime = 'edge'
 import { cookies } from 'next/headers';
 import { kv } from '@vercel/kv';
 
+import { HfInference } from "@huggingface/inference";
+
+
+const inference = new HfInference(process.env.HF_API_KEY!);
+
+
 const quotes = [
   "✨ Small daily improvements add up to big results over time. Keep logging your health data with Mediar!",
 
@@ -145,8 +151,7 @@ const TAG_PREFIX = 'tag_';
 export async function POST(req: Request) {
   const body = await req.text();
   const params = new URLSearchParams(body);
-  // @ts-ignore
-  const parsed = Object.fromEntries(params) as IncomingRequest;
+  const parsed = Object.fromEntries(params) as any;
   const supabase = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_KEY!
@@ -178,6 +183,34 @@ export async function POST(req: Request) {
   const questionCount = await kv.get(questionKey);
   const tagCount = await kv.get(tagKey);
   console.log("Question count:", questionCount, "Tag count:", tagCount);
+
+  const hasImage = parsed.NumMedia > 0;
+  if (hasImage) {
+    await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
+
+    await kv.incr(tagKey);
+    console.log("Image received, sending to inference API");
+    
+    const response = await inference.imageToText({
+      data: await (await fetch(parsed.MediaUrl0)).blob(),
+      model: 'nlpconnect/vit-gpt2-image-captioning',  
+    })
+
+    const caption = response.generated_text;
+
+    console.log("Caption:", caption);
+
+    // Insert as tag
+    const { data, error } = await supabase.from('tags').insert({
+      text: caption,
+      user_id: userId
+    });
+
+    console.log("Tag added:", data, error);
+
+    // Return response
+    return new Response(`I see in your image "${caption}". I've recorded that tag for you. Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️`);
+  }
   try {
     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
 
@@ -213,9 +246,9 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       );
     }
 
-    return new Response(`My sole purpose at the moment is to associate tags related to what is happening in your life to your brain activity.
+    return new Response(`My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
 You can send me messages like "just ate an apple", or "just had a fight with my wife", or "im sad", or "so low energy tday..".
-This way I will better understand your brain and how it works, and give you better insights about it.
+This way I will better understand how your body works, and give you better insights about it.
 
 ${quotes[Math.floor(Math.random() * quotes.length)]}`);
   } catch (error) {
