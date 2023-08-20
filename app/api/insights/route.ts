@@ -75,6 +75,9 @@ export async function GET(req: Request) {
       let insights = ''
 
       console.log("Generating insights for user:", user);
+      tags.forEach((tag) => tag.created_at = new Date(tag.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
+      neuros.forEach((neuro: any) => neuro.created_at = new Date(neuro.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
+      ouras?.forEach((oura) => oura.created_at = new Date(oura.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
 
       if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
         insights = await llm(buildBothDataPrompt(neuros, ouras, tags, user.full_name));

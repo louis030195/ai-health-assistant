@@ -184,7 +184,7 @@ export async function POST(req: Request) {
         user_id: userId,
       });
       console.log("Tag added:", data, error);
-    
+
       return new Response(`Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
 
@@ -257,6 +257,11 @@ async function generatePromptForUser(userId: string): Promise<string> {
 
   // 5. Retrieve tags for the user
   const tags = await getTags(userId, yesterday);
+
+  tags.forEach((tag) => tag.created_at = new Date(tag.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
+  neuros.forEach((neuro: any) => neuro.created_at = new Date(neuro.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
+  ouras?.forEach((oura) => oura.created_at = new Date(oura.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
+
 
   // 6. Construct the prompt based on available data
   let prompt = '';
