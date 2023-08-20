@@ -63,19 +63,27 @@ export default async function Dashboard() {
 
 
   return (
-    <div className="flex flex-col justify-center gap-2 items-center">
+    <div className="flex flex-col  gap-10 items-center">
       <SaveTimezone userId={session?.user?.id} saveUserTimezoneServer={saveUserTimezoneServer} />
       <PosthogMail session={session!} />
-      {
+      {/* {
         // @ts-ignore
         userDetails?.neurosity?.disabled !== true &&
         <NeurosityStatus userId={session!.user.id} />
-      }
+      } */}
 
       <TagBox session={session!}
         className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
       />
-      {
+
+      {/* mention that we removed charts and everything happens in whatsapp now! */}
+      <p className="text-black text-lg font-bold text-center">The main Mediar interface is now in WhatsApp.
+        Please <a
+          className="text-blue-500 underline"
+          href="/account">connect your WhatsApp number</a> to get started.</p>
+
+
+      {/* {
         // @ts-ignore
         userDetails?.neurosity?.disabled !== true &&
         <NeurosityFocusChart session={session!} getStates={getStatesServer} getTags={getTagsServer} />
@@ -84,12 +92,12 @@ export default async function Dashboard() {
         // @ts-ignore
         userDetails?.oura?.disabled !== true &&
         <OuraSleepChart session={session!} getSleeps={getSleepServer} getTags={getTagsServer} />
-      }
-      {
+      } */}
+      {/* {
         // @ts-ignore
         userDetails?.oura?.disabled !== true &&
         <OuraHrvChart session={session!} />
-      }
+      } */}
       {/* <CommandDialogDemo /> */}
       {/* <Chat /> */}
       {/* <NeurosityBrainwaveChart session={session!} getBrainwaves={getBrainwavesServer} getTags={getTagsServer} /> */}

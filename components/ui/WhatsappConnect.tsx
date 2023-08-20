@@ -4,18 +4,20 @@ import { Session, createClientComponentClient } from '@supabase/auth-helpers-nex
 import { Button } from './button';
 import { Loader2 } from 'lucide-react';
 import { Input } from './input';
-import { Toaster } from './toaster';
-import toast from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import { Database } from '@/types_db';
+import { VerificationData, VerificationResponse } from '@/app/whatsapp-server';
 type Subscription = Database['public']['Tables']['subscriptions']['Row'];
 type UserDetails = Database['public']['Tables']['users']['Row'];
 
 interface Prop {
     session: Session;
+    startVerification: (phoneNumber: string) => Promise<VerificationData>;
+    verifyOtp: (phoneNumber: string, otp: string) => Promise<VerificationResponse>;
     subscription?: Subscription;
-    userDetails?: UserDetails
+    userDetails?: UserDetails;
 }
-export default function WhatsappConnect({ session, subscription, userDetails }: Prop) {
+export default function WhatsappConnect({ session, subscription, userDetails, startVerification, verifyOtp }: Prop) {
     const supabase = createClientComponentClient();
 
     const [loading, setLoading] = useState(false);
@@ -27,32 +29,18 @@ export default function WhatsappConnect({ session, subscription, userDetails }: 
         const toastId = toast.loading('Sending you a WhatsApp message...');
 
         try {
-            // const { data, error } = await supabase.auth.signInWithOtp({
-            //     phone: phoneNumber,
-            //     options: {
-            //         // shouldCreateUser: false,
-            //         channel: 'whatsapp'
-            //     }
-            // });
+            await startVerification(phoneNumber);
 
-            // console.log(data, error);
-            // if (error) throw error;
+            const otp = prompt('Enter the OTP you received on WhatsApp');
 
-            // const otp = prompt('Enter the OTP you received on WhatsApp');
+            toast.loading('Verifying OTP...', { id: toastId });
+            const response = await verifyOtp(phoneNumber, otp!);
 
-            // const { error: error2 } = await supabase.auth.verifyOtp({
-            //     phone: phoneNumber,
-            //     token: otp!,
-            //     type: 'sms',
-            // });
-
-            // if (error2) throw error;
-
-            // alert('WhatsApp connected successfully!');
+            if (response.status !== 'approved') throw new Error('Invalid OTP:' + response);
 
             const { error } = await supabase.from('users').update({
                 phone: phoneNumber,
-                phone_verified: true // TODO: real verif
+                phone_verified: true
             }).eq('id', session.user?.id);
 
             if (error) throw error;
@@ -61,7 +49,7 @@ export default function WhatsappConnect({ session, subscription, userDetails }: 
             toast.success('Thank you for trying the beta integration of WhatsApp. Any issues, please contact us 🙏')
 
         } catch (error: any) {
-            // alert(error.message);
+            toast.error(error.message, { id: toastId });
         } finally {
             setLoading(false);
         }
@@ -94,6 +82,11 @@ export default function WhatsappConnect({ session, subscription, userDetails }: 
                 }
                 Connect WhatsApp
             </Button>
+
+            {/* small text saying that you should receive a whatsapp message from Mediar AI upon first time adding your phone number */}
+            <p className="text-gray-500 mt-4">
+                You will receive a WhatsApp message from Mediar AI to confirm your number. Any issues, <a href="mailto:louis@mediar.ai" className="text-blue-500 underline">please contact us 🙏</a>.
+            </p>
 
         </div>
     );

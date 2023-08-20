@@ -83,6 +83,11 @@ const OuraImport = ({ session }: { session: Session }) => {
                 <CloudArrowDownIcon className="w-5 h-5 mr-2" />
                 Import Oura Data
             </Button>
+            {/* small text below explaining why, when import */}
+            <p className="text-gray-500 max-w-[50%] text-center">
+                Import the last 30 days of Oura data into Mediar. This may take a few
+                minutes. The rest of your data will be imported daily, automatically.
+            </p>
             {/* hide upon reaching full progress */}
             {progress > 0 && progress < 100 && (
                 <div className="items-center justify-center flex flex-col">

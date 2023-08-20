@@ -106,16 +106,36 @@ export default function Example({ session, user, products, subscription }: Props
                                         Hobby
                                     </h3>
 
-                                    <div className="mt-4 flex items-baseline gap-x-2">
+                                    <p className="text-base leading-7 text-gray-600">
+                                        Simple insights into how your behaviors shape your wellbeing.
+                                    </p>
+                                    <div className="mt-2 border-t border-gray-200 pt-6" />
+
+
+                                    <div className="flex items-baseline gap-x-2">
                                         <span className="text-5xl font-bold tracking-tight text-gray-900">Free</span>
                                     </div>
 
-                                    <p className="mt-6 text-base leading-7 text-gray-600">
-                                        For those looking to dip their toes into attention training
+                                    <div className="mt-6 border-t border-gray-200 pt-6" />
+
+                                    <p className="text-base leading-7 text-gray-600">
+                                        Get started with:
                                     </p>
 
                                     {/* Features */}
-                                    <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
+                                    <ul role="list" className="mt-6 space-y-4 text-sm leading-6 text-gray-600">
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            2 tags & questions per day
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Send image, video, and audio tags
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Apple shortcuts to tag within seconds
+                                        </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
                                             Simple analytics
@@ -134,7 +154,7 @@ export default function Example({ session, user, products, subscription }: Props
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Limited AI usage
+                                            14 days of data retention
                                         </li>
                                     </ul>
                                 </div>
@@ -158,27 +178,33 @@ export default function Example({ session, user, products, subscription }: Props
                                         Biohacker
                                     </h3>
 
-                                    <div className="mt-4 flex items-baseline gap-x-2">
+                                    <p className="text-base leading-7 text-gray-600">
+                                        Deeper connections between behaviors and wellbeing.
+                                    </p>
+                                    <div className="mt-2 border-t border-gray-200 pt-6" />
+
+                                    <div className="flex items-baseline gap-x-2">
                                         <span className="text-5xl font-bold tracking-tight text-gray-900">$19.99</span>
                                         <span className="text-sm font-semibold leading-7 text-gray-600">/month</span>
                                     </div>
 
-                                    <p className="mt-6 text-base leading-7 text-gray-600">
-                                        Access to premium features
+
+
+                                    {/* divider */}
+
+                                    <div className="mt-6 border-t border-gray-200 pt-6" />
+
+                                    {/* Everything in the Free plan, plus: */}
+
+                                    <p className="text-base leading-7 text-gray-600">
+                                        Everything in the Free plan, plus:
                                     </p>
 
                                     {/* Features */}
-                                    <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
+                                    <ul role="list" className="mt-6 space-y-4 text-sm leading-6 text-gray-600">
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            WhatsApp integration <HoverCard>
-                                                <HoverCardTrigger>
-                                                    <QuestionMarkCircleIcon width={20} className="text-indigo-600" />
-                                                </HoverCardTrigger>
-                                                <HoverCardContent className="w-[800px] h-[600px]">
-                                                    <iframe src="https://link.excalidraw.com/p/readonly/cHcTRMmQ0XX3NzUpQZ6I" width="100%" height="100%"></iframe>
-                                                </HoverCardContent>
-                                            </HoverCard>
+                                            10 tags & questions per day
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
@@ -186,11 +212,15 @@ export default function Example({ session, user, products, subscription }: Props
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Founder phone number
+                                            WhatsApp support (max 3-hours response time)
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            WhatsApp support (max 3-hours response time)
+                                            Ask questions to Mediar AI with images, videos, and audio
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            30 days of data retention
                                         </li>
                                     </ul>
                                 </div>
@@ -204,63 +234,159 @@ export default function Example({ session, user, products, subscription }: Props
                                     {
                                         biohackerLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                                     }
-                                    Invest in yourself
+                                    Invest in your health
                                 </Button>
                             </div>
 
 
-                            {/* Executive Plan */}
+                            {/* Athlete Plan */}
                             <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
                                 <div>
-                                    <h3 id="tier-executive" className="text-base font-semibold leading-7 text-indigo-600">
-                                        Executive
+                                    <h3 id="tier-athlete" className="text-base font-semibold leading-7 text-indigo-600">
+                                        Athlete
                                     </h3>
 
-                                    <div className="mt-4 flex items-baseline gap-x-2">
-                                        <span className="text-5xl font-bold tracking-tight text-gray-900">$499</span>
-                                        <span className="text-base font-semibold leading-7 text-gray-600">/week</span>
+                                    <p className="text-base leading-7 text-gray-600">
+                                        For serious athletes looking to reach peak performance
+                                    </p>
+
+                                    <div className="mt-2 border-t border-gray-200 pt-6" />
+
+                                    <div className="flex items-baseline gap-x-2">
+                                        <span className="text-5xl font-bold tracking-tight text-gray-900">$99</span>
+                                        <span className="text-sm font-semibold leading-7 text-gray-600">/month</span>
                                     </div>
 
-                                    <p className="mt-6 text-base leading-7 text-gray-600">
-                                        For the busy and ambitious executive that want to reach peak performance
+                                    <div className="mt-6 border-t border-gray-200 pt-6" />
+
+                                    <p className="text-base leading-7 text-gray-600">
+                                        Everything in the Free and Biohacker plan, plus:
                                     </p>
 
                                     {/* Features */}
-                                    <ul role="list" className="mt-10 space-y-4 text-sm leading-6 text-gray-600">
+                                    <ul role="list" className="mt-6 space-y-4 text-sm leading-6 text-gray-600">
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            We handle it all - we'll ship you the perfect wearable device and seamlessly integrate the data.
+                                            100 tags & questions per day
+                                        </li>
+
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Custom Apple shortcuts (ask questions with Siri)
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Custom integrations to the products you use (e.g. apple, blood test, fitbit, etc.)
+                                            Share your health with relatives and doctors (they can ask questions to Mediar AI about your health)
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Custom AI according to your needs and goals (e.g. focus, sleep, etc.)
+                                            Founder phone number
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Weekly 1:1 with the founder
+                                            Monthly 1-on-1 coaching calls with professionals
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            WhatsApp support (max 20-minutes response time)
+                                            Email support (max 3-hours response time)
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            90 days of data retention
                                         </li>
                                     </ul>
+
                                 </div>
 
                                 <a
-                                    href="https://cal.com/louis030195/executive"
-                                    aria-describedby="tier-executive"
+                                    href="https://cal.com/louis030195/athlete"
+                                    aria-describedby="tier-athlete"
                                     className="text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+
                                 >
-                                    Coffee with the founder in SF
+                                    Choose Athlete Plan
                                 </a>
 
                             </div>
+
+
                         </div>
+                        {/* Executive Plan */}
+                        <Executive />
                     </div>
+                </div>
+            </div >
+        </div >
+    )
+}
+
+function Executive() {
+    return (
+        <div className="bg-white">
+            <div className="mx-auto max-w-7xl py-24 px-4 sm:px-6 lg:px-8">
+                <div className="mx-auto max-w-2xl">
+
+                    {/* Executive Plan */}
+                    <div className="rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10 lg:flex">
+
+                        <div className="lg:w-1/2 lg:flex-none">
+                            <h3 className="text-xl font-semibold leading-8 text-gray-900">Executive</h3>
+
+                            <div className="mt-4 flex items-baseline">
+                                <span className="text-5xl font-bold tracking-tight text-gray-900">
+                                    $499
+                                </span>
+
+                                <span className="ml-1 text-xl font-semibold leading-7 text-gray-600">
+                                    /week
+                                </span>
+                            </div>
+
+                            <p className="mt-6 text-base leading-7 text-gray-600">
+                                For the busy executive who wants to reach peak performance.
+                            </p>
+
+                            <a
+                                href="https://cal.com/louis030195/executive"
+                                aria-describedby="tier-executive"
+                                className="text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+                            >
+                                Coffee with the founder in SF
+                            </a>
+                        </div>
+
+                        <div className="mt-10 lg:mt-0 lg:ml-10 lg:flex-1">
+                            <ul role="list" className="space-y-6 text-sm leading-6 text-gray-600">
+                                <li className="flex gap-x-3">
+                                    <CheckIcon className="h-6 w-5 flex-none text-indigo-600" />
+                                    We handle it all - we'll ship you the perfect wearable device and seamlessly integrate the data.
+                                </li>
+
+                                <li className="flex gap-x-3">
+                                    <CheckIcon className="h-6 w-5 flex-none text-indigo-600" />
+                                    Custom integrations to the products you use (e.g. apple, blood test, fitbit, etc.)
+                                </li>
+
+                                <li className="flex gap-x-3">
+                                    <CheckIcon className="h-6 w-5 flex-none text-indigo-600" />
+                                    Custom AI according to your needs and goals (e.g. focus, sleep, etc.)
+                                </li>
+
+                                <li className="flex gap-x-3">
+                                    <CheckIcon className="h-6 w-5 flex-none text-indigo-600" />
+                                    Weekly 1:1 with the founder
+                                </li>
+
+                                <li className="flex gap-x-3">
+                                    <CheckIcon className="h-6 w-5 flex-none text-indigo-600" />
+                                    WhatsApp support (max 20-minutes response time)
+                                </li>
+                            </ul>
+                        </div>
+
+
+                    </div>
+
                 </div>
             </div>
         </div>
