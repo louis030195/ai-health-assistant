@@ -76,6 +76,9 @@ export default async function Dashboard() {
         className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
       />
 
+      {/* @ts-ignore */}
+      <iframe width="100%" height="400" src="https://www.youtube.com/embed/S0I5GDEoIkc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+
       {/* mention that we removed charts and everything happens in whatsapp now! */}
       <p className="text-black text-lg font-bold text-center">The main Mediar interface is now in WhatsApp.
         Please <a
