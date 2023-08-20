@@ -166,7 +166,7 @@ export async function POST(req: Request) {
   if (!phoneVerified) {
     return new Response(`Your phone has not been verified!`);
   }
-  const date = new Date();
+  const date = new Date().toLocaleDateString('en-US');
   const questionKey = QUESTION_PREFIX + userId + '_' + date;
   const tagKey = TAG_PREFIX + userId + '_' + date;
 
