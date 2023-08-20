@@ -9,7 +9,7 @@ export const runtime = 'edge'
 
 const welcomeMessage = (fullName?: string) => `🤖 Hi${fullName ? ' ' + fullName : ''}! It's Mediar, your health assistant! 👋 
 
-To help me understand you, simply send me tags about your daily activities, moods, foods, workouts, etc. 
+To help me understand best how events in your life affect your health, simply send me tags about your daily activities, moods, foods, workouts, etc. 
 
 For example:
 
@@ -19,6 +19,8 @@ For example:
 - 🏋️‍♀️ Did 30 mins workout
 
 Of course, just write on the go without emojis, I can also deal with grammar mistakes and typos! 🤓
+
+You can also send me pictures of your meals, workouts, drinks, etc. 📸. I'll try to understand what's in the picture and tag it for you! 🤖
 
 I'll use these tags to provide personalized daily insights on how to improve your focus, sleep, stress and general health! 🧘‍♀️🥰
 
