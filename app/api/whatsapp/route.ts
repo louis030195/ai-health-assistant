@@ -182,11 +182,16 @@ export async function POST(req: Request) {
     ]);
     if (isQuestionResponse) {
       await kv.incr(questionKey);
-      await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏.")
+      await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️")
       const prompt = await generatePromptForUser(userId)
       console.log("Prompt:", prompt);
       const response = await llm(prompt, 500)
       console.log("Response:", response);
+      const { data, error } = await supabase.from('chats').insert({
+        text: response,
+        user_id: userId,
+      });
+      console.log("Chat added:", data, error);
       return new Response(response);
     } else if (isATagResponse) {
       await kv.incr(tagKey);

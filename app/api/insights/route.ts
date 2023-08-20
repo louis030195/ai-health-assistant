@@ -97,6 +97,12 @@ export async function GET(req: Request) {
         return;
       }
 
+      const { data: d2, error } = await supabase.from('chats').insert({
+        text: insights,
+        user_id: user.id,
+      });
+      console.log("Inserted chat:", d2, "with error:", error);
+
       const response = await sendWhatsAppMessage(user.phone!, insights);
       console.log("Message sent to:", user.phone, "with response status:", response.status);
     })
