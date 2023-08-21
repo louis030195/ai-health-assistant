@@ -64,7 +64,7 @@ const llm = async (message: string, maxTokens = 5) => {
   const data = await response.json()
 
   if (data.error) {
-    throw new Error(`Anthropic API returned ${response.status} with error: ${data.error}`)
+    throw new Error(`Anthropic API returned ${response.status} with error: ${JSON.stringify(data.error)}`)
   }
   return data.completion
 }
@@ -72,7 +72,7 @@ const llm = async (message: string, maxTokens = 5) => {
 
 const isTagOrQuestion = async (message: string) => {
 
-  const prompt = `${baseMediarAI}
+  const prompt = `Human: ${baseMediarAI}
 
 YOU ONLY ANSWER:
 - 2 if it's a tag 
