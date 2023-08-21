@@ -60,10 +60,11 @@ const llm = async (message: string, maxTokens = 5) => {
       stream: false
     })
   })
-  if (!response.ok) {
-    throw new Error(`Anthropic API returned ${response.status} ${response.statusText}`)
-  }
   const data = await response.json()
+
+  if (data.error) {
+    throw new Error(`Anthropic API returned ${response.status} with error: ${data.error}`)
+  }
   return data.completion
 }
 
