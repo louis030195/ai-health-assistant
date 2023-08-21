@@ -99,7 +99,7 @@ This is the message sent by the user: "${message}"
 
 Answer: `
 
-  const response = await llm(prompt)
+  const response = await llm(prompt, 10)
 
   if (response.trim() === '2') {
     return 'tag' 
