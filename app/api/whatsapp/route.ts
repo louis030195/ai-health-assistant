@@ -74,59 +74,39 @@ or experience during the day or their life, on the go, for example: "just ate an
 The goal is to have a better understanding of the users' body and mind, and show them patterns and insights about it in order to help them improve their wellbeing.
 
 (atm you can only deal with sentences, not images or videos)`
-const isATag = async (message: string) => {
 
-  // try to guess if it seems to be a add tag request using a llm, if yes, add the tag 
+const isTagOrQuestion = async (message: string) => {
+
   const prompt = `${base}
 
-Your only job is to determine if the message sent by the user is a tag or another request.
+YOU ONLY ANSWER:
+- 2 if it's a tag 
+- 1 if it's a question
+- 0 otherwise
 
-Tag examples:
+Tag examples: 
 - coffee
 - workout 1 hour ago
 - no sun today
 - poor sleep
 
-Tag counter examples:
-- https://www.youtube.com/watch?v=1qN72LEQnaU
-- https://imgur.com/gallery/1qN72LEQnaU
-- image.jpg
-
-YOU ONLY ANSWER 1 (it's a tag) or 0 (it's not a tag).
-
-This is the message sent by the user: "${message}".
-
-Assistant:`
-
-  const response = await llm(prompt)
-  const isATag = response.trim().includes('1')
-
-  return isATag
-}
-
-const isQuestion = async (message: string) => {
-
-  const prompt = `${base}
-
-YOU ONLY ANSWER 1 (it's a question) or 0 (it's not a question).
-
 Question examples:
 - What is my average heart rate last week?
-- What is my sleep score?
-- What is my average HRV?
-- What is my focus score last few days?
-- How i can improve my sleep?
+- How can I improve my sleep?
 
-Counter examples:
-- https://www.youtube.com/watch?v=1qN72LEQnaU
-- Who the fuck are you?
+This is the message sent by the user: "${message}"
 
-This is the message sent by the user: "${message}".
-
-Assistant:`
+Answer: `
 
   const response = await llm(prompt)
-  return response.trim().includes('1')
+
+  if (response.trim() === '2') {
+    return 'tag' 
+  } else if (response.trim() === '1') {
+    return 'question'
+  } else {
+    return 'none'
+  }
 }
 
 const track = async (userId: string) => {
@@ -216,11 +196,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
   try {
     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
 
-    const [isATagResponse, isQuestionResponse] = await Promise.all([
-      isATag(parsed.Body),
-      isQuestion(parsed.Body)
-    ]);
-    if (isQuestionResponse) {
+    const intent = await isTagOrQuestion(parsed.Body);
+    if (intent === 'question') {
       await kv.incr(questionKey);
       await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️")
       const prompt = await generatePromptForUser(userId, parsed.Body)
@@ -233,7 +210,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
       });
       console.log("Chat added:", data, error);
       return new Response(response);
-    } else if (isATagResponse) {
+    } else if (intent === 'tag') {
       await kv.incr(tagKey);
       const { data, error } = await supabase.from('tags').insert({
         text: parsed.Body,
@@ -248,9 +225,9 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       );
     }
 
-    return new Response(`My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
+    return new Response(`I'm sorry it seems you didn't ask a question neither tag an event from your life. My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
 You can send me messages like "just ate an apple", or "just had a fight with my wife", or "im sad", or "so low energy tday..".
-This way I will better understand how your body works, and give you better insights about it.
+This way I will better understand how your body works, and give you better insights about it. I can also answer questions like "how can i be more productive?" or "how can i improve my sleep?".
 
 ${quotes[Math.floor(Math.random() * quotes.length)]}`);
   } catch (error) {
