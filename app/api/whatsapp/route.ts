@@ -7,6 +7,7 @@ import { cookies } from 'next/headers';
 import { kv } from '@vercel/kv';
 
 import { HfInference } from "@huggingface/inference";
+import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
 
 
 const inference = new HfInference(process.env.HF_API_KEY!);
@@ -68,17 +69,10 @@ const llm = async (message: string, maxTokens = 5) => {
   return data.completion
 }
 
-const base = `Human: You are an AI assistant that receive message through Whatsapp by users.
-The product that is integrated with WhatsApp is called Mediar, insights about your brain.
-Basically people wear a device that record their brain, heart, sleep, and physical activity and send tags to you regarding the things they do,
-or experience during the day or their life, on the go, for example: "just ate an apple", or "just had a fight with my wife", or "im sad", or "so low energy tday..".
-The goal is to have a better understanding of the users' body and mind, and show them patterns and insights about it in order to help them improve their wellbeing.
-
-(atm you can only deal with sentences, not images or videos)`
 
 const isTagOrQuestion = async (message: string) => {
 
-  const prompt = `${base}
+  const prompt = `${baseMediarAI}
 
 YOU ONLY ANSWER:
 - 2 if it's a tag 
@@ -313,43 +307,39 @@ async function generatePromptForUser(userId: string, question: string): Promise<
   return prompt;
 }
 
-const generalInstructions = `Here are a few rules: 
-- Your answers are very concise and straight to the point 
-- Your answers are based on the data provided 
-- Your answers are only the bullet points, and potentially some advices for the user at the end if you find any 
-- Do not say bullshit health advice, just infer from the data 
-- Your response will directly be sent to the user so change your language accordingly
-- Do not talk about tags if you don't see any clear correlation with the wearable data
-- Do not mention 'User' or 'Human' in your response, it's implied'`
+
 
 function buildBothDataPrompt(neuros: object[], ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
   const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
+  return `Human: ${baseMediarAI}
+Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
 and these OuraRing states: ${JSON.stringify(ouras)} 
 That answer the user's question: ${question}
-${generalInstructions}
+${generalMediarAIInstructions}
 Assistant:`;
 }
 
 function buildOnlyNeurosityPrompt(neuros: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
   const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
+  return `Human: ${baseMediarAI}
+Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
 That answer the user's question: ${question}
-${generalInstructions}
+${generalMediarAIInstructions}
 Assistant:`;
 }
 
 function buildOnlyOuraRingPrompt(ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
   const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
+  return `Human: ${baseMediarAI}
+Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
 given these tags: ${JSON.stringify(tags)} 
 And these OuraRing states: ${JSON.stringify(ouras)} 
 That answer the user's question: ${question}
-${generalInstructions}
+${generalMediarAIInstructions}
 Assistant:`;
 }
 const getTags = async (userId: string, date: string) => {

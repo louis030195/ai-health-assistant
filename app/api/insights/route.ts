@@ -1,5 +1,6 @@
 // ./app/api/insights/route.ts
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
+import { baseMediarAI, generalMediarAIInstructions } from '@/lib/utils';
 import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -112,41 +113,34 @@ export async function GET(req: Request) {
 
 // curl -X POST http://localhost:3000/api/insights
 
-
-const generalInstructions = `Here are a few rules: 
-- Your answers are very concise and straight to the point 
-- Your answers are based on the data provided 
-- Your answers are only the bullet points, and potentially some advices for the user at the end if you find any 
-- Do not say bullshit health advice, just infer from the data 
-- Your response will directly be sent to the user so change your language accordingly
-- Do not talk about you missing information, just don't say if you don't have enough data
-- Do not talk about tags if you don't see any clear correlation with the wearable data`
-
 function buildBothDataPrompt(neuros: object[], ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
   const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
+  return `Human: ${baseMediarAI}
+Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
 and these OuraRing states: ${JSON.stringify(ouras)} 
-${generalInstructions}
+${generalMediarAIInstructions}
 Assistant:`;
 }
 
 function buildOnlyNeurosityPrompt(neuros: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
   const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
+  return `Human: ${baseMediarAI}
+Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
-${generalInstructions}
+${generalMediarAIInstructions}
 Assistant:`;
 }
 
 function buildOnlyOuraRingPrompt(ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
   const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
+  return `Human: ${baseMediarAI}
+Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
 given these tags: ${JSON.stringify(tags)} 
 And these OuraRing states: ${JSON.stringify(ouras)} 
-${generalInstructions}
+${generalMediarAIInstructions}
 Assistant:`;
 }
 
