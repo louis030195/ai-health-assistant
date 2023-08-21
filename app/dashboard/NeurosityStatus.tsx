@@ -79,8 +79,10 @@ const NeurosityStatus = ({ userId }: Props) => {
                     <HoverCardTrigger>
                         <QuestionMarkCircleIcon width={16} className="text-gray-500" />
                     </HoverCardTrigger>
-                    <HoverCardContent className="w-96 h-96">
-                        <iframe src="https://link.excalidraw.com/p/readonly/7cjnnH0EFBiojPwLWFK7" width="100%" height="100%"></iframe>
+                    <HoverCardContent className="w-[400px] h-[600px]">
+                        <iframe src="https://link.excalidraw.com/p/readonly/7cjnnH0EFBiojPwLWFK7" width="100%" height="50%"></iframe>
+                        {/* @ts-ignore */}
+                        <iframe width="100%" height="50%" src="https://www.youtube.com/embed/xfg3QK15k4g" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
                     </HoverCardContent>
                 </HoverCard>
             </div>
