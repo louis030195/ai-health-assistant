@@ -97,13 +97,13 @@ Question examples:
 
 This is the message sent by the user: "${message}"
 
-Answer: `
+Assistant:`
 
   const response = await llm(prompt, 10)
 
-  if (response.trim() === '2') {
+  if (response.trim().includes('2')) {
     return 'tag' 
-  } else if (response.trim() === '1') {
+  } else if (response.trim().includes('1')) {
     return 'question'
   } else {
     return 'none'
