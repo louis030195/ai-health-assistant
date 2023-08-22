@@ -8,6 +8,7 @@ export function CustomHighlightStart() {
 
 		if (shouldStartHighlight) {
 			H.start();
+			console.log('started highlight')
 
 			return () => {
 				H.stop()
