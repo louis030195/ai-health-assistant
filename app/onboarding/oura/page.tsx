@@ -4,6 +4,7 @@ import { GoToButton } from "../intro/GoToButton";
 import NeurosityConnect from "@/components/NeurosityConnect";
 import OuraConnect from "@/components/OuraConnect";
 import { getOuraAccessTokenServer } from "@/app/oura-server";
+import OuraImport from "@/components/ui/OuraImport";
 
 
 
@@ -21,6 +22,7 @@ export default async function Onboarding() {
         // center stuff vertically and horizontally
         <div className="flex flex-col items-center justify-center mt-20 gap-2">
             <OuraConnect session={session} onboarding={true} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServerServer} />
+            <OuraImport session={session} />
         </div>
     )
 }

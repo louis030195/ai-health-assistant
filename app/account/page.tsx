@@ -14,11 +14,12 @@ import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { ReactNode } from 'react';
 import OuraConnect from '@/components/OuraConnect';
-import { createOuraWebhookSubscription, deleteOuraWebhookSubscriptionOfType, getOuraAccessToken, getOuraAccessTokenServer, getOuraPersonalInfo, listOuraWebhookSubscriptions } from '../oura-server';
+import { createOuraWebhookSubscription, deleteOuraWebhookSubscriptionOfType, getOuraAccessToken, getOuraAccessTokenServer, getOuraPersonalInfo, listOuraWebhookSubscriptions, revokeOuraAccessToken } from '../oura-server';
 import WhatsappConnect from '@/components/ui/WhatsappConnect';
 import OuraImport from '@/components/ui/OuraImport';
 import PlanRibbon from '@/components/ui/PlanRibbon';
 import { checkWhatsAppVerification, startWhatsAppVerification } from '../whatsapp-server';
+import OuraDisconnect from '@/components/OuraDisconnect';
 
 export default async function Account() {
   const session = await getSession();
@@ -43,6 +44,10 @@ export default async function Account() {
     'use server'
     return checkWhatsAppVerification(to, code)
   }
+  const revokeOuraAccessTokenServer = async (accessToken: string) => {
+    'use server'
+    return revokeOuraAccessToken(accessToken)
+  }
   return (
     <section className="mb-32 bg-white">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
@@ -65,8 +70,15 @@ export default async function Account() {
 
         {/* </PlanRibbon> */}
         <NeurosityConnect session={session} className='w-2/5' onboarding={false} />
-        <OuraConnect session={session} onboarding={false} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServerServer} />
-        <OuraImport session={session} />
+        {/* shadow */}
+        <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
+          <OuraConnect session={session} onboarding={false}
+            // remove shadow
+            className='w-2/5 shadow-none'
+            getOuraAccessToken={getOuraAccessTokenServerServer} />
+          <OuraImport session={session} />
+          <OuraDisconnect session={session} revokeOuraAccessToken={revokeOuraAccessTokenServer} />
+        </div>
       </div>
     </section >
   );
