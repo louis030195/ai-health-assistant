@@ -1,5 +1,5 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Button } from './button';
 import { Loader2 } from 'lucide-react';
@@ -22,8 +22,24 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
 
     const [loading, setLoading] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState(userDetails?.phone || '');
+    const [phoneNumberError, setPhoneNumberError] = useState('');
 
+    useEffect(() => {
+        validatePhoneNumber(phoneNumber);
+    }, [phoneNumber]);
+    const validatePhoneNumber = (number: string) => {
+        const regex = /^\+[1-9]\d{1,14}$/;
+        if (!regex.test(number)) {
+            setPhoneNumberError('Invalid phone number');
+            return false;
+        }
+        setPhoneNumberError('');
+        return true;
+    }
     const handleConnect = async () => {
+        if (!validatePhoneNumber(phoneNumber)) {
+            return;
+        }
         setLoading(true);
 
         const toastId = toast.loading('Sending you a WhatsApp message...');
@@ -72,9 +88,11 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
             />
+            {phoneNumberError && <p className="text-red-500 my-2">{phoneNumberError}</p>}
+
             <Button
                 onClick={handleConnect}
-                disabled={loading}
+                disabled={loading || phoneNumberError !== ''}
                 className="w-full"
             >
                 {
