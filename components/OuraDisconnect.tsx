@@ -37,15 +37,12 @@ export default function OuraDisconnect({ revokeOuraAccessToken, className, sessi
     return (
         <div >
             <Toaster />
-            <div className="space-y-4">
-                <Button
-                    className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full rounded-md"
-                    onClick={handleDisconnect}
-                    disabled={!accessToken}
-                >
-                    Disconnect your Oura account
-                </Button>
-            </div>
+            <Button
+                onClick={handleDisconnect}
+                disabled={!accessToken}
+            >
+                Disconnect your Oura account
+            </Button>
 
         </div>
     );

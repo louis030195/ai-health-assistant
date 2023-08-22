@@ -20,6 +20,7 @@ import OuraImport from '@/components/ui/OuraImport';
 import PlanRibbon from '@/components/ui/PlanRibbon';
 import { checkWhatsAppVerification, startWhatsAppVerification } from '../whatsapp-server';
 import OuraDisconnect from '@/components/OuraDisconnect';
+import NeurosityDisconnect from '@/components/NeurosityDisconnect';
 
 export default async function Account() {
   const session = await getSession();
@@ -69,12 +70,17 @@ export default async function Account() {
           startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
 
         {/* </PlanRibbon> */}
-        <NeurosityConnect session={session} className='w-2/5' onboarding={false} />
+        <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
+          <NeurosityConnect session={session}
+            className='w-4/5 shadow-none'
+            onboarding={false} />
+          <NeurosityDisconnect session={session} />
+        </div>
         {/* shadow */}
         <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
           <OuraConnect session={session} onboarding={false}
             // remove shadow
-            className='w-2/5 shadow-none'
+            className='w-4/5 shadow-none'
             getOuraAccessToken={getOuraAccessTokenServerServer} />
           <OuraImport session={session} />
           <OuraDisconnect session={session} revokeOuraAccessToken={revokeOuraAccessTokenServer} />
