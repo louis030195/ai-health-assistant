@@ -61,10 +61,12 @@ You will need to connect your accounts to Mediar to allow **access to your data*
 1. If you own a [Neurosity](https://neurosity.co) headset, connect it to Mediar. This lightweight device **senses your brainwaves 🧠** as you go about your days. 📟
   
 2. If you own an [Ouraring](https://ouraring.com), connect it to Mediar. This amazing device **senses your heart 💗 and sleep 😴** as you go about your days.
-   
-3. As you wear Neurosity, **use Mediar** to add tags - mark down how you were feeling, what you were doing, etc. This **trains** Mediar's AI over time. 🏷
 
-Soon, you'll start getting **personalized insights** and recommendations from Mediar to **boost your focus**, lower anxiety 🥰, and **upgrade your health 💪**!
+3. Connect your WhatsApp account to Mediar. This allows Mediar to **send you insights** and **receive tags** from you directly on WhatsApp. 📲
+
+4. As you wear Neurosity and Ouraring, **use Mediar** to send tags - mark down how you were feeling, what you were doing, send pics etc. to Mediar, it This **trains** Mediar's AI over time. 🏷
+
+Soon, you'll start getting **personalized insights** and recommendations from Mediar to lower anxiety 🥰, and **upgrade your health 💪**!
 `
 
 export function LLMStoryDistraction({className}: {className?: string}) {
