@@ -23,9 +23,10 @@ export async function GET(request: NextRequest) {
       .eq('user_id', response.data.user?.id)
       .limit(1)
     if (error) {
-      console.log(error.message);
+      console.error(error.message);
     }
 
+    console.log('data', data)
     if (!data) return NextResponse.redirect(`${getURL()}/onboarding/intro`)
   }
 
