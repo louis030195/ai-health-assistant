@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
                 Sentry.captureException(error);
                 continue;
             }
-            console.log("Access token renewed for user: " + row.user_id, "at: " + new Date());
+            console.log("Access token renewed for user: " + row.mediar_user_id, "at: " + new Date());
 
             // Check if today's entry already exists
             const { data: sleepData } = await supabase
@@ -50,7 +50,7 @@ export async function GET(req: NextRequest) {
 
             // If entry exists, skip to next iteration
             if (sleepData && sleepData.length > 0) {
-                console.log("Oura already exists for user: " + row.user_id, "at: " + new Date());
+                console.log("Oura already exists for user: " + row.mediar_user_id, "at: " + new Date());
                 continue;
             }
 

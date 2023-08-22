@@ -49,7 +49,7 @@ export async function POST(req: NextRequest) {
             Sentry.captureException(error);
             return NextResponse.json({ error: error }, { status: 500 });
         }
-        console.log("Access token renewed for user: " + row.user_id, "at: " + new Date());
+        console.log("Access token renewed for user: " + row.mediar_user_id, "at: " + new Date());
 
         let dailySleep: OuraDailySleep[] = []
         let sleep: OuraSleep[] = []
