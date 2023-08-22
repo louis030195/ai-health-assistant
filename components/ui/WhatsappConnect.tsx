@@ -67,7 +67,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
             {/* Phone number input */}
             <Input
                 type="text"
-                placeholder="Enter phone number"
+                placeholder="+12345678901"
                 className="mb-4 text-black"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
