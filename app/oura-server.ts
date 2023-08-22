@@ -406,3 +406,23 @@ export const getOuraAccessTokenServer = async (code: string, scopes: string[], r
     }
     return accessToken;
 }
+
+export const revokeOuraAccessToken = async (accessToken: string) => {
+    const clientId = process.env.NEXT_PUBLIC_OURA_OAUTH_CLIENT_ID!;
+    const revokeUrl = `https://api.ouraring.com/oauth/revoke?access_token=${accessToken}`;
+
+    const response = await fetch(revokeUrl, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic ${Buffer.from(`${clientId}:`).toString('base64')}`
+        }
+    });
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Failed to revoke OAuth token: ${response.status} ${response.statusText} ${text}`);
+    }
+
+    return response.ok;
+};

@@ -70,7 +70,8 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
             toast.success('Thank you for trying the beta integration of WhatsApp. Any issues, please contact us 🙏')
 
         } catch (error: any) {
-            toast.error(error.message, { id: toastId });
+            console.error(error);
+            toast.error('Error connecting WhatsApp. Please try again.', { id: toastId });
         } finally {
             setLoading(false);
         }

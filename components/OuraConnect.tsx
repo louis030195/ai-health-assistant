@@ -61,6 +61,7 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
                     src="/oura.png" alt="oura" width="64" height="64"
                 />
                 <h1 className="text-3xl font-bold text-indigo-600">Connect your Ouraring</h1>
+                <h2 className="text-1xl font-bold text-red-600">Unfortunately we have too many Oura users atm. Will be back soon, feel free to contact us if you have questions</h2>
                 <p className="text-lg text-gray-600">Connect your account to <Link
                     className="underline"
                     href="https://ouraring.com">Oura</Link> to get your ring data.</p>
@@ -82,6 +83,7 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
                 <Button
                     className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full rounded-md"
                     onClick={handleConnect}
+                    disabled={true}
                 >
                     Connect
                 </Button>
