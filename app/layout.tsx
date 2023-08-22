@@ -82,8 +82,10 @@ export default function RootLayout({
           enabled: true,
           recordHeadersAndBody: true,
           urlBlocklist: [],
+          
         }}
         excludedHostnames={['localhost']}
+        enableStrictPrivacy={false}
       />
       <CustomHighlightStart />
 
