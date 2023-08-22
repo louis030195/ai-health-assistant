@@ -37,9 +37,9 @@ export default async function Navbar() {
               <Link href="/pricing" className={s.link}>
                 Pricing
               </Link>
-              <Link href="/dev" className={s.link}>
+              {/* <Link href="/dev" className={s.link}>
                 Developer
-              </Link>
+              </Link> */}
 
               {session && (
                 <Link href="/account" className={s.link}>
