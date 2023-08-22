@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('data', data)
-    if (!data) return NextResponse.redirect(`${getURL()}/onboarding/intro`)
+    if (!data || data?.length === 0) return NextResponse.redirect(`${getURL()}/onboarding/intro`)
   }
 
   // URL to redirect to after sign in process completes
