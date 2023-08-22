@@ -47,6 +47,13 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
         }
         setLoading(true);
 
+        const { error } = await supabase.from('users').update({
+            phone: phoneNumber,
+            phone_verified: false
+        }).eq('id', session.user?.id);
+
+        if (error) throw error;
+
         const toastId = toast.loading('Sending you a WhatsApp message...');
 
         try {
@@ -111,7 +118,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
                 {
                     loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 }
-                Connect WhatsApp
+                Send me a WhatsApp verification code
             </Button>
 
             {/* small text saying that you should receive a whatsapp message from Mediar AI upon first time adding your phone number */}
