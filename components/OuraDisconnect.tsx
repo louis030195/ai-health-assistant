@@ -3,7 +3,7 @@ import Image from 'next/image';
 import React, { useState, useEffect } from 'react';
 import { Button } from './ui/button';
 import { getURL } from '@/utils/helpers';
-import { Toaster } from 'react-hot-toast';
+import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 import { useOuraToken } from './useTokens';
 import { Session } from '@supabase/supabase-js';
@@ -20,10 +20,16 @@ export default function OuraDisconnect({ revokeOuraAccessToken, className, sessi
     const handleDisconnect = async () => {
         if (accessToken) {
             try {
-                await revokeOuraAccessToken(accessToken);
+                const toastId = toast.loading('Disconnecting your Oura account...');
+                const result = await revokeOuraAccessToken(accessToken);
+                if (!result) {
+                    throw new Error('Failed to revoke access token');
+                }
+                toast.success('Successfully disconnected your Oura account', { id: toastId });
                 setAccessToken(undefined);
             } catch (error) {
                 console.error('Failed to disconnect Oura:', error);
+                toast.error('Failed to disconnect your Oura account, please reach out to us');
             }
         }
     };
