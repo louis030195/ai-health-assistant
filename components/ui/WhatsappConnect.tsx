@@ -74,7 +74,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
             />
             <Button
                 onClick={handleConnect}
-                disabled={loading || !subscription}
+                disabled={loading}
                 className="w-full"
             >
                 {
