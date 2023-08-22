@@ -7,6 +7,11 @@ import { Input } from './input';
 import toast, { Toaster } from 'react-hot-toast';
 import { Database } from '@/types_db';
 import { VerificationData, VerificationResponse } from '@/app/whatsapp-server';
+
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
+
+
 type Subscription = Database['public']['Tables']['subscriptions']['Row'];
 type UserDetails = Database['public']['Tables']['users']['Row'];
 
@@ -23,7 +28,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
     const [loading, setLoading] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState(userDetails?.phone || '');
     const [phoneNumberError, setPhoneNumberError] = useState('');
-
+    console.log('phoneNumber', phoneNumber);
     useEffect(() => {
         validatePhoneNumber(phoneNumber);
     }, [phoneNumber]);
@@ -81,13 +86,20 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
                 Connect your WhatsApp account to receive insights and send tags directly on WhatsApp.
             </p>
             {/* Phone number input */}
-            <Input
+            {/* <Input
                 type="text"
                 placeholder="+12345678901"
                 className="mb-4 text-black"
                 value={phoneNumber}
                 onChange={(e) => setPhoneNumber(e.target.value)}
+            /> */}
+            <PhoneInput
+                placeholder="Enter phone number"
+                value={phoneNumber}
+                onChange={(n) => setPhoneNumber(n || '')}
+                className="mb-4 text-black"
             />
+
             {phoneNumberError && <p className="text-red-500 my-2">{phoneNumberError}</p>}
 
             <Button
