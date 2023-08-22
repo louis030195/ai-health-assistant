@@ -77,7 +77,18 @@ export default async function Dashboard() {
       />
 
       {/* @ts-ignore */}
-      <iframe width="100%" height="400" src="https://www.youtube.com/embed/S0I5GDEoIkc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+      {/* <iframe width="100%" height="400" src="https://www.youtube.com/embed/S0I5GDEoIkc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> */}
+      {/* @ts-ignore */}
+      <iframe width="100%" height="560"
+        src="https://www.youtube.com/embed/u4HlR_z49CA"
+        title="YouTube video player"
+        // frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+      // allowfullscreen
+      >
+
+      </iframe>
+      {/* <iframe width="100%" height="400" src="https://youtube.com/shorts/u4HlR_z49CA?feature=share" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> */}
 
       {/* mention that we removed charts and everything happens in whatsapp now! */}
       <p className="text-black text-lg font-bold text-center">The main Mediar interface is now in WhatsApp.
