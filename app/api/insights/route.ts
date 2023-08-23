@@ -5,6 +5,7 @@ import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { llm } from '@/utils/llm';
 
 export const runtime = 'edge'
 
@@ -144,28 +145,6 @@ ${generalMediarAIInstructions}
 Assistant:`;
 }
 
-
-const llm = async (message: string) => {
-  const response = await fetch('https://api.anthropic.com/v1/complete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY!
-    },
-    body: JSON.stringify({
-      prompt: message,
-      model: 'claude-2',
-      // model: 'claude-instant-1.2',
-      max_tokens_to_sample: 500,
-      stream: false
-    })
-  })
-  if (!response.ok) {
-    throw new Error(`Anthropic API returned ${response.status} ${response.statusText}`)
-  }
-  const data = await response.json()
-  return data.completion
-}
 
 
 
