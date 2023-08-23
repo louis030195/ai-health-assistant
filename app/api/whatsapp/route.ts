@@ -2,7 +2,7 @@ import { addTags } from "@/app/supabase-server";
 import { sendWhatsAppMessage } from "@/app/whatsapp-server";
 import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
-// export const runtime = 'edge'
+export const runtime = 'edge'
 import { cookies } from 'next/headers';
 import { kv } from '@vercel/kv';
 
