@@ -4,7 +4,7 @@ import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
 import { cookies } from 'next/headers';
 import { kv } from '@vercel/kv';
-
+import fetch from 'node-fetch';
 import { HfInference } from "@huggingface/inference";
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
 
@@ -172,14 +172,11 @@ export async function POST(req: Request) {
     //   model: 'nlpconnect/vit-gpt2-image-captioning',
     // })
     const urlContentToDataUri = async (url: string) => {
-      return fetch(url)
-        .then(response => response.blob())
-        .then(blob => new Promise(callback => {
-          let reader = new FileReader();
-          reader.onload = function () { callback(this.result) };
-          reader.readAsDataURL(blob);
-        }));
-    }
+      const response = await fetch(url);
+      const buffer = await response.buffer();
+      const base64 = buffer.toString('base64');
+      return base64;
+    };
     // const caption = response.generated_text;
     // @ts-ignore
     const caption: string = getCaption('list each element in the image', await urlContentToDataUri(parsed.MediaUrl0))
@@ -188,12 +185,12 @@ export async function POST(req: Request) {
     console.log("Caption:", caption);
 
     // Insert as tag
-    const { data, error } = await supabase.from('tags').insert({
+    const { data: d2, error: e2 } = await supabase.from('tags').insert({
       text: caption,
       user_id: userId
     });
 
-    console.log("Tag added:", data, error);
+    console.log("Tag added:", d2, e2);
 
     // Return response
     return new Response(`I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
