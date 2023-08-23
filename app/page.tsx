@@ -55,7 +55,7 @@ export default async function Home() {
           <p className="mt-1 text-3xl font-extrabold text-gray-900 sm:text-4xl sm:tracking-tight lg:text-5xl">
             How does it work?
           </p>
-          <iframe width="100%" height="560"
+          <iframe width="100%" height="600"
             src="https://www.youtube.com/embed/u4HlR_z49CA"
             title="YouTube video player"
             // frameborder="0"
