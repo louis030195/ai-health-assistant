@@ -8,7 +8,8 @@ import {
   getSleep,
   getOnboarding,
   getUserDetails,
-  saveUserTimezone
+  saveUserTimezone,
+  saveOnboarding
 } from '@/app/supabase-server';
 import React from 'react'
 import { NeurosityFocusChart } from './NeurosityFocusChart';
@@ -34,6 +35,7 @@ export default async function Dashboard() {
   // if (!hasOnboarded) {
   //   return redirect('/onboarding/intro');
   // }
+  await saveOnboarding(session.user.id);
   const userDetails = await getUserDetails();
 
   const saveUserTimezoneServer = async (userId: string, timezone: string) => {

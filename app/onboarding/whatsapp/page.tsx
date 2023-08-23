@@ -25,6 +25,10 @@ export default async function Onboarding() {
         'use server'
         return checkWhatsAppVerification(to, code)
     }
+    const onFinished = async () => {
+        'use server'
+        await saveOnboarding(session.user.id);
+    }
     return (
         // center stuff vertically and horizontally
         <div className="flex flex-col items-center justify-center mt-20 gap-20">
@@ -32,7 +36,7 @@ export default async function Onboarding() {
             <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
                 startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
 
-            <GoToButton path="/dashboard" session={session} text="Finish" />
+            <GoToButton path="/dashboard" session={session} text="Finish" onClick={onFinished} />
         </div>
     )
 }
