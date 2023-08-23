@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.5.8",
+    "@google-cloud/aiplatform": "^3.0.0",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@highlight-run/next": "^4.0.0",
@@ -41,6 +42,7 @@
     "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "crisp-sdk-web": "^1.0.19",
+    "google-auth-library": "^9.0.0",
     "lucide-react": "^0.263.1",
     "next": "13.4.19",
     "openai-edge": "^1.2.2",

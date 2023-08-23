@@ -9,7 +9,6 @@ import { kv } from '@vercel/kv';
 import { HfInference } from "@huggingface/inference";
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
 
-
 const inference = new HfInference(process.env.HF_API_KEY!);
 
 
@@ -96,7 +95,7 @@ Assistant:`
   const response = await llm(prompt, 10)
 
   if (response.trim().includes('2')) {
-    return 'tag' 
+    return 'tag'
   } else if (response.trim().includes('1')) {
     return 'question'
   } else {
@@ -166,12 +165,21 @@ export async function POST(req: Request) {
     await kv.incr(tagKey);
     console.log("Image received, sending to inference API");
 
-    const response = await inference.imageToText({
-      data: await (await fetch(parsed.MediaUrl0)).blob(),
-      model: 'nlpconnect/vit-gpt2-image-captioning',
-    })
-
-    const caption = response.generated_text;
+    // const response = await inference.imageToText({
+    //   data: await (await fetch(parsed.MediaUrl0)).blob(),
+    //   model: 'nlpconnect/vit-gpt2-image-captioning',
+    // })
+    const urlContentToDataUri = async (url: string) => {
+      return fetch(url)
+        .then(response => response.blob())
+        .then(blob => new Promise(callback => {
+          let reader = new FileReader();
+          reader.onload = function () { callback(this.result) };
+          reader.readAsDataURL(blob);
+        }));
+    }
+    // const caption = response.generated_text;
+    const caption = getCaption(parsed.Body, await urlContentToDataUri(parsed.MediaUrl0))
 
     console.log("Caption:", caption);
 
@@ -358,4 +366,54 @@ const getTags = async (userId: string, date: string) => {
     console.log("Error fetching tags:", error.message);
   }
   return data || [];
+};
+
+
+
+import { auth } from "google-auth-library";
+const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
+const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
+
+const getIdToken = async () => {
+  const client = auth.fromJSON(JSON.parse(process.env.GOOGLE_SVC!));
+  // @ts-ignore
+  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
+  // @ts-ignore
+  const idToken = await client.authorize();
+  return idToken.access_token;
+};
+
+const getCaption = async (prompt: string, base64Image: string) => {
+  const headers = {
+    Authorization: `Bearer ` + (await getIdToken()),
+    "Content-Type": "application/json",
+  };
+
+  const data = {
+    instances: [
+      {
+        prompt,
+        image: {
+          bytesBase64Encoded: base64Image,
+        },
+      },
+    ],
+    parameters: {
+      sampleCount: 1
+    }
+  }
+
+  const response = await fetch(URL, {
+    method: "POST",
+    headers,
+    body: JSON.stringify(data),
+  });
+
+  if (!response.ok) {
+    console.error(response.statusText);
+    throw new Error("Request failed " + response.statusText);
+  }
+
+  const result = await response.json();
+  return result.predictions[0]
 };
