@@ -30,15 +30,18 @@ export async function GET(req: Request) {
     ?.map(async (user) => {
       console.log("Processing user:", user);
 
-      const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone })
-      console.log("Yesterday's date for user:", yesterday);
-      const yesterdayFromOneAm = new Date(new Date(yesterday).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone })
+      const threeDaysAgo = new Date(new Date().setDate(new Date().getDate() - 3)).toLocaleString('en-US', { timeZone: user.timezone });
+
+      // const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone })
+      console.log("Yesterday's date for user:", threeDaysAgo);
+      // const yesterdayFromOneAm = new Date(new Date(yesterday).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone })
+      const threeDaysAgoFromOneAm = new Date(new Date(threeDaysAgo).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone });
 
       const { data } = await supabase
         .from('states')
         .select()
         .eq('metadata->>label', 'focus')
-        .gte('created_at', yesterdayFromOneAm)
+        .gte('created_at', threeDaysAgoFromOneAm)
         .order('created_at', { ascending: false })
       console.log("Retrieved Neurosity data:", data?.length);
 
@@ -59,11 +62,11 @@ export async function GET(req: Request) {
         .from('states')
         .select()
         // format as YYYY-MM-DD
-        .gte('oura->>day', yesterdayFromOneAm.split(' ')[0])
+        .gte('oura->>day', threeDaysAgoFromOneAm.split(' ')[0])
         .order('oura->>day', { ascending: false })
       console.log("Retrieved Oura data:", ouras?.length);
 
-      const tags = await getTags(user.id, yesterdayFromOneAm);
+      const tags = await getTags(user.id, threeDaysAgoFromOneAm);
       console.log("Retrieved tags:", tags);
 
       // if the user has nor tags, neuros, ouras, skip to next user
