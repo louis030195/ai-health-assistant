@@ -21,6 +21,8 @@ import PlanRibbon from '@/components/ui/PlanRibbon';
 import { checkWhatsAppVerification, startWhatsAppVerification } from '../whatsapp-server';
 import OuraDisconnect from '@/components/OuraDisconnect';
 import NeurosityDisconnect from '@/components/NeurosityDisconnect';
+import DailyUsage from './DailyUsage';
+import { kv } from '@vercel/kv';
 
 export default async function Account() {
   const session = await getSession();
@@ -49,6 +51,12 @@ export default async function Account() {
     'use server'
     return revokeOuraAccessToken(accessToken)
   }
+  const kvGetServer = async (key: string) => {
+    'use server'
+    const v = await kv.get(key)
+    return v
+  }
+
   return (
     <section className="mb-32 bg-white">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
@@ -60,6 +68,11 @@ export default async function Account() {
       </div>
       {/* center */}
       <div className="p-4 flex gap-4 flex-col items-center justify-center">
+        <DailyUsage userId={session.user.id} kvGet={kvGetServer} limit={
+          subscription?.prices?.products?.name === 'Biohacker' ? 10 : 2
+        }
+          price={products.find((product) => product.name === 'Biohacker')?.prices[0]!}
+        />
         {/* <PlanRibbon
           displayText="Biohacker Plan"
           price={products?.find((product) => product.name === 'Biohacker')?.prices[0]!}
