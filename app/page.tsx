@@ -55,7 +55,14 @@ export default async function Home() {
           <p className="mt-1 text-3xl font-extrabold text-gray-900 sm:text-4xl sm:tracking-tight lg:text-5xl">
             How does it work?
           </p>
-          <iframe src="https://link.excalidraw.com/p/readonly/x2iA4KZYDy8hdse5ltLu" width="100%" height="800px"></iframe>
+          <iframe width="100%" height="560"
+            src="https://www.youtube.com/embed/u4HlR_z49CA"
+            title="YouTube video player"
+            // frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          // allowfullscreen
+          />
+          {/* <iframe src="https://link.excalidraw.com/p/readonly/x2iA4KZYDy8hdse5ltLu" width="100%" height="800px"></iframe> */}
         </div>
 
       </div>
