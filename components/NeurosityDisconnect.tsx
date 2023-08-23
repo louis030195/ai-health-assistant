@@ -8,6 +8,7 @@ import Link from 'next/link';
 import { useNeurosityToken, useOuraToken } from './useTokens';
 import { Session } from '@supabase/supabase-js';
 import { Neurosity } from '@neurosity/sdk';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 interface Props {
     session: Session;
@@ -26,7 +27,11 @@ export default function NeurosityDisconnect({ session }: Props) {
                 if (!result) {
                     throw new Error('Failed to disconnect Neurosity');
                 }
+                const supabase = createClientComponentClient()
 
+                const { error } = await supabase.from('tokens').delete().match({ mediar_user_id: session.user.id, provider: 'neurosity' })
+
+                console.log(error)
                 toast.success('Successfully disconnected your Neurosity account', { id: toastId });
             } catch (error) {
                 console.error('Failed to disconnect Neurosity:', error);

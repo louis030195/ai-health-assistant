@@ -7,6 +7,7 @@ import toast, { Toaster } from 'react-hot-toast';
 import Link from 'next/link';
 import { useOuraToken } from './useTokens';
 import { Session } from '@supabase/supabase-js';
+import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 interface Props {
     revokeOuraAccessToken: (accessToken: string) => Promise<boolean>;
@@ -25,6 +26,10 @@ export default function OuraDisconnect({ revokeOuraAccessToken, className, sessi
                 if (!result) {
                     throw new Error('Failed to revoke access token');
                 }
+                const supabase = createClientComponentClient()
+
+                const { error } = await supabase.from('tokens').delete().match({ mediar_user_id: session.user.id, provider: 'oura' })
+                console.log(error)
                 toast.success('Successfully disconnected your Oura account', { id: toastId });
                 setAccessToken(undefined);
             } catch (error) {
