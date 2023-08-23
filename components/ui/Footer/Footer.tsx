@@ -47,14 +47,14 @@ export default function Footer() {
                 Privacy Policy
               </Link>
             </li>
-            {/* <li className="py-3 md:py-0 md:pb-4">
+            <li className="py-3 md:py-0 md:pb-4">
               <Link
-                href="/"
+                href="/terms"
                 className="text-gray-700 transition duration-150 ease-in-out hover:text-gray-900"
               >
                 Terms of Use
               </Link>
-            </li> */}
+            </li>
           </ul>
         </div>
 

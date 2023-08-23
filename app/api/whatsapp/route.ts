@@ -130,6 +130,7 @@ export async function POST(req: Request) {
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_KEY!
   )
+  
   console.log(parsed);
   const phoneNumber = parsed.From.replace('whatsapp:', '')
   // get userId
