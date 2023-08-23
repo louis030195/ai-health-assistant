@@ -180,7 +180,7 @@ export async function POST(req: Request) {
     // const caption = response.generated_text;
     const b64Image = await urlContentToDataUri(parsed.MediaUrl0);
     // @ts-ignore
-    const caption: string = getCaption('list each element in the image', b64Image)
+    const caption: string = await getCaption('list each element in the image', b64Image)
     // list each element in the image
     // what is the person doing?
     console.log("Caption:", caption);
