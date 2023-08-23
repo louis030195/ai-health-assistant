@@ -214,7 +214,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
         user_id: userId,
       });
       console.log("Chat added:", data, error);
-      return new Response(response);
+      await sendWhatsAppMessage(phoneNumber, response)
+      return new Response("If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️");
     } else if (intent === 'tag') {
       await kv.incr(tagKey);
       const { data, error } = await supabase.from('tags').insert({
