@@ -165,10 +165,10 @@ export async function POST(req: Request) {
     await kv.incr(tagKey);
     console.log("Image received, sending to inference API");
 
-    // const response = await inference.imageToText({
-    //   data: await (await fetch(parsed.MediaUrl0)).blob(),
-    //   model: 'nlpconnect/vit-gpt2-image-captioning',
-    // })
+    const response = await inference.imageToText({
+      data: await (await fetch(parsed.MediaUrl0)).blob(),
+      model: 'nlpconnect/vit-gpt2-image-captioning',
+    })
     const urlContentToDataUri = async (url: string) => {
       return fetch(url)
         .then(response => response.blob())
@@ -178,10 +178,11 @@ export async function POST(req: Request) {
           reader.readAsDataURL(blob);
         }));
     }
-    // const caption = response.generated_text;
+    const caption = response.generated_text;
     // @ts-ignore
-    const caption: string = getCaption('list each element in the image?', await urlContentToDataUri(parsed.MediaUrl0))
+    // const caption: string = getCaption('list each element in the image', await urlContentToDataUri(parsed.MediaUrl0))
     // list each element in the image
+    // what is the person doing?
     console.log("Caption:", caption);
 
     // Insert as tag
@@ -371,50 +372,50 @@ const getTags = async (userId: string, date: string) => {
 
 
 
-import { auth } from "google-auth-library";
-const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
-const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
+// import { auth } from "google-auth-library";
+// const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
+// const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
 
-const getIdToken = async () => {
-  const client = auth.fromJSON(JSON.parse(process.env.GOOGLE_SVC!));
-  // @ts-ignore
-  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
-  // @ts-ignore
-  const idToken = await client.authorize();
-  return idToken.access_token;
-};
+// const getIdToken = async () => {
+//   const client = auth.fromJSON(JSON.parse(process.env.GOOGLE_SVC!));
+//   // @ts-ignore
+//   client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
+//   // @ts-ignore
+//   const idToken = await client.authorize();
+//   return idToken.access_token;
+// };
 
-const getCaption = async (prompt: string, base64Image: string) => {
-  const headers = {
-    Authorization: `Bearer ` + (await getIdToken()),
-    "Content-Type": "application/json",
-  };
+// const getCaption = async (prompt: string, base64Image: string) => {
+//   const headers = {
+//     Authorization: `Bearer ` + (await getIdToken()),
+//     "Content-Type": "application/json",
+//   };
 
-  const data = {
-    instances: [
-      {
-        prompt,
-        image: {
-          bytesBase64Encoded: base64Image,
-        },
-      },
-    ],
-    parameters: {
-      sampleCount: 1
-    }
-  }
+//   const data = {
+//     instances: [
+//       {
+//         prompt,
+//         image: {
+//           bytesBase64Encoded: base64Image,
+//         },
+//       },
+//     ],
+//     parameters: {
+//       sampleCount: 1
+//     }
+//   }
 
-  const response = await fetch(URL, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(data),
-  });
+//   const response = await fetch(URL, {
+//     method: "POST",
+//     headers,
+//     body: JSON.stringify(data),
+//   });
 
-  if (!response.ok) {
-    console.error(response.statusText);
-    throw new Error("Request failed " + response.statusText);
-  }
+//   if (!response.ok) {
+//     console.error(response.statusText);
+//     throw new Error("Request failed " + response.statusText);
+//   }
 
-  const result = await response.json();
-  return result.predictions[0]
-};
+//   const result = await response.json();
+//   return result.predictions[0]
+// };
