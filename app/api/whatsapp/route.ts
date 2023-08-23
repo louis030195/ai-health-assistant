@@ -181,7 +181,12 @@ export async function POST(req: Request) {
     // const caption = response.generated_text;
     const b64Image = await urlContentToDataUri(parsed.MediaUrl0);
     // @ts-ignore
-    const caption: string = await getCaption('list each element in the image', b64Image)
+    const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
+        getCaption('list each element in the image', b64Image),
+        getCaption('what is the person doing?', b64Image),
+        getCaption('what is the written text?', b64Image)
+    ]);
+    const caption = `elements: ${elementsCaption}, action: ${actionCaption}, text: ${textCaption}`;
     // list each element in the image
     // what is the person doing?
     console.log("Caption:", caption);
