@@ -2,7 +2,7 @@ import { addTags } from "@/app/supabase-server";
 import { sendWhatsAppMessage } from "@/app/whatsapp-server";
 import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
-export const runtime = 'edge'
+// export const runtime = 'edge'
 import { cookies } from 'next/headers';
 import { kv } from '@vercel/kv';
 
@@ -179,8 +179,9 @@ export async function POST(req: Request) {
         }));
     }
     // const caption = response.generated_text;
-    const caption = getCaption(parsed.Body, await urlContentToDataUri(parsed.MediaUrl0))
-
+    // @ts-ignore
+    const caption: string = getCaption('list each element in the image?', await urlContentToDataUri(parsed.MediaUrl0))
+    // list each element in the image
     console.log("Caption:", caption);
 
     // Insert as tag
