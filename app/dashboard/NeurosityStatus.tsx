@@ -17,24 +17,10 @@ interface Props {
 
 const NeurosityStatus = ({ userId }: Props) => {
     const [active, setActive] = useState(false);
+    const [lastFocus, setLastFocus] = useState<number | null>(null); // <--- 1. New state for last recorded focus
+
     const supabase = createClientComponentClient()
 
-    const forceListen = async () => {
-        // simply tweak a token row will trigger a change
-        const { error } = await supabase
-            .from('tokens')
-            .update({ status: { valid: true, updated_at: new Date().toISOString() } })
-            .eq('user_id', userId)
-
-        if (error) {
-            console.error('Error fetching data:', error);
-            return;
-        }
-
-        toast.loading('Force-checking if your Neurosity is connected ...', {
-            duration: 2000,
-        })
-    }
 
     useEffect(() => {
 
@@ -42,14 +28,28 @@ const NeurosityStatus = ({ userId }: Props) => {
             const fiveMinutesAgo = new Date(new Date().getTime() - 5 * 60 * 1000);
             const { data, error } = await supabase
                 .from('states')
-                .select('created_at') // replace with the actual column name for creation timestamp
+                .select('created_at,probability') // replace with the actual column name for creation timestamp
                 .gte('created_at', fiveMinutesAgo.toISOString())
+                .eq('user_id', userId)
+                // .eq('provider', 'neurosity')
+                .gte('probability', 0.1)
                 .limit(1);
+            // const { count } = await supabase
+            //     .from('states')
+            //     .select('*', { count: 'exact', head: true })
+            //     .eq('user_id', userId)
 
-            console.log('data', data);
+            console.log('data', data)
             if (error) {
                 console.error('Error fetching data:', error);
                 return;
+            }
+
+            if (data && data.length > 0) {
+                setActive(true);
+                setLastFocus(data[0].probability);  // <--- 2. Set the lastFocus value from the retrieved data
+            } else {
+                setActive(false);
             }
             setActive(data && data.length > 0)
         };
@@ -69,7 +69,7 @@ const NeurosityStatus = ({ userId }: Props) => {
             <p className="text-sm text-gray-500 max-w-xs text-center">
                 {
                     active ?
-                        'Receiving your brain activity ...You don\'t have to keep Mediar open, we will keep receiving your brain activity in the background.' :
+                        `Receiving your brain activity ... Last recorded focus level: ${lastFocus?.toFixed(2)}` : // <--- 3. Displaying the focus level
                         'No activity has been received from your Neurosity, please power it, wear it, and make sure your Neurosity account is connected in the account tab. It can take up to 5 minutes to show up here.'
                 }
             </p>
@@ -86,10 +86,10 @@ const NeurosityStatus = ({ userId }: Props) => {
                     </HoverCardContent>
                 </HoverCard>
             </div>
-            {/* top left in parent */}
+            {/* top left in parent
             <ArrowPathIcon width={16}
                 className="absolute top-0 left-0 mt-2 ml-2 text-gray-500 transform rotate-180 hover:cursor-pointer"
-                onClick={forceListen} />
+                onClick={forceListen} /> */}
         </div>
     );
 };
