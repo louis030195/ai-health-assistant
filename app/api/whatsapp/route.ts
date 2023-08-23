@@ -133,14 +133,14 @@ export async function POST(req: Request) {
   console.log(parsed);
   const phoneNumber = parsed.From.replace('whatsapp:', '')
   // get userId
-  const { data, error } = await supabase.from('users').select().eq('phone', phoneNumber).maybeSingle();
-  if (error || !data) {
+  const { data, error } = await supabase.from('users').select().eq('phone', phoneNumber).limit(1);
+  if (error || !data || data.length === 0) {
     console.log(error, data)
     return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 400 });
 
   }
-  const userId = data.id
-  const phoneVerified = data?.phone_verified || false
+  const userId = data[0].id
+  const phoneVerified = data[0].phone_verified || false
   await track(userId)
   if (!phoneVerified) {
     return new Response(`Your phone has not been verified!`);
