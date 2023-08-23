@@ -156,6 +156,7 @@ export async function POST(req: Request) {
   const questionKey = QUESTION_PREFIX + userId + '_' + date;
   const tagKey = TAG_PREFIX + userId + '_' + date;
 
+  console.log("Question key:", questionKey, "Tag key:", tagKey);
   const questionCount = await kv.get(questionKey);
   const tagCount = await kv.get(tagKey);
   console.log("Question count:", questionCount, "Tag count:", tagCount);
