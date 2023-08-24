@@ -39,7 +39,8 @@ export async function POST(req: Request) {
     console.log("Body:", userId, phone, full_name);
 
 
-    const response = await sendWhatsAppMessage(phone, welcomeMessage(full_name));
+    // const response = await sendWhatsAppMessage(phone, welcomeMessage(full_name));
+    const response = await sendWhatsAppMessageTemplate(phone, full_name);
     console.log("Message sent to:", userId, "with response status:", response.status);
 
     return NextResponse.json({ message: "Sent welcome message" }, { status: 200 });
@@ -64,7 +65,7 @@ export async function POST(req: Request) {
 //     -u $TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN
 
 
-const sendWhatsAppMessageTemplate = async (to: string, body: string) => {
+const sendWhatsAppMessageTemplate = async (to: string, name: string) => {
     const from = process.env.TWILIO_PHONE_NUMBER
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -79,7 +80,7 @@ const sendWhatsAppMessageTemplate = async (to: string, body: string) => {
         body: new URLSearchParams({
             ContentSid: '',
             From: `whatsapp:${from}`,
-            ContentVariables: JSON.stringify({ 1: body }),
+            ContentVariables: JSON.stringify({ 1: name }),
             To: `whatsapp:${to}`,
         }).toString()
     });
