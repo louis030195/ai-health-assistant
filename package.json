@@ -41,7 +41,6 @@
     "ai": "^2.1.28",
     "class-variance-authority": "^0.7.0",
     "classnames": "^2.3.2",
-    "clsx": "^2.0.0",
     "cmdk": "^0.2.0",
     "crisp-sdk-web": "^1.0.19",
     "google-auth-library": "^9.0.0",
@@ -64,8 +63,6 @@
     "remark-footnotes": "^4.0.1",
     "remark-gfm": "^3.0.1",
     "stripe": "^12.6.0",
-    "tailwind-merge": "^1.14.0",
-    "tailwindcss": "^3.3.2",
     "tailwindcss-animate": "^1.0.6"
   },
   "devDependencies": {
@@ -77,6 +74,7 @@
     "@types/react-plotly.js": "^2.6.0",
     "@types/react-syntax-highlighter": "^15.5.7",
     "autoprefixer": "^10.4.14",
+    "clsx": "^2.0.0",
     "dotenv": "^16.3.1",
     "encoding": "^0.1.13",
     "eslint": "^8.41.0",
@@ -88,6 +86,8 @@
     "prettier": "^2.8.8",
     "prettier-plugin-tailwindcss": "^0.3.0",
     "supabase": "^1.63.1",
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss": "^3.3.3",
     "typescript": "^5.0.4"
   },
   "prettier": {

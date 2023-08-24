@@ -12,6 +12,9 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { ArrowPathIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
+import HeroVideo from '@/components/magicui/hero-video';
+import { MagicCard, MagicContainer } from '@/components/magicui/magic-card';
+
 
 export default async function Home() {
 
@@ -21,12 +24,13 @@ export default async function Home() {
     <div className="py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 space-y-8 sm:px-6 lg:px-8">
 
-        <div className="text-center space-y-4">
+        <div className="text-center space-y-4 flex flex-col items-center justify-center">
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
             One health assistant for all your wearables
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Combine your brain activity data from Neurosity and/or biometric data from wearables like Oura ring for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health.
+            Mediar is developing an AI assistant that analyzes multi-modal health data from wearables and user input, then delivers personalized insights and recommendations through WhatsApp to optimize wellbeing and performance.
+            {/* Combine your brain activity data from Neurosity and/or biometric data from wearables like Oura ring for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health. */}
           </p>
           <div className="inline-flex gap-4">
             <div className="inline-flex rounded-md shadow">
@@ -50,18 +54,32 @@ export default async function Home() {
               </div>
             </div>*/}
           </div>
-          <iframe src="https://link.excalidraw.com/p/readonly/HPHqJw8yfgFU0lEHDblD" width="100%" height="800px"></iframe>
+
+          <div className="h-[600px] w-full relative">
+            {/* <HeroVideo
+
+            // className={cn(
+            //   "absolute inset-[1px] flex overflow-hidden rounded-2xl",
+            //   className,
+            // )}
+            // override absolute and display below
+            // className="absolute inset-[1px] flex overflow-hidden rounded-2xl"
+            /> */}
+
+            <MagicContainer>
+              <MagicCard className="[mask:linear-gradient(0deg,transparent_0%,#fff_100%)]">
+                <HeroVideo image="video-under.png" />
+              </MagicCard>
+            </MagicContainer>
+          </div>
 
           <p className="mt-1 text-3xl font-extrabold text-gray-900 sm:text-4xl sm:tracking-tight lg:text-5xl">
             How does it work?
           </p>
-          <iframe width="100%" height="600"
-            src="https://www.youtube.com/embed/u4HlR_z49CA"
-            title="YouTube video player"
-            // frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          // allowfullscreen
-          />
+
+
+          <iframe src="https://link.excalidraw.com/p/readonly/HPHqJw8yfgFU0lEHDblD" width="100%" height="800px"></iframe>
+
           {/* <iframe src="https://link.excalidraw.com/p/readonly/x2iA4KZYDy8hdse5ltLu" width="100%" height="800px"></iframe> */}
         </div>
 
