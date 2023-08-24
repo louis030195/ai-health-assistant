@@ -4,7 +4,7 @@ import { useEffect } from 'react';
 
 export function CustomHighlightStart() {
 	useEffect(() => {
-		const shouldStartHighlight = window.location.hostname === 'https://mediar.ai'
+		const shouldStartHighlight = window.location.hostname.includes('mediar.ai')
 
 		if (shouldStartHighlight) {
 			H.start();
