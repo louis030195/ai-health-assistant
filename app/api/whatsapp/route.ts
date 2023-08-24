@@ -186,7 +186,20 @@ export async function POST(req: Request) {
         getCaption('what is the person doing?', b64Image),
         getCaption('what is the written text?', b64Image)
     ]);
-    const caption = `elements: ${elementsCaption}, action: ${actionCaption}, text: ${textCaption}`;
+    let captions = []
+
+    // if detected caption is not "unanswerable", add it to the caption
+    // `elements: ${elementsCaption}, action: ${actionCaption}, text: ${textCaption}`;
+    if (elementsCaption !== 'unanswerable') {
+      captions.push('elements: ' + elementsCaption)
+    }
+    if (actionCaption !== 'unanswerable') {
+      captions.push('action: ' + actionCaption)
+    }
+    if (textCaption !== 'unanswerable') {
+      captions.push('text: ' + textCaption)
+    }
+    const caption = captions.join('\n')
     // list each element in the image
     // what is the person doing?
     console.log("Caption:", caption);

@@ -242,8 +242,11 @@ interface OuraDailySleepResponse {
     next_token: string;
 }
 
-export async function listOuraDailySleep(token: string, startDate: string, endDate: string) {
-    const url = `https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=${startDate}&end_date=${endDate}`
+export async function listOuraDailySleep(token: string, startDate: string, endDate: string, nextToken?: string) {
+    let url = `https://api.ouraring.com/v2/usercollection/daily_sleep?start_date=${startDate}&end_date=${endDate}`;
+    if (nextToken) {
+        url += `&next_token=${nextToken}`;
+    }
     const options = {
         method: 'GET',
         headers: {
@@ -264,8 +267,11 @@ export async function listOuraDailySleep(token: string, startDate: string, endDa
     return data as OuraDailySleepResponse
 }
 
-export async function listOuraSleep(token: string, startDate: string, endDate: string) {
-    const url = `https://api.ouraring.com/v2/usercollection/sleep?start_date=${startDate}&end_date=${endDate}`
+export async function listOuraSleep(token: string, startDate: string, endDate: string, nextToken?: string) {
+    let url = `https://api.ouraring.com/v2/usercollection/sleep?start_date=${startDate}&end_date=${endDate}`;
+    if (nextToken) {
+        url += `&next_token=${nextToken}`;
+    }
     const options = {
         method: 'GET',
         headers: {
@@ -301,7 +307,8 @@ export async function listDailySleep(token: string, startDate?: string, endDate?
         sleep.push(...response.data)
         response = await listOuraDailySleep(token,
             startDate || localDate,
-            endDate || localDate)
+            endDate || localDate,
+            response.next_token)
     }
 
     sleep.push(...response.data)
@@ -320,10 +327,9 @@ export async function listSleep(token: string, startDate?: string, endDate?: str
     const sleepData: OuraSleep[] = []
 
     let response = await listOuraSleep(token, localYesterday, localToday)
-    console.log('response', localYesterday, localToday, response)
     while (response.next_token) {
         sleepData.push(...response.data)
-        response = await listOuraSleep(token, localYesterday, localToday)
+        response = await listOuraSleep(token, localYesterday, localToday, response.next_token)
     }
 
     sleepData.push(...response.data)
@@ -426,3 +432,44 @@ export const revokeOuraAccessToken = async (accessToken: string) => {
 
     return response.ok;
 };
+
+
+interface OuraWorkout {
+    id: string;
+    activity: string;
+    calories: number;
+    day: string;
+    distance: number;
+    end_datetime: string;
+    intensity: string;
+    label: string;
+    source: string;
+    start_datetime: string;
+}
+
+interface OuraWorkoutResponse {
+    data: OuraWorkout[];
+    next_token: string;
+}
+
+export async function listOuraWorkouts(token: string, startDate: string, endDate: string) {
+    const url = `https://api.ouraring.com/v2/usercollection/workout?start_date=${startDate}&end_date=${endDate}`
+    const options = {
+        method: 'GET',
+        headers: {
+            'Authorization': `Bearer ${token}`,
+            Accept: 'application/json',
+            'Content-Type': 'application/json'
+        }
+    }
+
+    const response = await fetch(url, options)
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Failed to list workouts: ${response.status} ${response.statusText} ${text}`);
+    }
+
+    const data = await response.json()
+    return data as OuraWorkoutResponse
+}
