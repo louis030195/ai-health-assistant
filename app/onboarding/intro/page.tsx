@@ -6,10 +6,10 @@ import { LLMStoryDistraction } from "./LLMStoryDistraction";
 export default async function Onboarding() {
     const session = await getSession();
     if (!session) return redirect('/signin');
-    const hasOnboarded = await getOnboarding(session.user.id);
-    if (hasOnboarded) {
-        return redirect('/dashboard');
-    }
+    // const hasOnboarded = await getOnboarding(session.user.id);
+    // if (hasOnboarded) {
+    //     return redirect('/dashboard');
+    // }
 
     return (
         // height almost full screen size
