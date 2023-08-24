@@ -16,7 +16,6 @@ export async function GET(request: NextRequest) {
   if (code) {
     const supabase = createRouteHandlerClient<Database>({ cookies })
     const response = await supabase.auth.exchangeCodeForSession(code)
-
     const { data, error } = await supabase
       .from('onboardings')
       .select('*')
