@@ -47,3 +47,47 @@ export async function POST(req: Request) {
 }
 
 // curl -X POST http://localhost:3000/api/phone-verified
+
+
+// CONTENTVARIABLES=$(cat << EOF
+//     {
+//         "1": "Name"
+//     }
+//     EOF
+//     )
+    
+//     curl -X POST "https://api.twilio.com/2010-04-01/Accounts/$TWILIO_ACCOUNT_SID/Messages.json" \
+//     --data-urlencode "ContentSid=HXXXXXXXXX" \
+//     --data-urlencode "From=MGXXXXXXXX" \
+//     --data-urlencode "ContentVariables=$CONTENTVARIABLES" \
+//     --data-urlencode "To=whatsapp:+18551234567" \
+//     -u $TWILIO_ACCOUNT_SID:$TWILIO_AUTH_TOKEN
+
+
+const sendWhatsAppMessageTemplate = async (to: string, body: string) => {
+    const from = process.env.TWILIO_PHONE_NUMBER
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+
+    console.log(`Sending WhatsApp message from ${from} to ${to}`);
+    const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            'Authorization': `Basic ${Buffer.from(`${accountSid}:${authToken}`).toString('base64')}`
+        },
+        body: new URLSearchParams({
+            ContentSid: '',
+            From: `whatsapp:${from}`,
+            ContentVariables: JSON.stringify({ 1: body }),
+            To: `whatsapp:${to}`,
+        }).toString()
+    });
+
+    if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Failed to send WhatsApp message: ${response.status} ${response.statusText} ${text}`);
+    }
+
+    return response;
+}

@@ -21,7 +21,7 @@ export default async function Onboarding() {
     return (
         // center stuff vertically and horizontally
         <div className="flex flex-col items-center justify-center mt-20 gap-2">
-            <OuraConnect session={session} onboarding={true} className='w-2/5' getOuraAccessToken={getOuraAccessTokenServerServer} />
+            <OuraConnect session={session} onboarding={true} className='w-4/5' getOuraAccessToken={getOuraAccessTokenServerServer} />
             <OuraImport session={session} />
         </div>
     )

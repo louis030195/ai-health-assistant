@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Logo from '@/components/icons/Logo';
 import GitHub from '@/components/icons/GitHub';
 import Image from 'next/image';
+import { TwitterIcon } from 'lucide-react';
 export default function Footer() {
   return (
     <footer className="mx-auto max-w-[1920px] px-6 bg-white position: absolute; bottom: 0; left: 0; right: 0;">
@@ -66,10 +67,10 @@ export default function Footer() {
             &copy; {new Date().getFullYear()} Mediar, Inc. All rights reserved.
             <br />
             <Link
-              href="https://louis030195.com"
+              href="https://twitter.com/mediar_ai"
               className="transition duration-150 ease-in-out hover:text-gray-900"
             >
-              🔨 louis030195
+              <TwitterIcon className="inline-block w-5 h-5 mr-1" />
             </Link>
           </span>
         </div>

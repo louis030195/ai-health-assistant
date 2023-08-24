@@ -13,7 +13,7 @@ export default async function Onboarding() {
     return (
         // center stuff vertically and horizontally
         <div className="flex flex-col items-center justify-center mt-20">
-            <NeurosityConnect session={session} onboarding={true} />
+            <NeurosityConnect className='w-4/5' session={session} onboarding={true} />
         </div>
     )
 }

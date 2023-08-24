@@ -32,7 +32,7 @@ export const metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        site: '@vercel',
+        site: '@mediar_ai',
         title: meta.title,
         description: meta.description,
         cardImage: meta.cardImage
@@ -43,12 +43,10 @@ export default function Layout({
     children
 }: PropsWithChildren) {
     return (
-        <div>
-            <MobileWarning />
+        <div className="space-y-4">
             {children}
-            {/* divider */}
-            {/* position fixed floating bottom screen */}
-            <Steps className="fixed bottom-10 left-0 right-0" />
+            {/* on mobile just at bottom */}
+            <Steps className="lg:bottom-0 lg:left-0 lg:right-0 lg:fixed" />
         </div>
     );
 }

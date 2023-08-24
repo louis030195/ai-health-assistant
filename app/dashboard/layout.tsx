@@ -33,7 +33,7 @@ export const metadata = {
     },
     twitter: {
         card: 'summary_large_image',
-        site: '@vercel',
+        site: '@mediar_ai',
         title: meta.title,
         description: meta.description,
         cardImage: meta.cardImage
