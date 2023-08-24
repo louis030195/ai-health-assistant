@@ -434,7 +434,7 @@ export const revokeOuraAccessToken = async (accessToken: string) => {
 };
 
 
-interface OuraWorkout {
+export interface OuraWorkout {
     id: string;
     activity: string;
     calories: number;
@@ -452,8 +452,11 @@ interface OuraWorkoutResponse {
     next_token: string;
 }
 
-export async function listOuraWorkouts(token: string, startDate: string, endDate: string) {
-    const url = `https://api.ouraring.com/v2/usercollection/workout?start_date=${startDate}&end_date=${endDate}`
+async function listOuraWorkouts(token: string, startDate: string, endDate: string, nextToken?: string) {
+    let url = `https://api.ouraring.com/v2/usercollection/workout?start_date=${startDate}&end_date=${endDate}`
+    if (nextToken) {
+        url += `&next_token=${nextToken}`;
+    }
     const options = {
         method: 'GET',
         headers: {
@@ -472,4 +475,25 @@ export async function listOuraWorkouts(token: string, startDate: string, endDate
 
     const data = await response.json()
     return data as OuraWorkoutResponse
+}
+
+export async function listWorkouts(token: string, startDate?: string, endDate?: string, nextToken?: string) {
+    const currentDate = new Date();
+    const workouts: OuraWorkout[] = []
+    const localToday =
+        endDate ||
+        new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000).toISOString().split('T')[0];
+    const localYesterday =
+        startDate ||
+        new Date(currentDate.valueOf() - currentDate.getTimezoneOffset() * 60000 - 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+
+    let response = await listOuraWorkouts(token, localYesterday, localToday)
+
+    while (response.next_token) {
+        workouts.push(...response.data)
+        response = await listOuraWorkouts(token, localYesterday, localToday, response.next_token)
+    }
+
+    workouts.push(...response.data)
+    return workouts
 }

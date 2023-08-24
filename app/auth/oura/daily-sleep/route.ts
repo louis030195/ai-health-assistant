@@ -1,7 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { Database } from "@/types_db";
-import { OuraDailySleep, OuraSleep, listDailySleep, listSleep, renewOuraAccessToken } from "@/app/oura-server";
+import { OuraDailySleep, OuraSleep, OuraWorkout, listDailySleep, listSleep, listWorkouts, renewOuraAccessToken } from "@/app/oura-server";
 import * as Sentry from "@sentry/nextjs";
 
 export const runtime = 'edge'
@@ -56,6 +56,7 @@ export async function GET(req: NextRequest) {
 
             let dailySleep: OuraDailySleep[] = []
             let sleep: OuraSleep[] = []
+            let workout: OuraWorkout[] = []
 
             try {
                 dailySleep = await listDailySleep(accessToken)
@@ -74,8 +75,15 @@ export async function GET(req: NextRequest) {
 
                 continue;
             }
+            try {
+                workout = await listWorkouts(accessToken)
+            } catch (error) {
+                console.log(error)
+                Sentry.captureException(error);
 
-            if (sleep.length === 0 && dailySleep.length === 0) {
+                return NextResponse.json({ error: error }, { status: 500 });
+            }
+            if (sleep.length === 0 && dailySleep.length === 0 && workout.length === 0) {
                 console.log("No Oura data for user: " + row.user_id, "at: " + new Date());
                 continue;
             }
@@ -87,7 +95,8 @@ export async function GET(req: NextRequest) {
                     oura: {
                         day: localDate,
                         daily_sleep: dailySleep,
-                        sleep: sleep
+                        sleep: sleep,
+                        workout: workout
                     } as any
                 })
 

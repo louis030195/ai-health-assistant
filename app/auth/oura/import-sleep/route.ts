@@ -1,10 +1,10 @@
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { Database } from "@/types_db";
-import { OuraDailySleep, OuraSleep, listDailySleep, listSleep, renewOuraAccessToken } from "@/app/oura-server";
+import { OuraDailySleep, OuraSleep, OuraWorkout, listDailySleep, listSleep, listWorkouts, renewOuraAccessToken } from "@/app/oura-server";
 import * as Sentry from "@sentry/nextjs";
 import { kv } from '@vercel/kv'
-
+import { H } from '@highlight-run/next/server'
 export const runtime = 'edge'
 const supabase = createClient<Database>(
     process.env.SUPABASE_URL!,
@@ -53,6 +53,7 @@ export async function POST(req: NextRequest) {
 
         let dailySleep: OuraDailySleep[] = []
         let sleep: OuraSleep[] = []
+        let workout: OuraWorkout[] = []
         // Get previous date for listSleep
         const prevDate = new Date(date);
         prevDate.setDate(prevDate.getDate() - 1);
@@ -76,7 +77,16 @@ export async function POST(req: NextRequest) {
             return NextResponse.json({ error: error }, { status: 500 });
         }
 
-        if (sleep.length === 0 && dailySleep.length === 0) {
+        try {
+            workout = await listWorkouts(accessToken, prevDateString, date)
+        } catch (error) {
+            console.log(error)
+            Sentry.captureException(error);
+
+            return NextResponse.json({ error: error }, { status: 500 });
+        }
+
+        if (sleep.length === 0 && dailySleep.length === 0 && workout.length === 0) {
             console.log("No Oura data for user: " + row.user_id, "at: " + new Date());
             return NextResponse.json({ message: "No Oura data for user: " + row.user_id }, { status: 200 });
         }
@@ -87,7 +97,8 @@ export async function POST(req: NextRequest) {
                 oura: {
                     day: date,
                     daily_sleep: dailySleep,
-                    sleep: sleep
+                    sleep: sleep,
+                    workout: workout
                 } as any
             })
 
