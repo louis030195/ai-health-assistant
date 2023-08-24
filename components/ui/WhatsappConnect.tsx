@@ -10,6 +10,7 @@ import { VerificationData, VerificationResponse } from '@/app/whatsapp-server';
 
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
+import { getURL } from '@/utils/helpers';
 
 
 type Subscription = Database['public']['Tables']['subscriptions']['Row'];
@@ -65,6 +66,21 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
             const response = await verifyOtp(phoneNumber, otp!);
 
             if (response.status !== 'approved') throw new Error('Invalid OTP:' + response);
+
+            // fetch /api/phone-verified
+            const response2 = await fetch(`${getURL()}/api/phone-verified`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: session.user?.id,
+                    phone: phoneNumber,
+                    full_name: userDetails?.full_name,
+                })
+            }).then(res => res.json());
+
+            console.log('response2', response2);
 
             const { error } = await supabase.from('users').update({
                 phone: phoneNumber,
@@ -123,7 +139,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
 
             {/* small text saying that you should receive a whatsapp message from Mediar AI upon first time adding your phone number */}
             <p className="text-gray-500 mt-4">
-                You will receive a WhatsApp message from Mediar AI to confirm your number. Any issues, <a href="mailto:louis@mediar.ai" className="text-blue-500 underline">please contact us 🙏</a>.
+                You will receive a WhatsApp message from "Verify" to confirm your number. <br></br>After verifying, you will receive a welcome message from Mediar AI. Any issues, <a href="mailto:louis@mediar.ai" className="text-blue-500 underline">please contact us 🙏</a>.
             </p>
 
         </div>

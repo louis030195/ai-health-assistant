@@ -35,36 +35,14 @@ Let's unlock your full potential together! Sending tags is quick and easy - I'm 
 
 export async function POST(req: Request) {
     // get userId, phone, and token from the body
-    const body = await req.json();
-    console.log("Body:", body);
-    // console.log(req.headers);
+    const { userId, phone, full_name } = await req.json();
+    console.log("Body:", userId, phone, full_name);
 
-    const { userId, phone, full_name } = body.record;
 
-    // get token from http header
-    //  'x-invoke-query' => '%7B%22token%22%3A%22thisisatoken%22%7D',
-    // const token = req.headers.get('x-invoke-query')?.split('token=')[1];
+    const response = await sendWhatsAppMessage(phone, welcomeMessage(full_name));
+    console.log("Message sent to:", userId, "with response status:", response.status);
 
-    // console.log("Token:", token);
-
-    // // check if the token is valid
-    // if (token !== 'thisisatoken') { // JUST A HACK
-    //     return NextResponse.json({ message: "Invalid token" }, { status: 401 });
-    // }
-
-    // check if phone_verified when from anything to true
-    // body.type !== 'UPDATE' && body.table !== 'users' &&
-    
-    // console.log(body.record.phone_verified, body.old_record.phone_verified)
-    // console.log(body.record.phone_verified === true && body.old_record.phone_verified !== true)
-    if (body.record.phone_verified === true && body.old_record.phone_verified !== true) {
-        // welcome the user
-        const response = await sendWhatsAppMessage(phone, welcomeMessage(full_name));
-        console.log("Message sent to:", userId, "with response status:", response.status);
-
-        return NextResponse.json({ message: "Sent welcome message" }, { status: 200 });
-    }
-    return NextResponse.json({ message: "Phone still verified!" }, { status: 200 });
+    return NextResponse.json({ message: "Sent welcome message" }, { status: 200 });
 
 }
 
