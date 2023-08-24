@@ -72,7 +72,7 @@ export default async function Navbar() {
                 <DropdownMenu>
                   <DropdownMenuTrigger><Menu className="mr-2 h-4 w-4 text-black" />
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="mr-4">
                     <DropdownMenuLabel> Menu</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem>

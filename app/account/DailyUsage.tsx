@@ -2,14 +2,17 @@
 import { Button } from '@/components/ui/button';
 import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
+import { Loader2 } from 'lucide-react';
 import { useState, useEffect } from 'react';
 
 export default function DailyUsage({ kvGet, userId, limit, price }: { kvGet: any, userId: string, limit: number, price: any }) {
 
     const [stats, setStats] = useState<any>([]);
+    const [isLoading, setIsLoading] = useState(false);
 
 
     useEffect(() => {
+        setIsLoading(true);
         const fetchData = async () => {
             const date = new Date().toLocaleDateString('en-US');
 
@@ -25,7 +28,7 @@ export default function DailyUsage({ kvGet, userId, limit, price }: { kvGet: any
             ]);
         };
 
-        fetchData();
+        fetchData().finally(() => setIsLoading(false));
     }, [userId]);
 
     const onBiohacker = async () => {
@@ -41,12 +44,18 @@ export default function DailyUsage({ kvGet, userId, limit, price }: { kvGet: any
 
     return (
         // border
-        <div className="p-4 flex gap-4 flex-col items-center justify-center border-2 border-gray-200 rounded-md">
+        <div
+            // min size
+            className="p-4 flex gap-4 flex-col items-center justify-center border-2 border-gray-200 rounded-md min-w-[300px] min-h-[200px]">
             <div className="text-2xl font-bold text-black">
                 Daily Usage
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-2 gap-4 min-h-[100px]">
+                {
+                    isLoading && <Loader2
+                        className="mr-2 h-10 w-10 animate-spin text-gray-500 col-span-2" />
+                }
                 {stats.map((stat: any) => (
                     <div key={stat.name} className="bg-white p-4">
                         <dt className="text-sm font-medium text-gray-500 text-center">

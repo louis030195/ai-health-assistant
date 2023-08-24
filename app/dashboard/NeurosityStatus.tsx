@@ -74,7 +74,8 @@ const NeurosityStatus = ({ userId }: Props) => {
                 }
             </p>
             {/* top right in parent */}
-            <div className="absolute top-0 right-0 mt-2 mr-2">
+            {/* hidden on mobile */}
+            <div className="absolute top-0 right-0 mt-2 mr-2 text-gray-500 hidden md:block">
                 <HoverCard>
                     <HoverCardTrigger>
                         <QuestionMarkCircleIcon width={16} className="text-gray-500" />
