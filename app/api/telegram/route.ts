@@ -132,7 +132,6 @@ const QUESTION_PREFIX = 'question_';
 const TAG_PREFIX = 'tag_';
 
 export async function POST(req: Request) {
-  console.log("Incoming request:", req);
   const body = await req.json() as IncomingRequest;
 
   console.log("Incoming request:", body);
@@ -186,106 +185,102 @@ export async function POST(req: Request) {
     return new Response(`Sorry, I couldn't update your user information. Error: ${e3.message}`, { status: 400 });
   }
 
-  // const hasImage = parsed.NumMedia > 0;
-//   if (hasImage) {
-//     // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
+  const hasImage = body.message.photo && body.message.photo.length > 0;
+  if (hasImage) {
+    // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
+    await sendTelegramMessage(body.message.chat.id.toString(), "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
+    await kv.incr(tagKey);
+    console.log("Image received, sending to inference API");
 
-//     await kv.incr(tagKey);
-//     console.log("Image received, sending to inference API");
+    const urlContentToDataUri = async (url: string) => {
+      const response = await fetch(url);
+      const buffer = await response.buffer();
+      const base64 = buffer.toString('base64');
+      return base64;
+    };
+    // const caption = response.generated_text;
+    const b64Image = await urlContentToDataUri(body.message.photo![0].file_id);
+    // @ts-ignore
+    const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
+      getCaption('list each element in the image', b64Image),
+      getCaption('what is the person doing?', b64Image),
+      getCaption('what is the written text?', b64Image)
+    ]);
+    let captions = []
 
-//     // const response = await inference.imageToText({
-//     //   data: await (await fetch(parsed.MediaUrl0)).blob(),
-//     //   model: 'nlpconnect/vit-gpt2-image-captioning',
-//     // })
-//     const urlContentToDataUri = async (url: string) => {
-//       const response = await fetch(url);
-//       const buffer = await response.buffer();
-//       const base64 = buffer.toString('base64');
-//       return base64;
-//     };
-//     // const caption = response.generated_text;
-//     const b64Image = await urlContentToDataUri(parsed.MediaUrl0);
-//     // @ts-ignore
-//     const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
-//       getCaption('list each element in the image', b64Image),
-//       getCaption('what is the person doing?', b64Image),
-//       getCaption('what is the written text?', b64Image)
-//     ]);
-//     let captions = []
+    // if detected caption is not "unanswerable", add it to the caption
+    // `elements: ${elementsCaption}, action: ${actionCaption}, text: ${textCaption}`;
+    if (elementsCaption !== 'unanswerable') {
+      captions.push('elements: ' + elementsCaption)
+    }
+    if (actionCaption !== 'unanswerable') {
+      captions.push('action: ' + actionCaption)
+    }
+    if (textCaption !== 'unanswerable') {
+      captions.push('text: ' + textCaption)
+    }
+    const caption = captions.join('\n')
+    // list each element in the image
+    // what is the person doing?
+    console.log("Caption:", caption);
 
-//     // if detected caption is not "unanswerable", add it to the caption
-//     // `elements: ${elementsCaption}, action: ${actionCaption}, text: ${textCaption}`;
-//     if (elementsCaption !== 'unanswerable') {
-//       captions.push('elements: ' + elementsCaption)
-//     }
-//     if (actionCaption !== 'unanswerable') {
-//       captions.push('action: ' + actionCaption)
-//     }
-//     if (textCaption !== 'unanswerable') {
-//       captions.push('text: ' + textCaption)
-//     }
-//     const caption = captions.join('\n')
-//     // list each element in the image
-//     // what is the person doing?
-//     console.log("Caption:", caption);
+    // Insert as tag
+    const { data: d2, error: e2 } = await supabase.from('tags').insert({
+      text: caption,
+      user_id: userId
+    });
 
-//     // Insert as tag
-//     const { data: d2, error: e2 } = await supabase.from('tags').insert({
-//       text: caption,
-//       user_id: userId
-//     });
+    console.log("Tag added:", d2, e2);
 
-//     console.log("Tag added:", d2, e2);
+    // Return response
+    return new Response(`I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
+Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️!
+${quotes[Math.floor(Math.random() * quotes.length)]}`);
+  }
+  try {
+    console.log(`Message from ${body.message.from.username}: ${body.message.text}`);
 
-//     // Return response
-//     return new Response(`I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
-// Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️!
-// ${quotes[Math.floor(Math.random() * quotes.length)]}`);
-//   }
-//   try {
-//     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
+    const intent = await isTagOrQuestion(body.message.text);
+    if (intent === 'question') {
+      await kv.incr(questionKey);
+      // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️")
+      const prompt = await generatePromptForUser(userId, body.message.text);
+      console.log("Prompt:", prompt);
+      const response = await llm(prompt, 500)
+      console.log("Response:", response);
+      const { data, error } = await supabase.from('chats').insert({
+        text: response,
+        user_id: userId,
+      });
+      console.log("Chat added:", data, error);
+      // await sendWhatsAppMessage(phoneNumber, response)
+      return new Response("If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️");
+    } else if (intent === 'tag') {
+      await kv.incr(tagKey);
+      const { data, error } = await supabase.from('tags').insert({
+        text: body.message.text,
+        user_id: userId,
+      });
+      console.log("Tag added:", data, error);
 
-//     const intent = await isTagOrQuestion(parsed.Body);
-//     if (intent === 'question') {
-//       await kv.incr(questionKey);
-//       // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️")
-//       const prompt = await generatePromptForUser(userId, parsed.Body)
-//       console.log("Prompt:", prompt);
-//       const response = await llm(prompt, 500)
-//       console.log("Response:", response);
-//       const { data, error } = await supabase.from('chats').insert({
-//         text: response,
-//         user_id: userId,
-//       });
-//       console.log("Chat added:", data, error);
-//       // await sendWhatsAppMessage(phoneNumber, response)
-//       return new Response("If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️");
-//     } else if (intent === 'tag') {
-//       await kv.incr(tagKey);
-//       const { data, error } = await supabase.from('tags').insert({
-//         text: parsed.Body,
-//         user_id: userId,
-//       });
-//       console.log("Tag added:", data, error);
+      return new Response(`Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
+By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
 
-//       return new Response(`Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
-// By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
+${quotes[Math.floor(Math.random() * quotes.length)]}`
+      );
+    }
 
-// ${quotes[Math.floor(Math.random() * quotes.length)]}`
-//       );
-//     }
+    return new Response(`I'm sorry it seems you didn't ask a question neither tag an event from your life. My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
+You can send me messages like "just ate an apple", or "just had a fight with my wife", or "im sad", or "so low energy tday..".
+This way I will better understand how your body works, and give you better insights about it. I can also answer questions like "how can i be more productive?" or "how can i improve my sleep?".
 
-//     return new Response(`I'm sorry it seems you didn't ask a question neither tag an event from your life. My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
-// You can send me messages like "just ate an apple", or "just had a fight with my wife", or "im sad", or "so low energy tday..".
-// This way I will better understand how your body works, and give you better insights about it. I can also answer questions like "how can i be more productive?" or "how can i improve my sleep?".
-
-// ${quotes[Math.floor(Math.random() * quotes.length)]}`);
-//   } catch (error) {
-//     console.log(error);
-//     return new Response(
-//       'Webhook handler failed. View your nextjs function logs.',
-//       { status: 500 });
-//   }
+${quotes[Math.floor(Math.random() * quotes.length)]}`);
+  } catch (error) {
+    console.log(error);
+    return new Response(
+      'Webhook handler failed. View your nextjs function logs.',
+      { status: 500 });
+  }
 }
 
 async function generatePromptForUser(userId: string, question: string): Promise<string> {
@@ -420,6 +415,7 @@ const getTags = async (userId: string, date: string) => {
 import { auth } from "google-auth-library";
 import { getURL } from "@/utils/helpers";
 import { NextResponse } from "next/server";
+import { sendTelegramMessage } from "@/app/telegram-server";
 const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
 const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
 
