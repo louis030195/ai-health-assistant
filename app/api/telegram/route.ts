@@ -161,7 +161,7 @@ export async function POST(req: Request) {
   const token = process.env.TELEGRAM_BOT_TOKEN!;
 
   const bot = new TelegramBot(token);
-  await bot.sendChatAction(body.message.chat.id, "typing");
+  // await bot.sendChatAction(body.message.chat.id, "typing");
   console.log("Incoming request:", body);
   if (body.message.photo) {
     console.log("Image received");
