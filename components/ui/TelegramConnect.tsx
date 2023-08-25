@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react';
 import { Session, createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import { Button } from './button';
-import { Loader2, Save, Send, TwitterIcon } from 'lucide-react';
+import { Check, Loader2, Save, Send, TwitterIcon } from 'lucide-react';
 import { Input } from './input';
 import toast, { Toaster } from 'react-hot-toast';
 import { Database } from '@/types_db';
@@ -30,6 +30,21 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
     const supabase = createClientComponentClient();
     const [telegramUsernameLoading, setTelegramUsernameLoading] = useState(false);
     const [telegramUsername, setTelegramUsername] = useState(userDetails?.telegram_username || '');
+
+    const [hasChatId, setHasChatId] = useState('');
+
+    useEffect(() => {
+        // check if user has a telegram_chat_id in the db
+        supabase.from('users').select('telegram_chat_id').eq('id', session.user?.id).then(({ data, error }) => {
+            if (error) {
+                console.error(error);
+                return;
+            }
+            if (data?.length === 1) {
+                setHasChatId(data[0].telegram_chat_id);
+            }
+        });
+    }, []);
 
     const handleSetTelegramUsername = async (number: string) => {
         setTelegramUsernameLoading(true);
@@ -69,6 +84,15 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
             <Toaster />
 
             <h2 className="text-2xl font-bold mb-4 text-black text-center">Connect Telegram</h2>
+            {/* if connected, write it down with a check */}
+            {
+                hasChatId && <div className="flex flex-col items-center justify-center">
+                    <Check className="h-8 w-8 text-green-500" />
+                    <p className="text-gray-500 mb-4">
+                        Connected to Telegram!
+                    </p>
+                </div>
+            }
             <Icons.telegram
 
                 className="h-12 w-12 cursor-pointer text-black"
