@@ -226,8 +226,8 @@ export async function POST(req: Request) {
 
   const hasImage = body.message.photo && body.message.photo.length > 0;
   if (hasImage) {
-    const ww = await bot.sendMessage(body.message.chat.id, "Sorry my image engine is in maintenance, I'll be back soon!", { parse_mode: 'Markdown' })
-    console.log("Response:", ww);
+    // const ww = await bot.sendMessage(body.message.chat.id, "Sorry my image engine is in maintenance, I'll be back soon!", { parse_mode: 'Markdown' })
+    // console.log("Response:", ww);
     // return new Response('', { status: 200 });
     // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
     const response = await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️", { parse_mode: 'Markdown' })
