@@ -36,8 +36,6 @@ yarn-error.log*
 # editors
 .vscode
 
-# Sentry Auth Token
-.sentryclirc
 
 
 # Jupyter hacks

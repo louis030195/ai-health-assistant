@@ -2,7 +2,6 @@ import { createClient } from "@supabase/supabase-js";
 import { NextRequest, NextResponse } from "next/server";
 import { Database } from "@/types_db";
 import { OuraDailySleep, OuraSleep, OuraWorkout, listDailySleep, listSleep, listWorkouts, renewOuraAccessToken } from "@/app/oura-server";
-import * as Sentry from "@sentry/nextjs";
 
 export const runtime = 'edge'
 const supabase = createClient<Database>(
@@ -36,7 +35,6 @@ export async function GET(req: NextRequest) {
                 accessToken = tokens.accessToken;
             } catch (error) {
                 console.log(error)
-                Sentry.captureException(error);
                 continue;
             }
             console.log("Access token renewed for user: " + row.mediar_user_id, "at: " + new Date());
@@ -62,7 +60,6 @@ export async function GET(req: NextRequest) {
                 dailySleep = await listDailySleep(accessToken)
             } catch (error) {
                 console.log(error)
-                Sentry.captureException(error);
 
                 continue;
             }
@@ -71,7 +68,6 @@ export async function GET(req: NextRequest) {
                 sleep = await listSleep(accessToken)
             } catch (error) {
                 console.log(error)
-                Sentry.captureException(error);
 
                 continue;
             }
@@ -79,7 +75,6 @@ export async function GET(req: NextRequest) {
                 workout = await listWorkouts(accessToken)
             } catch (error) {
                 console.log(error)
-                Sentry.captureException(error);
 
                 return NextResponse.json({ error: error }, { status: 500 });
             }
