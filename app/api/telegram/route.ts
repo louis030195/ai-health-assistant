@@ -3,7 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
-
+import { sendTelegramMessage } from "@/app/telegram-server";
 // export const runtime = 'edge'
 
 
@@ -415,7 +415,6 @@ const getTags = async (userId: string, date: string) => {
 import { auth } from "google-auth-library";
 import { getURL } from "@/utils/helpers";
 import { NextResponse } from "next/server";
-import { sendTelegramMessage } from "@/app/telegram-server";
 const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
 const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
 
@@ -505,3 +504,5 @@ async function setTelegramWebhook(url?: string) {
 
 // Usage
 // setTelegramWebhook('https://barely-honest-yak.ngrok-free.app/api/telegram');
+// setTelegramWebhook('https://mediar.ai/api/telegram');
+
