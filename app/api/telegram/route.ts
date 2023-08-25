@@ -211,6 +211,7 @@ export async function POST(req: Request) {
       console.log("Error updating user:", e3.message);
       return new Response(`Error updating user. Error: ${e3.message}`, { status: 400 });
     }
+    await sendTelegramMessage(body.message.chat.id.toString(), welcomeMessage)
     return new Response(welcomeMessage, { status: 200 });
   }
 
