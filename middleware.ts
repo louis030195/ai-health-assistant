@@ -10,6 +10,7 @@ export const CORS_HEADERS = {
 const apiRoutes = [
   '/api/whatsapp',
   '/api/insights',
+  '/api/telegram',
 ]
 export async function middleware(req: NextRequest) {
   if (req.method === 'OPTIONS') {
