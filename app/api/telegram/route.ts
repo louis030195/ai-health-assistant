@@ -157,7 +157,7 @@ If you have any feedback or questions ❓ about Mediar, just join the Discord co
 Your health matter ❤️🥦💪🧠`
 
 export async function POST(req: Request) {
-  const body = await req.json();
+  const body = await req.json() as IncomingRequest;
   const token = process.env.TELEGRAM_BOT_TOKEN!;
 
   const bot = new TelegramBot(token);
@@ -228,7 +228,7 @@ export async function POST(req: Request) {
   if (hasImage) {
     const ww = await bot.sendMessage(body.message.chat.id, "Sorry my image engine is in maintenance, I'll be back soon!", { parse_mode: 'Markdown' })
     console.log("Response:", ww);
-    return new Response('', { status: 200 });
+    // return new Response('', { status: 200 });
     // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
     const response = await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️", { parse_mode: 'Markdown' })
     console.log("Response:", response);
@@ -241,9 +241,10 @@ export async function POST(req: Request) {
       const base64 = buffer.toString('base64');
       return base64;
     };
-    // const caption = response.generated_text;
-    const b64Image = await urlContentToDataUri(body.message.photo![0].file_id);
-    // @ts-ignore
+    const fileId = body.message.photo![body.message.photo!.length - 1].file_id;
+    const fileUri = await bot.getFileLink(fileId)
+    const b64Image = await urlContentToDataUri(fileUri);
+
     const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
       getCaption('list each element in the image', b64Image),
       getCaption('what is the person doing?', b64Image),
