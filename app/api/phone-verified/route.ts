@@ -49,5 +49,60 @@ export async function POST(req: Request) {
 
 // curl -X POST http://localhost:3000/api/phone-verified
 
-// sendWhatsAppMessage('+xxx', welcomeMessage('xx')).then(console.log).catch(console.error)
+// // sendWhatsAppMessage('+xxx', welcomeMessage('xx')).then(console.log).catch(console.error)
+
+// const supabase = createClient<Database>(
+//     process.env.SUPABASE_URL!,
+//     process.env.SUPABASE_KEY!
+//   )
+
+
+async function sendMessagesAndUpdateUsers() {
+    const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_KEY!
+    )
+
+    const customMessage = `🙏 Hi awesome Mediar users! Louis here again. 
+
+I wanted to say a huge THANK YOU for joining our early WhatsApp integration beta! I really appreciate you taking the time to try it out and provide feedback. 😊
+
+I know there were a few hiccups with the WhatsApp and Oura syncing properly. Please accept my sincere apologies for that! 😓 Rest assured, we've sorted out those issues and everything should now be working smoothly. 🙌
+
+As a token of thanks for your patience, I've created a special promo code "EARLY" just for you. Use it to get 40% off our Biohacker plan until tomorrow! 🔥
+
+Our vision is to empower people worldwide to optimize their wellbeing through personalized insights. With your support, I know we'll get there! 🚀
+
+We will launch on Product hunt tomorrow (in ~3 hours) and would love your support, please upvote at launch time! https://www.producthunt.com/products/mediar
+
+Hit me up if you face any other issues or have any feedback ❤️. Wishing you stellar health and happiness! 🥦🧠💪`
+
+    const { error, data: users } = await supabase
+        .from('users')
+        .select('id, phone, full_name')
+        .gte('phone', '')
+
+    if (error) {
+        console.log("Error fetching users:", error.message);
+        return;
+    }
+
+    console.log("Sending messages to users:", users);
+
+    for (const user of users) {
+        await sendWhatsAppMessage(user.phone!, welcomeMessage(user.full_name || ''));
+        await sendWhatsAppMessage(user.phone!, customMessage);
+
+        const { error: updateError } = await supabase
+            .from('users')
+            .update({ phone_verified: true })
+            .eq('id', user.id);
+
+        if (updateError) {
+            console.log(`Error updating user ${user.id}:`, updateError.message);
+        }
+    }
+}
+
+// sendMessagesAndUpdateUsers().then(console.log).catch(console.error)
 

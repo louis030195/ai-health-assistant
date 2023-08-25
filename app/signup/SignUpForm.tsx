@@ -10,6 +10,7 @@ import posthog from 'posthog-js'
 import { Icons } from '@/components/ui/icons'
 import toast, { Toaster } from 'react-hot-toast'
 import { Loader2 } from 'lucide-react'
+import { H } from '@highlight-run/next/client';
 
 interface Props { }
 
@@ -21,24 +22,30 @@ const SignUpForm: FC<Props> = () => {
     const [isLoading, setIsLoading] = useState(false)
 
     const router = useRouter()
+    const baseUrl = getURL().replace(/\/$/, '')
+
+    console.log(baseUrl + '/auth/callback')
     const signUp = async () => {
         setIsLoading(true)
+        const id = toast.loading('Signing up...')
+        // remove trailing slash
         const { data, error } = await supabase.auth.signUp({
             email: email,
             password: password,
             options: {
                 // make this redirect to a page that interprets the token so that it signs in automatically
                 // emailRedirectTo: `${getRedirectURL()}/signin`,
-                emailRedirectTo: `${getURL()}/auth/callback`
+                emailRedirectTo: baseUrl + '/auth/callback',
             }
         })
         if (error) {
             console.log(error)
-            return toast.error(error.message)
+            H.consumeError(error)
+            return toast.error(error.message, { id })
         }
         setIsLoading(false)
 
-        toast.success('Signed up successfully, check your email for confirmation')
+        toast.success('Signed up successfully, check your email for confirmation', { id })
 
         setCheckMail(true)
 
@@ -51,10 +58,15 @@ const SignUpForm: FC<Props> = () => {
     const signInWithGoogle = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: `${getURL()}/auth/callback` }
+            options: { 
+                redirectTo: baseUrl + '/auth/callback',
+                
+                // redirectTo: `${getURL()}/auth/callback`
+            }
         })
 
         if (error) {
+            H.consumeError(error)
             return toast.error(error.message)
         }
     }
@@ -66,6 +78,7 @@ const SignUpForm: FC<Props> = () => {
         })
 
         if (error) {
+            H.consumeError(error)
             return toast.error(error.message)
         }
     }

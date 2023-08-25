@@ -5,7 +5,7 @@ const defaultSteps = [
     { id: '1. Intro', name: 'Intro', href: '/onboarding/intro', status: 'current' },
     { id: '2. 🧠 Setup Neurosity', name: 'Neurosity', href: '/onboarding/neurosity', status: 'upcoming' },
     { id: '3. ❤️😴 Setup Ouraring', name: 'Ouraring', href: '/onboarding/oura', status: 'upcoming' },
-    { id: '3. 📲 Setup WhatsApp', name: 'WhatsApp', href: '/onboarding/whatsapp', status: 'upcoming' },
+    { id: '3. 📲 Setup Telegram', name: 'Telegram', href: '/onboarding/telegram', status: 'upcoming' },
     { id: '4. 👉 Finish', name: 'Finish', href: '/dashboard', status: 'upcoming' },
 ]
 

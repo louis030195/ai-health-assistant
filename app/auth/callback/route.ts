@@ -13,6 +13,8 @@ export async function GET(request: NextRequest) {
   const code = requestUrl.searchParams.get('code')
 
   console.log('yo', requestUrl.origin)
+  // remove trailing slash
+  const nextUrl = getURL().replace(/\/$/, '')
   if (code) {
     const supabase = createRouteHandlerClient<Database>({ cookies })
     const response = await supabase.auth.exchangeCodeForSession(code)
@@ -26,9 +28,9 @@ export async function GET(request: NextRequest) {
     }
 
     console.log('data', data)
-    if (!data || data?.length === 0) return NextResponse.redirect(`${getURL()}/onboarding/intro`)
+    if (!data || data?.length === 0) return NextResponse.redirect(`${nextUrl}/onboarding/intro`)
   }
 
   // URL to redirect to after sign in process completes
-  return NextResponse.redirect(`${getURL()}/dashboard`)
+  return NextResponse.redirect(`${nextUrl}/dashboard`)
 }

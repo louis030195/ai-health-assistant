@@ -77,7 +77,7 @@ export default function RootLayout({
         <body className="bg-white loading">
           <PHProvider>
             <Toaster />
-            <WhatsAppBanner />
+            {/* <WhatsAppBanner /> */}
 
             <SupabaseProvider>
               <Navbar />
@@ -214,7 +214,7 @@ export function WhatsAppBanner() {
         />
       </div>
       <p className="text-sm leading-6 text-gray-900">
-        <b>Announcement:</b> We're excited to introduce the WhatsApp integration!{' '}
+        <b>Announcement:</b> We're excited to introduce the Telegram integration!{' '}
         <a href="/whatsapp" className="whitespace-nowrap font-semibold">
           Learn more&nbsp;<span aria-hidden="true">&rarr;</span>
         </a>

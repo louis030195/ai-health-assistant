@@ -10,6 +10,7 @@ import posthog from 'posthog-js'
 import { Icons } from '@/components/ui/icons'
 import toast, { Toaster } from 'react-hot-toast'
 import { Loader2 } from 'lucide-react'
+import { H } from '@highlight-run/next/client';
 
 interface Props { }
 
@@ -19,6 +20,8 @@ const SignInForm: FC<Props> = () => {
     const [password, setPassword] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
+    const baseUrl = getURL().replace(/\/$/, '')
+
     const signIn = async () => {
         setIsLoading(true)
         const { data, error } = await supabase.auth.signInWithPassword({
@@ -26,6 +29,7 @@ const SignInForm: FC<Props> = () => {
             password: password,
         })
         if (error) {
+            H.consumeError(error)
             return toast.error(error.message)
         }
         setIsLoading(false)
@@ -40,20 +44,29 @@ const SignInForm: FC<Props> = () => {
     const signInWithGoogle = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'google',
-            options: { redirectTo: `${getURL()}/auth/callback` }
+            options: {
+                redirectTo: baseUrl + '/auth/callback',
+
+                // redirectTo: `${getURL()}/auth/callback`
+            }
         })
 
         if (error) {
+            H.consumeError(error)
             return toast.error(error.message)
         }
     }
     const signInWithTwitter = async () => {
         const { data, error } = await supabase.auth.signInWithOAuth({
             provider: 'twitter',
-            options: { redirectTo: `${getURL()}/auth/callback` }
+            options: {
+                redirectTo: baseUrl + '/auth/callback',
+                // redirectTo: `${getURL()}/auth/callback` 
+            }
         })
 
         if (error) {
+            H.consumeError(error)
             return toast.error(error.message)
         }
     }

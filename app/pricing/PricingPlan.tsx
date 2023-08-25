@@ -212,7 +212,7 @@ export default function Example({ session, user, products, subscription }: Props
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            WhatsApp support (max 3-hours response time)
+                                            Quick support (max 3-hours response time)
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
@@ -379,7 +379,7 @@ function Executive() {
 
                                 <li className="flex gap-x-3">
                                     <CheckIcon className="h-6 w-5 flex-none text-indigo-600" />
-                                    WhatsApp support (max 20-minutes response time)
+                                    Instant support (max 20-minutes response time)
                                 </li>
                             </ul>
                         </div>

@@ -23,6 +23,8 @@ import OuraDisconnect from '@/components/OuraDisconnect';
 import NeurosityDisconnect from '@/components/NeurosityDisconnect';
 import DailyUsage from './DailyUsage';
 import { kv } from '@vercel/kv';
+import TelegramConnect from '@/components/ui/TelegramConnect';
+import { checkTelegramVerification, sendTelegramMessage, startTelegramVerification } from '../telegram-server';
 
 export default async function Account() {
   const session = await getSession();
@@ -57,6 +59,11 @@ export default async function Account() {
     return v
   }
 
+  const sendTelegramMessageServer = async (to: string, text: string) => {
+    'use server'
+    return sendTelegramMessage(to, text)
+  }
+
   return (
     <section className="mb-32 bg-white">
       <div className="max-w-6xl px-4 py-8 mx-auto sm:px-6 sm:pt-24 lg:px-8">
@@ -79,8 +86,10 @@ export default async function Account() {
           subscription={subscription || undefined}
           session={session}
         > */}
-        <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
-          startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
+        {/* <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
+          startVerification={startVerificationServer} verifyOtp={checkVerificationServer} /> */}
+        <TelegramConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
+          sendTelegramMessage={sendTelegramMessageServer} />
 
         {/* </PlanRibbon> */}
         <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">

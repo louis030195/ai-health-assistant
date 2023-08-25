@@ -26,10 +26,11 @@ export async function GET(req: Request) {
   }
 
   await Promise.all(users
-    ?.filter((user) => user.timezone && user.phone)
+    ?.filter((user) => user.timezone && user.phone && !ignoredNumbers.includes(user.phone))
     ?.map(async (user) => {
       console.log("Processing user:", user);
 
+      const usersToday = new Date().toLocaleString('en-US', { timeZone: user.timezone })
       const threeDaysAgo = new Date(new Date().setDate(new Date().getDate() - 3)).toLocaleString('en-US', { timeZone: user.timezone });
 
       // const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone })
@@ -37,10 +38,24 @@ export async function GET(req: Request) {
       // const yesterdayFromOneAm = new Date(new Date(yesterday).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone })
       const threeDaysAgoFromOneAm = new Date(new Date(threeDaysAgo).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone });
 
+      // check if there is already an insight at the today timezone of the user
+      const { data: todaysInsights } = await supabase
+        .from("insights")
+        .select()
+        .eq("user_id", user.id)
+        .gte('created_at', usersToday)
+
+      // If an insight has already been sent today, skip to the next user
+      if (todaysInsights && todaysInsights.length > 0) {
+        console.log("Insight already sent today for user:", user);
+        return;
+      }
+
       const { data } = await supabase
         .from('states')
         .select()
         .eq('metadata->>label', 'focus')
+        .eq('user_id', user.id)
         .gte('created_at', threeDaysAgoFromOneAm)
         .order('created_at', { ascending: false })
       console.log("Retrieved Neurosity data:", data?.length);
@@ -63,6 +78,7 @@ export async function GET(req: Request) {
         .select()
         // format as YYYY-MM-DD
         .gte('oura->>day', threeDaysAgoFromOneAm.split(' ')[0])
+        .eq('user_id', user.id)
         .order('oura->>day', { ascending: false })
       console.log("Retrieved Oura data:", ouras?.length);
 
@@ -110,6 +126,13 @@ export async function GET(req: Request) {
 
       const response = await sendWhatsAppMessage(user.phone!, insights);
       console.log("Message sent to:", user.phone, "with response status:", response.status);
+
+      const { error: e2 } = await supabase.from('insights').insert({
+        text: insights,
+        user_id: user.id,
+      });
+
+      console.log("Inserted insight:", insights, "with error:", e2);
     }));
 
   return NextResponse.json({ message: "Success" }, { status: 200 });

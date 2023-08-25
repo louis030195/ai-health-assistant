@@ -62,7 +62,7 @@ You will need to connect your accounts to Mediar to allow **access to your data*
   
 2. If you own an [Ouraring](https://ouraring.com), connect it to Mediar. This amazing device **senses your heart 💗 and sleep 😴** as you go about your days.
 
-3. Connect your WhatsApp account to Mediar. This allows Mediar to **send you insights** and **receive tags** from you directly on WhatsApp. 📲
+3. Connect your Telegram account to Mediar. This allows Mediar to **send you insights** and **receive tags** from you directly on Telegram. 📲
 
 4. As you wear Neurosity and Ouraring, **use Mediar** to send tags - mark down how you were feeling, what you were doing, send pics etc. to Mediar, it This **trains** Mediar's AI over time. 🏷
 

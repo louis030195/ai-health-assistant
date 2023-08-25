@@ -31,10 +31,10 @@ export default async function Dashboard() {
     return redirect('/signin');
   }
 
-  // const hasOnboarded = await getOnboarding(session.user.id);
-  // if (!hasOnboarded) {
-  //   return redirect('/onboarding/intro');
-  // }
+  const hasOnboarded = await getOnboarding(session.user.id);
+  if (!hasOnboarded) {
+    return redirect('/onboarding/intro');
+  }
   await saveOnboarding(session.user.id);
   const userDetails = await getUserDetails();
 
@@ -93,10 +93,10 @@ export default async function Dashboard() {
       {/* <iframe width="100%" height="400" src="https://youtube.com/shorts/u4HlR_z49CA?feature=share" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> */}
 
       {/* mention that we removed charts and everything happens in whatsapp now! */}
-      <p className="text-black text-lg font-bold text-center">The main Mediar interface is now in WhatsApp.
+      <p className="text-black text-lg font-bold text-center">The main Mediar interface is now in Telegram.
         Please <a
           className="text-blue-500 underline"
-          href="/account">connect your WhatsApp number</a> to get started.</p>
+          href="/account">connect your Telegram account</a> to get started.</p>
 
 
       {/* {

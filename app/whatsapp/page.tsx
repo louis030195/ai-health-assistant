@@ -22,10 +22,10 @@ export default async function Home() {
 
         <div className="text-center space-y-4">
           <p className="mt-1 text-4xl font-extrabold text-gray-900 sm:text-5xl sm:tracking-tight lg:text-6xl">
-            One health assistant for all your wearables in WhatsApp
+            One health assistant for all your wearables in Telegram
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Send pictures or texts of events in your life to Mediar AI in WhatsApp and get health insights daily.
+            Send pictures or texts of events in your life to Mediar AI in Telegram and get health insights daily.
           </p>
           <div className="inline-flex gap-4">
             <div className="inline-flex rounded-md shadow">

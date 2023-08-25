@@ -1,24 +1,13 @@
 import Pricing from '@/components/Pricing';
 
-import {
-  getSession,
-  getSubscription,
-  getActiveProductsWithPrices
-} from '@/app/supabase-server';
+
 import React from 'react'
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { ArrowPathIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
+
 import HeroVideo from '@/components/magicui/hero-video';
 import { MagicCard, MagicContainer } from '@/components/magicui/magic-card';
 
 
 export default async function Home() {
-
-
 
   return (
     <div className="py-16 overflow-hidden">
@@ -29,7 +18,7 @@ export default async function Home() {
             One health assistant for all your wearables
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Mediar is developing an AI assistant that analyzes multi-modal health data from wearables and user input, then delivers personalized insights and recommendations through WhatsApp to optimize wellbeing and performance.
+            Mediar is an AI assistant that analyzes multi-modal health data from wearables and user input, then delivers personalized insights and recommendations through Telegram to optimize wellbeing and performance.
             {/* Combine your brain activity data from Neurosity and/or biometric data from wearables like Oura ring for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health. */}
           </p>
           <div className="inline-flex gap-4">
