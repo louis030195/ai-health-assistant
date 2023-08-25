@@ -119,18 +119,24 @@ const SignInForm: FC<Props> = () => {
                     Sign In
                 </Button>
 
+                {/* display a small text saying "its not possible to create a mail account anymore" */}
+                <p className="text-gray-500 mt-4 text-sm text-center">
+                    It is not possible to create a new account with email and password anymore.
+                    Please use Google to sign up.
+                </p>
+
                 <div className="flex items-center justify-between">
                     <div className="border-b w-full" />
                     <div className="text-xs text-gray-500 px-2">or</div>
                     <div className="border-b w-full" />
                 </div>
 
-                <a
+                {/* <a
                     href="/signup"
                     className="block text-center text-gray-500 hover:underline"
                 >
                     Don't have an account? Sign up
-                </a>
+                </a> */}
 
                 {/* </form> */}
 

@@ -5,14 +5,16 @@ import Logo from '@/components/icons/Logo';
 import SignUpForm from '@/app/signup/SignUpForm';
 
 export default async function SignIn() {
-  const session = await getSession();
+  return redirect('/signin');
 
-  if (session) {
-    const hasOnboarded = await getOnboarding(session.user.id);
-    console.log('hasOnboarded', hasOnboarded);
-    if (!hasOnboarded) return redirect('/onboarding/intro');
-    return redirect('/dashboard');
-  }
+  // const session = await getSession();
+
+  // if (session) {
+  //   const hasOnboarded = await getOnboarding(session.user.id);
+  //   console.log('hasOnboarded', hasOnboarded);
+  //   if (!hasOnboarded) return redirect('/onboarding/intro');
+  //   return redirect('/dashboard');
+  // }
 
   return (
     <div className="flex justify-center height-screen-helper">
