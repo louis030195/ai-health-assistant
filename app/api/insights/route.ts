@@ -26,7 +26,7 @@ export async function GET(req: Request) {
   }
 
   await Promise.all(users
-    ?.filter((user) => user.timezone && user.phone && !ignoredNumbers.includes(user.phone))
+    ?.filter((user) => user.timezone && user.phone)
     ?.map(async (user) => {
       console.log("Processing user:", user);
 
