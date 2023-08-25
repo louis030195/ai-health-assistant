@@ -183,6 +183,9 @@ export async function POST(req: Request) {
 
   if (error || !data || data.length === 0) {
     console.log(error, data)
+    const response = await bot.sendMessage(body.message.chat.id,
+      `I'm sorry I don't know you yet. Make sure to save your Telegram username is mediar.ai/account first.`, { parse_mode: 'Markdown' });
+    console.log("Response:", response);
     return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 400 });
   }
   const userId = data[0].id
