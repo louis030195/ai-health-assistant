@@ -3,7 +3,6 @@ import { createClient } from "@supabase/supabase-js";
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
-import { sendTelegramMessage } from "@/app/telegram-server";
 // export const runtime = 'edge'
 
 
@@ -211,14 +210,14 @@ export async function POST(req: Request) {
       console.log("Error updating user:", e3.message);
       return new Response(`Error updating user. Error: ${e3.message}`, { status: 400 });
     }
-    await sendTelegramMessage(body.message.chat.id.toString(), welcomeMessage)
+    await bot.sendMessage(body.message.chat.id, welcomeMessage);
     return new Response(welcomeMessage, { status: 200 });
   }
 
   const hasImage = body.message.photo && body.message.photo.length > 0;
   if (hasImage) {
     // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
-    await sendTelegramMessage(body.message.chat.id.toString(), "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
+    await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️");
     await kv.incr(tagKey);
     console.log("Image received, sending to inference API");
 
