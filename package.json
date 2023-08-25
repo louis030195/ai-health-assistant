@@ -57,6 +57,7 @@
     "react-hot-toast": "^2.4.1",
     "react-markdown": "^8.0.7",
     "react-merge-refs": "^2.0.2",
+    "react-otp-input": "^3.0.4",
     "react-phone-number-input": "^3.3.4",
     "react-plotly.js": "^2.6.0",
     "react-syntax-highlighter": "^15.5.0",
