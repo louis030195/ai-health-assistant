@@ -132,9 +132,13 @@ const QUESTION_PREFIX = 'question_';
 const TAG_PREFIX = 'tag_';
 
 export async function POST(req: Request) {
-  const body = await req.json() as IncomingRequest;
+  const body = await req.json();
+  // const token = process.env.TELEGRAM_BOT_TOKEN!;
 
+  // const bot = new TelegramBot(token);
+  // const chat = await bot.getChat(body.message.chat.id)
   console.log("Incoming request:", body);
+  return NextResponse.json({ ok: true }, { status: 200 })
   if (body.message.photo) {
     console.log("Image received");
     // Handle the image here
@@ -415,6 +419,7 @@ const getTags = async (userId: string, date: string) => {
 import { auth } from "google-auth-library";
 import { getURL } from "@/utils/helpers";
 import { NextResponse } from "next/server";
+import TelegramBot from "node-telegram-bot-api";
 const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
 const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
 
