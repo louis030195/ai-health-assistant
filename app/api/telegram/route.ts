@@ -161,7 +161,7 @@ export async function POST(req: Request) {
   const token = process.env.TELEGRAM_BOT_TOKEN!;
 
   const bot = new TelegramBot(token);
-  bot.sendChatAction(body.message.chat.id, "typing");
+  await bot.sendChatAction(body.message.chat.id, "typing");
   console.log("Incoming request:", body);
   if (body.message.photo) {
     console.log("Image received");
@@ -210,14 +210,16 @@ export async function POST(req: Request) {
       console.log("Error updating user:", e3.message);
       return new Response(`Error updating user. Error: ${e3.message}`, { status: 400 });
     }
-    await bot.sendMessage(body.message.chat.id, welcomeMessage);
+    const response = await bot.sendMessage(body.message.chat.id, welcomeMessage, { parse_mode: 'Markdown' });
+    console.log("Welcome message sent:", response);
     return new Response(welcomeMessage, { status: 200 });
   }
 
   const hasImage = body.message.photo && body.message.photo.length > 0;
   if (hasImage) {
     // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
-    await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️");
+    const response = await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️", { parse_mode: 'Markdown' })
+    console.log("Response:", response);
     await kv.incr(tagKey);
     console.log("Image received, sending to inference API");
 
@@ -261,10 +263,12 @@ export async function POST(req: Request) {
 
     console.log("Tag added:", d2, e2);
 
-    // Return response
-    return new Response(`I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
+    const response2 = await bot.sendMessage(body.message.chat.id,
+      `I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
 Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️!
-${quotes[Math.floor(Math.random() * quotes.length)]}`);
+${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' })
+    console.log("Response:", response2);
+    return new Response('', { status: 200 });
   }
   try {
     console.log(`Message from ${body.message.from.username}: ${body.message.text}`);
@@ -283,7 +287,11 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
       });
       console.log("Chat added:", data, error);
       // await sendWhatsAppMessage(phoneNumber, response)
-      return new Response("If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️");
+      const response2 = await bot.sendMessage(body.message.chat.id,
+        "If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️", { parse_mode: 'Markdown' })
+      console.log("Response:", response2);
+
+      return new Response('', { status: 200 });
     } else if (intent === 'tag') {
       await kv.incr(tagKey);
       const { data, error } = await supabase.from('tags').insert({
@@ -292,18 +300,25 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
       });
       console.log("Tag added:", data, error);
 
-      return new Response(`Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
+      const response = await bot.sendMessage(body.message.chat.id,
+        `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
 
-${quotes[Math.floor(Math.random() * quotes.length)]}`
+${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' }
       );
+      console.log("Response:", response);
+      return new Response('', { status: 200 });
     }
 
-    return new Response(`I'm sorry it seems you didn't ask a question neither tag an event from your life. My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
+    const response = await bot.sendMessage(body.message.chat.id,
+      `I'm sorry it seems you didn't ask a question neither tag an event from your life. My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
 You can send me messages like "just ate an apple", or "just had a fight with my wife", or "im sad", or "so low energy tday..".
 This way I will better understand how your body works, and give you better insights about it. I can also answer questions like "how can i be more productive?" or "how can i improve my sleep?".
 
-${quotes[Math.floor(Math.random() * quotes.length)]}`);
+${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' }
+    );
+    console.log("Response:", response);
+    return new Response('', { status: 200 });
   } catch (error) {
     console.log(error);
     return new Response(
