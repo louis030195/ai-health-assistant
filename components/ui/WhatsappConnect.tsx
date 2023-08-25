@@ -112,13 +112,30 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
 
             {
                 showOtpInput && (
-                    <OtpInput
-                        value={otp}
-                        onChange={setOtp}
-                        numInputs={6}
-                        renderInput={(props) => <input {...props} />}
+                    <div
+                        // center   
+                        className="flex justify-center mb-4 text-black "
+
+                    >
+                        <OtpInput
+                            value={otp}
+                            onChange={setOtp}
+                            numInputs={6}
+                            inputType='number'
+                            renderSeparator={<span> | </span>}
+                            // renderInput={(props) => <input
+                            //     // {...props}
+                            //     className='p-0 m-2 w-[4rem] h-[2rem] text-center border-b-2 border-gray-700 focus:outline-none focus:border-indigo-500'
+
+                            // />}
+                            renderInput={(props) => <Input
+                                // {...props}
+                                className="font-bold text-center w-8 m-0.5 p-1 rounded border flex justify-center  text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 border-gray-700"
+                                maxLength={1}
+                            />}
                         // className="mb-4"
-                    />
+                        />
+                    </div>
                 )
             }
 
