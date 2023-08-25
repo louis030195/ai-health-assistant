@@ -36,17 +36,36 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
         validatePhoneNumber(phoneNumber);
     }, [phoneNumber]);
 
+
+    console.log(otp);
+
+    const handlePaste = (e: any) => {
+        e.preventDefault();
+    
+        const pastedData = e.clipboardData.getData('text/plain');
+        const regex = /^\d{6}$/;
+    
+        // remove all non-numeric characters from pasted data
+        const pastedDataNumeric = pastedData.replace(/\D/g, '').split('').slice(0, 6).join('')
+        console.log(pastedDataNumeric);
+        if (regex.test(pastedDataNumeric)) {
+            console.log(pastedDataNumeric);
+            setOtp(pastedDataNumeric);
+        }
+    };
     useEffect(() => {
         if (otp.length === 6) {
             const verifyOTP = async () => {
-                toast.loading('Verifying OTP...');
+                const id = toast.loading('Verifying OTP...');
                 try {
+                    console.log('verify otp');
                     const response = await verifyOtp(phoneNumber, otp);
                     if (response.status !== 'approved') throw new Error('Invalid OTP:' + response);
                     setShowOtpInput(false);
+                    toast.success('WhatsApp connected successfully!', { id });
                 } catch (error: any) {
                     console.error(error);
-                    toast.error('Error verifying OTP. Please try again.');
+                    toast.error('Error verifying OTP. Please try again.', { id });
                 }
             }
 
@@ -128,10 +147,16 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
                             //     className='p-0 m-2 w-[4rem] h-[2rem] text-center border-b-2 border-gray-700 focus:outline-none focus:border-indigo-500'
 
                             // />}
-                            renderInput={(props) => <Input
-                                // {...props}
-                                className="font-bold text-center w-8 m-0.5 p-1 rounded border flex justify-center  text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 border-gray-700"
+                            inputStyle={{
+                                width: '2rem',
+                            }}
+                            renderInput={(props, i) => <Input
+                                {...props}
+                                onPaste={handlePaste}
+                                className="font-bold text-center w-16 m-0.5 p-1 rounded border flex justify-center  text-gray-900 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 border-gray-700"
                                 maxLength={1}
+                                type="tel"
+                                pattern="[0-9]*"
                             />}
                         // className="mb-4"
                         />
