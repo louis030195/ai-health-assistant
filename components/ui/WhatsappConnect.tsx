@@ -96,7 +96,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
 
         if (error) throw error;
 
-        const toastId = toast.loading('Sending you a WhatsApp message...');
+        const toastId = toast.loading('Sending you a WhatsApp message...', { duration: 2000 });
 
         try {
             await startVerification(phoneNumber);
