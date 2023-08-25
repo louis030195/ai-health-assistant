@@ -163,6 +163,12 @@ export async function POST(req: Request) {
   const bot = new TelegramBot(token);
   // await bot.sendChatAction(body.message.chat.id, "typing");
   console.log("Incoming request:", body);
+  // return if bot 
+
+  if (body.message.from.is_bot) {
+    console.log("Message from bot, ignoring");
+    return new Response('', { status: 200 });
+  }
   if (body.message.photo) {
     console.log("Image received");
     // Handle the image here
