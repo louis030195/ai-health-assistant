@@ -9,6 +9,40 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      chats: {
+        Row: {
+          created_at: string
+          id: number
+          is_insight: boolean | null
+          prev: string | null
+          text: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          is_insight?: boolean | null
+          prev?: string | null
+          text?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          is_insight?: boolean | null
+          prev?: string | null
+          text?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "chats_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       customers: {
         Row: {
           id: string
@@ -26,6 +60,34 @@ export interface Database {
           {
             foreignKeyName: "customers_id_fkey"
             columns: ["id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      insights: {
+        Row: {
+          created_at: string
+          id: number
+          text: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          text?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          text?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "insights_user_id_fkey"
+            columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -316,6 +378,8 @@ export interface Database {
           payment_method: Json | null
           phone: string | null
           phone_verified: boolean
+          telegram_chat_id: string | null
+          telegram_username: string | null
           timezone: string
         }
         Insert: {
@@ -329,6 +393,8 @@ export interface Database {
           payment_method?: Json | null
           phone?: string | null
           phone_verified?: boolean
+          telegram_chat_id?: string | null
+          telegram_username?: string | null
           timezone?: string
         }
         Update: {
@@ -342,6 +408,8 @@ export interface Database {
           payment_method?: Json | null
           phone?: string | null
           phone_verified?: boolean
+          telegram_chat_id?: string | null
+          telegram_username?: string | null
           timezone?: string
         }
         Relationships: [
