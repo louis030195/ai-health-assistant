@@ -88,6 +88,7 @@ export async function GET(req: NextRequest) {
                 .upsert({
                     user_id: row.mediar_user_id!,
                     oura: {
+                        measurement_date: localDate,
                         day: localDate,
                         daily_sleep: dailySleep,
                         sleep: sleep,

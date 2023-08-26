@@ -89,6 +89,7 @@ export async function POST(req: NextRequest) {
             .from("states")
             .upsert({
                 user_id: row.mediar_user_id!,
+                measurement_date: date,
                 oura: {
                     day: date,
                     daily_sleep: dailySleep,
