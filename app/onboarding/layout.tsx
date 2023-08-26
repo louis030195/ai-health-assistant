@@ -3,6 +3,7 @@ import { PropsWithChildren } from 'react';
 import 'styles/main.css';
 import Steps from './Steps';
 import MobileWarning from './MobileWarning';
+import { getSession, saveOnboarding } from '../supabase-server';
 
 const meta = {
     title: 'Mediar',
@@ -42,11 +43,19 @@ export const metadata = {
 export default function Layout({
     children
 }: PropsWithChildren) {
+
+    const onFinish = async () => {
+        'use server'
+        const session = await getSession();
+
+        await saveOnboarding(session!.user.id);
+    }
+
     return (
         <div className="space-y-4">
             {children}
             {/* on mobile just at bottom */}
-            <Steps className="lg:bottom-0 lg:left-0 lg:right-0 lg:fixed" />
+            <Steps className="lg:bottom-0 lg:left-0 lg:right-0 lg:fixed" onEnd={onFinish} />
         </div>
     );
 }

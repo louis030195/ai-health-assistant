@@ -6,6 +6,7 @@ import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { llm } from '@/utils/llm';
+import TelegramBot from 'node-telegram-bot-api';
 
 export const runtime = 'edge'
 
@@ -17,7 +18,9 @@ export async function GET(req: Request) {
   )
   const { error, data: users } = await supabase
     .from('users')
-    .select('id, phone, timezone, full_name')
+    .select('id, timezone, full_name, telegram_chat_id')
+    // filter users who have a telegram_chat_id
+    .gte('telegram_chat_id', '')
   console.log("Retrieved users:", users?.length);
 
   if (error) {
@@ -25,8 +28,10 @@ export async function GET(req: Request) {
     return NextResponse.json({ message: "Error fetching users" }, { status: 500 });
   }
 
+  const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, { polling: false });
+
   await Promise.all(users
-    ?.filter((user) => user.timezone && user.phone)
+    ?.filter((user) => user.timezone && user.telegram_chat_id)
     ?.map(async (user) => {
       console.log("Processing user:", user);
 
@@ -124,8 +129,13 @@ export async function GET(req: Request) {
       });
       console.log("Inserted chat:", d2, "with error:", error);
 
-      const response = await sendWhatsAppMessage(user.phone!, insights);
-      console.log("Message sent to:", user.phone, "with response status:", response.status);
+      // const response = await sendWhatsAppMessage(user.phone!, insights);
+      const response = await bot.sendMessage(
+        user.telegram_chat_id!,
+        insights,
+        { parse_mode: 'Markdown' }
+      )
+      console.log("Message sent to:", user.telegram_chat_id, "with response:", response);
 
       const { error: e2 } = await supabase.from('insights').insert({
         text: insights,

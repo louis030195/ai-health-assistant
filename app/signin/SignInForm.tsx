@@ -51,6 +51,7 @@ const SignInForm: FC<Props> = () => {
             }
         })
 
+        posthog.capture('sign in')
         if (error) {
             H.consumeError(error)
             return toast.error(error.message)
