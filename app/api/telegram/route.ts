@@ -301,7 +301,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
       console.log("Chat added:", data, error);
       // await sendWhatsAppMessage(phoneNumber, response)
       const response2 = await bot.sendMessage(body.message.chat.id,
-        "If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️", { parse_mode: 'Markdown' })
+        response, { parse_mode: 'Markdown' })
+      // "If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️", { parse_mode: 'Markdown' })
       console.log("Response:", response2);
 
       return new Response('', { status: 200 });
