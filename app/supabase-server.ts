@@ -127,7 +127,6 @@ export const saveOnboarding = async (userId: string) => {
       // updated_at: new Date().toString(),
       user_id: userId,
     })
-    .eq('user_id', userId)
 
   if (error) {
     console.log(error.message);
