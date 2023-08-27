@@ -20,7 +20,7 @@ export async function POST(req: Request) {
   const { userId, timezone, fullName, telegramChatId } = await req.json()
 
   if (!userId || !timezone || !telegramChatId) {
-    console.error("Missing userId, timezone, fullName, or telegramChatId:", userId, timezone, fullName, telegramChatId);
+    console.log("Missing userId, timezone, fullName, or telegramChatId:", userId, timezone, fullName, telegramChatId);
     return NextResponse.json({ message: "Missing userId, timezone, fullName, or telegramChatId" }, { status: 400 });
   }
 
