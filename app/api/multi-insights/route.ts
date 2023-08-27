@@ -14,11 +14,10 @@ export async function GET(req: Request) {
 
     const baseUrl = getURL().replace(/\/$/, '')
     const url = baseUrl + '/api/single-insights'
-    const upstashUrl = process.env.UPSTASH_REDIS_REST_URL!
     const response = await fetch('https://qstash.upstash.io/v1/publish/v1/publish/' + url, {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer ' + process.env.UPSTASH_REDIS_REST_TOKEN!,
+        'Authorization': 'Bearer ' + process.env.QSTASH_TOKEN!,
         // 'Upstash-Forward-My-Header': 'my-value', // TODO: security
         'Upstash-Retries': '3',
         'Content-type': 'application/json'
