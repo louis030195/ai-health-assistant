@@ -1,11 +1,8 @@
 
 
-import { Neurosity, STREAMING_MODE } from '@neurosity/sdk';
-import { useState, useEffect } from 'react';
+import { Neurosity } from '@neurosity/sdk';
 import { BrainwavesLabel, PowerByBand } from '@neurosity/sdk/dist/esm/types/brainwaves';
 import { Credentials } from '@neurosity/sdk/dist/esm/types/credentials';
-import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
-import { Database } from '@/types_db';
 
 class FakeNeurosity extends Neurosity {
     login(_: Credentials) {

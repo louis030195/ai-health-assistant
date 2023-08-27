@@ -1,15 +1,13 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { createClient } from "@supabase/supabase-js";
 import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 import {
     HoverCard,
     HoverCardContent,
     HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { ArrowPathIcon, QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
-import { Button } from '@/components/ui/button';
-import toast, { Toaster } from 'react-hot-toast';
+import { QuestionMarkCircleIcon } from '@heroicons/react/20/solid';
+import { Toaster } from 'react-hot-toast';
 
 interface Props {
     userId: string

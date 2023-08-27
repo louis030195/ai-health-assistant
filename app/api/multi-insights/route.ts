@@ -3,6 +3,8 @@ import { getURL } from '@/utils/helpers';
 import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
+export const runtime = 'edge'
+
 export async function GET(req: Request) {
   async function queueInsightTask(user: any) {
     const taskData = {
