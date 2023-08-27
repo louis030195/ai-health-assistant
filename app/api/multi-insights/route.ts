@@ -14,6 +14,7 @@ export async function GET(req: Request) {
 
     const baseUrl = getURL().replace(/\/$/, '')
     const url = baseUrl + '/api/single-insights'
+    console.log("Queuing task for user:", user, "at url:", url);
     const response = await fetch('https://qstash.upstash.io/v1/publish/v1/publish/' + url, {
       method: 'POST',
       headers: {
