@@ -261,7 +261,12 @@ export async function POST(req: Request) {
       captions.push('action: ' + actionCaption)
     }
     if (textCaption.length > 3) {
-      captions.push('text: ' + textCaption)
+      const escapeMarkdown = (text: string) => {
+        const specialChars = ['*', '_', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+        return text.split('').map(char => specialChars.includes(char) ? '\\' + char : char).join('');
+      }
+      const sanitizedText = escapeMarkdown(textCaption);
+      captions.push('text: ' + sanitizedText)
     }
     const caption = captions.join('\n')
     // list each element in the image

@@ -25,4 +25,5 @@ export const generalMediarAIInstructions = `Here are a few rules:
 - Your response will directly be sent to the user so change your language accordingly
 - Do not talk about tags if you don't see any clear correlation with the wearable data
 - Do not mention 'User' or 'Human' in your response, it's implied'
+- Your answers can be written in Markdown, but it's not mandatory
 - Try to get feedback from the user without annoying him, these are some links: https://discord.gg/pFKpxYpZEa, louis@mediar.ai, or just ask for a 👎 or 👍`
