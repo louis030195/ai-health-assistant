@@ -367,6 +367,7 @@ async function generatePromptForUser(userId: string, question: string): Promise<
     .from('states')
     .select('created_at, probability')
     .eq('metadata->>label', 'focus')
+    .eq('user_id', user.id)
     .gte('created_at', yesterday)
     .order('created_at', { ascending: false });
 
@@ -388,7 +389,8 @@ async function generatePromptForUser(userId: string, question: string): Promise<
   const { data: ouras } = await supabase
     .from('states')
     .select()
-    .gte('oura->>day', yesterday.split(' ')[0])
+    .gte('oura->>day', new Date(yesterday).toISOString().split('T')[0])
+    .eq('user_id', user.id)
     .order('oura->>day', { ascending: false });
 
   // 5. Retrieve tags for the user
