@@ -4,6 +4,37 @@ import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request) {
+  async function queueInsightTask(user: any) {
+    const taskData = {
+      userId: user.id,
+      timezone: user.timezone,
+      fullName: user.full_name,
+      telegramChatId: user.telegram_chat_id
+    };
+
+    const baseUrl = getURL().replace(/\/$/, '')
+    const url = baseUrl + '/api/single-insights'
+    const upstashUrl = process.env.UPSTASH_REDIS_REST_URL!
+    const response = await fetch(upstashUrl + '/publish/v1/' + url, {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + process.env.UPSTASH_REDIS_REST_TOKEN!,
+        // 'Upstash-Forward-My-Header': 'my-value', // TODO: security
+        'Upstash-Retries': '3',
+        'Content-type': 'application/json'
+      },
+      body: JSON.stringify(taskData)
+    });
+
+    const responseData = await response.json();
+    if (!response.ok) {
+      console.error("Failed to queue task for user:", user, "with response:", responseData);
+      throw new Error(responseData.message || "Failed to queue task");
+    }
+
+    console.log("Task queued successfully for user:", user);
+  }
+
   const supabase = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_KEY!
@@ -26,33 +57,3 @@ export async function GET(req: Request) {
   return NextResponse.json({ message: "Tasks queued successfully" }, { status: 200 });
 }
 
-async function queueInsightTask(user: any) {
-  const taskData = { 
-    userId: user.id,
-    timezone: user.timezone,
-    fullName: user.full_name,
-    telegramChatId: user.telegram_chat_id
-  };
-
-  const baseUrl = getURL().replace(/\/$/, '')
-  const url = baseUrl + '/api/single-insights'
-  const upstashUrl = process.env.UPSTASH_REDIS_REST_URL!
-  const response = await fetch(upstashUrl + '/publish/' + url, {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer ' + process.env.UPSTASH_REDIS_REST_TOKEN!,
-      // 'Upstash-Forward-My-Header': 'my-value', // TODO: security
-      'Upstash-Retries': '3',
-      'Content-type': 'application/json'
-    },
-    body: JSON.stringify(taskData)
-  });
-
-  const responseData = await response.json();
-  if (!response.ok) {
-    console.error("Failed to queue task for user:", user, "with response:", responseData);
-    throw new Error(responseData.message || "Failed to queue task");
-  }
-
-  console.log("Task queued successfully for user:", user);
-}
