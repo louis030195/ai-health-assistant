@@ -19,7 +19,7 @@ export async function POST(req: Request) {
   )
   const { userId, timezone, fullName, telegramChatId } = await req.json()
 
-  if (!userId || !timezone || !fullName || !telegramChatId) {
+  if (!userId || !timezone || !telegramChatId) {
     console.error("Missing userId, timezone, fullName, or telegramChatId:", userId, timezone, fullName, telegramChatId);
     return NextResponse.json({ message: "Missing userId, timezone, fullName, or telegramChatId" }, { status: 400 });
   }
@@ -101,23 +101,38 @@ export async function POST(req: Request) {
     return;
   }
   console.log("User has neuros of length:", neuros?.length, "and ouras of length:", ouras?.length);
-
+  console.log("User has tags of length:", tags?.length);
   let insights = ''
 
   console.log("Generating insights for user:", user);
-  tags.forEach((tag) => tag.created_at = new Date(tag.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
-  neuros.forEach((neuro: any) => neuro.created_at = new Date(neuro.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
-  ouras?.forEach((oura) => oura.created_at = new Date(oura.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
+  
+  let tagsString = '';
+  tags.forEach((tag) => {
+    tag.created_at = new Date(tag.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
+    tagsString += JSON.stringify(tag);
+  });
+
+  let neurosString = '';
+  neuros.forEach((neuro: any) => {
+    neuro.created_at = new Date(neuro.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
+    neurosString += JSON.stringify(neuro);
+  });
+
+  let ourasString = '';
+  ouras?.forEach((oura) => {
+    oura.created_at = new Date(oura.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
+    ourasString += JSON.stringify(oura);
+  });
+
 
   if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
-    insights = await llm(buildBothDataPrompt(neuros, ouras, tags, user.full_name));
+    insights = await llm(buildBothDataPrompt(neurosString, ourasString, tagsString, user.full_name));
   } else if (neuros && neuros.length > 0) {
-    insights = await llm(buildOnlyNeurosityPrompt(neuros, tags, user.full_name));
+    insights = await llm(buildOnlyNeurosityPrompt(neurosString, tagsString, user.full_name));
   } else if (ouras && ouras.length > 0) {
-    insights = await llm(buildOnlyOuraRingPrompt(ouras, tags, user.full_name));
+    insights = await llm(buildOnlyOuraRingPrompt(ourasString, tagsString, user.full_name));
   } else {
-    console.warn("No neuros or ouras for user:", user);
-    return;
+    insights = await llm(buildOnlyTagsPrompt(tagsString, user.full_name));
   }
 
   console.log("Generated insights:", insights);
@@ -154,7 +169,7 @@ export async function POST(req: Request) {
 
 // curl -X POST http://localhost:3000/api/insights
 
-function buildBothDataPrompt(neuros: object[], ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
+function buildBothDataPrompt(neuros: string, ouras: string, tags: string, fullName: string | null) {
   const userReference = fullName ? ` for ${fullName}` : '';
   return `Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
@@ -165,7 +180,7 @@ ${generalMediarAIInstructions}
 Assistant:`;
 }
 
-function buildOnlyNeurosityPrompt(neuros: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
+function buildOnlyNeurosityPrompt(neuros: string, tags: string, fullName: string | null) {
   const userReference = fullName ? ` for ${fullName}` : '';
   return `Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
@@ -175,7 +190,7 @@ ${generalMediarAIInstructions}
 Assistant:`;
 }
 
-function buildOnlyOuraRingPrompt(ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null) {
+function buildOnlyOuraRingPrompt(ouras: string, tags: string, fullName: string | null) {
   const userReference = fullName ? ` for ${fullName}` : '';
   return `Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
@@ -185,7 +200,14 @@ ${generalMediarAIInstructions}
 Assistant:`;
 }
 
-
+function buildOnlyTagsPrompt(tags: string, fullName: string | null) {
+  const userReference = fullName ? ` for ${fullName}` : '';
+  return `Human: ${baseMediarAI}
+Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
+given these tags: ${JSON.stringify(tags)} 
+${generalMediarAIInstructions}
+Assistant:`;
+}
 
 
 const getTags = async (userId: string, date: string) => {
