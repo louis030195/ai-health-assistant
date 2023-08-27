@@ -8,7 +8,7 @@ import { NextResponse } from 'next/server';
 import { llm } from '@/utils/llm';
 import TelegramBot from 'node-telegram-bot-api';
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 
 
 export async function GET(req: Request) {
@@ -27,7 +27,6 @@ export async function GET(req: Request) {
     console.log("Error fetching users:", error.message);
     return NextResponse.json({ message: "Error fetching users" }, { status: 500 });
   }
-
   const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, { polling: false });
 
   await Promise.all(users
@@ -86,6 +85,7 @@ export async function GET(req: Request) {
         .eq('user_id', user.id)
         .order('oura->>day', { ascending: false })
       console.log("Retrieved Oura data:", ouras?.length);
+      return
 
       const tags = await getTags(user.id, threeDaysAgoFromOneAm);
       console.log("Retrieved tags:", tags);
@@ -122,6 +122,7 @@ export async function GET(req: Request) {
         console.error("No insights generated for user:", user);
         return;
       }
+
 
       const { data: d2, error } = await supabase.from('chats').insert({
         text: insights,
