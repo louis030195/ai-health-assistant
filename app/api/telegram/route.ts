@@ -557,7 +557,7 @@ const opticalCharacterRecognition = async (base64Image: string) => {
     throw new Error("Request failed " + response.statusText);
   }
 
-  return result.responses[0].fullTextAnnotation.text
+  return result?.responses?.[0]?.fullTextAnnotation?.text
 }
 
 // import fs from 'fs';
