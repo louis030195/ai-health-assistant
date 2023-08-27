@@ -19,6 +19,11 @@ export async function POST(req: Request) {
   )
   const { userId, timezone, fullName, telegramChatId } = await req.json()
 
+  if (!userId || !timezone || !fullName || !telegramChatId) {
+    console.error("Missing userId, timezone, fullName, or telegramChatId:", userId, timezone, fullName, telegramChatId);
+    return NextResponse.json({ message: "Missing userId, timezone, fullName, or telegramChatId" }, { status: 400 });
+  }
+
   console.log("Got user:", userId, timezone, fullName, telegramChatId);
 
   const bot = new TelegramBot(process.env.TELEGRAM_BOT_TOKEN!, { polling: false });
@@ -47,10 +52,10 @@ export async function POST(req: Request) {
     .gte('created_at', usersToday)
 
   // If an insight has already been sent today, skip to the next user
-  // if (todaysInsights && todaysInsights.length > 0) {
-  //   console.log("Insight already sent today for user:", user);
-  //   return;
-  // }
+  if (todaysInsights && todaysInsights.length > 0) {
+    console.log("Insight already sent today for user:", user);
+    return;
+  }
 
   const { data } = await supabase
     .from('states')

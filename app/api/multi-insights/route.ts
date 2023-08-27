@@ -12,8 +12,8 @@ export async function GET(req: Request) {
       telegramChatId: user.telegram_chat_id
     };
 
-    // const baseUrl = getURL().replace(/\/$/, '')
-    const url = 'https://mediar.ai/api/single-insights'
+    const baseUrl = getURL().replace(/\/$/, '')
+    const url = baseUrl + '/api/single-insights';
     console.log("Queuing task for user:", user, "at url:", url);
     const response = await fetch('https://qstash.upstash.io/v1/publish/v1/publish/' + url, {
       method: 'POST',
@@ -28,7 +28,7 @@ export async function GET(req: Request) {
 
     const responseData = await response.json();
     if (!response.ok) {
-      console.error("Failed to queue task for user:", user, "with response:", responseData);
+      console.log("Failed to queue task for user:", user, "with response:", responseData);
       throw new Error(responseData.message || "Failed to queue task");
     }
 
