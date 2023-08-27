@@ -150,6 +150,7 @@ export async function POST(req: Request) {
   const { data: d2, error: e2 } = await supabase.from('chats').insert({
     text: parsed.Body,
     user_id: userId,
+    category: 'question',
   });
   console.log("Chat added:", d2, e2);
   const date = new Date().toLocaleDateString('en-US');
@@ -231,6 +232,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
       const { data, error } = await supabase.from('chats').insert({
         text: response,
         user_id: userId,
+        category: 'answer',
       });
       console.log("Chat added:", data, error);
       await sendWhatsAppMessage(phoneNumber, response)

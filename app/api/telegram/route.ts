@@ -81,10 +81,18 @@ const isTagOrQuestion = async (message: string) => {
 
   const prompt = `Human: ${baseMediarAI}
 
+Your task is to classify the following message into one of the following categories:
+
 YOU ONLY ANSWER:
+- 3 if it's a feedback
 - 2 if it's a tag 
 - 1 if it's a question
 - 0 otherwise
+
+Feedback examples:
+- i would rather have weekly insights
+- i dont like advices
+- you are awesome
 
 Tag examples: 
 - coffee
@@ -102,7 +110,9 @@ Assistant:`
 
   const response = await llm(prompt, 10)
 
-  if (response.trim().includes('2')) {
+  if (response.trim().includes('3')) {
+    return 'feedback'
+  } else if (response.trim().includes('2')) {
     return 'tag'
   } else if (response.trim().includes('1')) {
     return 'question'
@@ -196,11 +206,7 @@ export async function POST(req: Request) {
   }
   const userId = data[0].id
   await track(userId)
-  const { data: d2, error: e2 } = await supabase.from('chats').insert({
-    text: body.message.text,
-    user_id: userId,
-  });
-  console.log("Chat added:", d2, e2);
+
   const date = new Date().toLocaleDateString('en-US');
   const questionKey = QUESTION_PREFIX + userId + '_' + date;
   const tagKey = TAG_PREFIX + userId + '_' + date;
@@ -242,6 +248,11 @@ export async function POST(req: Request) {
       return base64;
     };
     const fileId = body.message.photo![body.message.photo!.length - 1].file_id;
+    await supabase.from('chats').insert({
+      text: JSON.stringify(body.message.photo),
+      user_id: userId,
+      category: 'tag'
+    });
     const fileUri = await bot.getFileLink(fileId)
     const b64Image = await urlContentToDataUri(fileUri);
 
@@ -304,6 +315,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
       const { data, error } = await supabase.from('chats').insert({
         text: response,
         user_id: userId,
+        category: 'answer'
       });
       console.log("Chat added:", data, error);
       // await sendWhatsAppMessage(phoneNumber, response)
@@ -320,10 +332,29 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
         user_id: userId,
       });
       console.log("Tag added:", data, error);
-
+      await supabase.from('chats').insert({
+        text: body.message.text,
+        user_id: userId,
+        category: 'tag'
+      });
       const response = await bot.sendMessage(body.message.chat.id,
         `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
+
+${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' }
+      );
+      console.log("Response:", response);
+      return new Response('', { status: 200 });
+    } else if (intent === 'feedback') {
+      // New code for feedback intent
+      const { data, error } = await supabase.from('chats').insert({
+        text: body.message.text,
+        user_id: userId,
+        category: 'feedback'
+      });
+      console.log("Feedback added:", data, error);
+      const response = await bot.sendMessage(body.message.chat.id,
+        `Thank you for your feedback! We appreciate your input and will use it to improve our service. Feel free to send us more feedback anytime!
 
 ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' }
       );
