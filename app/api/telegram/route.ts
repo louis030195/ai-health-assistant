@@ -248,7 +248,7 @@ export async function POST(req: Request) {
     const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
       getCaption('list each element in the image', b64Image),
       getCaption('what is the person doing?', b64Image),
-      getCaption('what is the written text?', b64Image)
+      opticalCharacterRecognition(b64Image)
     ]);
     let captions = []
 
@@ -260,7 +260,7 @@ export async function POST(req: Request) {
     if (actionCaption !== 'unanswerable') {
       captions.push('action: ' + actionCaption)
     }
-    if (textCaption !== 'unanswerable') {
+    if (textCaption.length > 3) {
       captions.push('text: ' + textCaption)
     }
     const caption = captions.join('\n')
@@ -523,7 +523,54 @@ const getCaption = async (prompt: string, base64Image: string) => {
   return result.predictions[0]
 };
 
+const opticalCharacterRecognition = async (base64Image: string) => {
+  const headers = {
+    Authorization: `Bearer ` + (await getIdToken()),
+    "Content-Type": "application/json",
+    "x-goog-user-project": "mediar-394022"
+  };
 
+  const data = {
+    requests: [
+      {
+        image: {
+          content: base64Image
+        },
+        features: [
+          {
+            type: "TEXT_DETECTION"
+          }
+        ]
+      }
+    ]
+  }
+
+  const response = await fetch('https://vision.googleapis.com/v1/images:annotate', {
+    method: "POST",
+    headers,
+    body: JSON.stringify(data),
+  });
+  const result = await response.json();
+
+  if (!response.ok) {
+    console.error(response.statusText, result);
+    throw new Error("Request failed " + response.statusText);
+  }
+
+  return result.responses[0].fullTextAnnotation.text
+}
+
+// import fs from 'fs';
+
+// Read the file into a Buffer
+// const buffer = fs.readFileSync('/Users/louisbeaumont/Downloads/IMG_2189.jpg');
+// const buffer = fs.readFileSync('/Users/louisbeaumont/Downloads/afcad06f-7ef8-456d-bca5-543a6cf070e4.jpeg');
+
+// Convert the Buffer to a base64 string
+// const base64Image = buffer.toString('base64');
+
+// Now you can pass the base64 string to your opticalCharacterRecognition function
+// opticalCharacterRecognition(base64Image);
 
 // Pure function to set webhook
 async function setTelegramWebhook(url?: string) {
