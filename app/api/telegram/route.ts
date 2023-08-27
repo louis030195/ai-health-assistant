@@ -295,6 +295,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
     if (intent === 'question') {
       await kv.incr(questionKey);
       // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️")
+      await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️",
+        { parse_mode: 'Markdown' })
       const prompt = await generatePromptForUser(userId, body.message.text);
       console.log("Prompt:", prompt);
       const response = await llm(prompt, 500)
