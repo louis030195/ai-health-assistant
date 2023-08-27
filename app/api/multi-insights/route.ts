@@ -15,7 +15,7 @@ export async function GET(req: Request) {
     const baseUrl = getURL().replace(/\/$/, '')
     const url = baseUrl + '/api/single-insights'
     const upstashUrl = process.env.UPSTASH_REDIS_REST_URL!
-    const response = await fetch(upstashUrl + '/publish/v1/' + url, {
+    const response = await fetch(upstashUrl + '/v1/publish/' + url, {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + process.env.UPSTASH_REDIS_REST_TOKEN!,

@@ -16,6 +16,7 @@ const meta = {
 };
 
 export const metadata = {
+    metadataBase: meta.url,
     title: meta.title,
     description: meta.description,
     cardImage: meta.cardImage,
