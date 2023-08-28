@@ -22,9 +22,71 @@ const quotes = [
   "🙌 The body and mind achieve what they believe. Believe in yourself and your health goals!"
 ]
 
+// Incoming request: {
+//   update_id: 313167669,
+//   my_chat_member: {
+//     chat: {
+//       id: -917440634,
+//       title: 'Louis, Mediar',
+//       type: 'group',
+//       all_members_are_administrators: false
+//     },
+//     from: {
+//       id: 5776185278,
+//       is_bot: false,
+//       first_name: 'Louis',
+//       last_name: 'Beaumont',
+//       username: 'louis030195',
+//       language_code: 'en'
+//     },
+//     date: 1693185440,
+//     old_chat_member: { user: [Object], status: 'left' },
+//     new_chat_member: { user: [Object], status: 'member' }
+//   }
+// }
+
 // Define the type for the incoming request
 interface IncomingRequest {
   update_id: number;
+  my_chat_member: {
+    chat: {
+      id: number;
+      title: string;
+      type: string;
+      all_members_are_administrators: boolean;
+    },
+    from: {
+      id: number;
+      is_bot: boolean;
+      first_name: string;
+      last_name: string;
+      username: string;
+      language_code: string;
+    },
+    date: number;
+    old_chat_member: {
+      user: {
+        id: number;
+        is_bot: boolean;
+        first_name: string;
+        last_name: string;
+        username: string;
+        language_code: string;
+      },
+      status: string;
+    },
+    new_chat_member: {
+      user: {
+        id: number;
+        is_bot: boolean;
+        first_name: string;
+        last_name: string;
+        username: string;
+        language_code: string;
+      },
+      status: string;
+    }
+  }
   message: {
     message_id: number;
     from: {
@@ -179,6 +241,14 @@ export async function POST(req: Request) {
     console.log("Message from bot, ignoring");
     return new Response('', { status: 200 });
   }
+
+  // return if group 
+
+  if (body.message.chat.type !== 'private') {
+    console.log("Message from group, ignoring");
+    return new Response('', { status: 200 });
+  }
+
   if (body.message.photo) {
     console.log("Image received", JSON.stringify(body.message.photo));
     // Handle the image here
