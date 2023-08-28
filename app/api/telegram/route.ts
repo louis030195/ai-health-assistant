@@ -718,7 +718,39 @@ async function setTelegramWebhook(url?: string) {
   console.log(result);
 }
 
+
+
+// deleteWebhook();
+
+async function deleteWebhook() {
+  // Telegram bot token 
+  const botToken = process.env.TELEGRAM_BOT_TOKEN;
+
+  // API endpoint
+  const apiUrl = `https://api.telegram.org/bot${botToken}/deleteWebhook`;
+
+  // API options 
+  const options = {
+    method: 'POST',
+    body: JSON.stringify({ drop_pending_updates: true }),
+    headers: { 'Content-Type': 'application/json' }
+  };
+
+  console.log('Deleting Telegram webhook...');
+  console.log('API URL:', apiUrl);
+  // Call Telegram API  
+  const response = await fetch(apiUrl, options)
+
+  if (!response.ok) {
+    console.error(response.statusText);
+    throw new Error("Request failed " + response.statusText);
+  }
+
+  const result = await response.json();
+  console.log(result);
+}
+
+// deleteWebhook();
 // Usage
 // setTelegramWebhook('https://barely-honest-yak.ngrok-free.app/api/telegram');
 // setTelegramWebhook('https://mediar.ai/api/telegram');
-
