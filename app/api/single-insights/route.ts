@@ -142,6 +142,7 @@ export async function POST(req: Request) {
     return;
   }
 
+  // return NextResponse.json({ message: "Success" }, { status: 200 });
 
   const { data: d2, error: e2 } = await supabase.from('chats').insert({
     text: insights,

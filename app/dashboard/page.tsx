@@ -23,7 +23,7 @@ import Chat from './Chat';
 import { CommandDialogDemo } from './Command';
 import { OuraHrvChart } from './OuraHrvChart';
 import SaveTimezone from './SaveTimezone';
-
+export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
   const session = await getSession();

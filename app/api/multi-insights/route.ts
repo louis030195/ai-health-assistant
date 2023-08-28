@@ -42,7 +42,7 @@ export async function GET(req: Request) {
       throw new Error(responseData.message || "Failed to queue task");
     }
 
-    console.log("Task queued successfully for user:", user);
+    console.log("Task queued successfully for user:", user, "with response:", responseData);
   }
 
   const supabase = createClient<Database>(
@@ -62,7 +62,8 @@ export async function GET(req: Request) {
   // Assuming you want to process users who have a timezone and telegram_chat_id
   const filteredUsers = users?.filter((user) => user.timezone && user.telegram_chat_id) || [];
 
-  await Promise.all(filteredUsers.map(async (user) => queueInsightTask(user)));
+  console.log("Got users:", filteredUsers);
+  await Promise.all(filteredUsers.map(async (user) => await queueInsightTask(user)));
 
   return NextResponse.json({ message: "Tasks queued successfully" }, { status: 200 });
 }

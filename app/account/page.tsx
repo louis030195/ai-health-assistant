@@ -6,13 +6,7 @@ import {
   getSubscription,
   getActiveProductsWithPrices,
 } from '@/app/supabase-server';
-import { Database } from '@/types_db';
-import { createServerActionClient } from '@supabase/auth-helpers-nextjs';
-import { revalidatePath } from 'next/cache';
-import { cookies } from 'next/headers';
-import Link from 'next/link';
 import { redirect } from 'next/navigation';
-import { ReactNode } from 'react';
 import OuraConnect from '@/components/OuraConnect';
 import { createOuraWebhookSubscription, deleteOuraWebhookSubscriptionOfType, getOuraAccessToken, getOuraAccessTokenServer, getOuraPersonalInfo, listOuraWebhookSubscriptions, revokeOuraAccessToken } from '../oura-server';
 import WhatsappConnect from '@/components/ui/WhatsappConnect';
@@ -25,6 +19,7 @@ import DailyUsage from './DailyUsage';
 import { kv } from '@vercel/kv';
 import TelegramConnect from '@/components/ui/TelegramConnect';
 import { checkTelegramVerification, sendTelegramMessage, startTelegramVerification } from '../telegram-server';
+export const dynamic = "force-dynamic";
 
 export default async function Account() {
   const session = await getSession();
@@ -86,8 +81,8 @@ export default async function Account() {
           subscription={subscription || undefined}
           session={session}
         > */}
-        {/* <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
-          startVerification={startVerificationServer} verifyOtp={checkVerificationServer} /> */}
+        <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
+          startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
         <TelegramConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
           sendTelegramMessage={sendTelegramMessageServer} />
 

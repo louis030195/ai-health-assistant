@@ -7,7 +7,7 @@ export const runtime = 'edge'
 
 
 
-const welcomeMessage = (fullName?: string) => `🤖 Hi ${fullName}! It's Mediar, your health assistant! 👋 
+const welcomeMessage = (fullName?: string) => `🤖 Hi {{1}}! It's Mediar, your health assistant! 👋 
 
 To help me understand best how events in your life affect your health, simply send me tags about your daily activities, moods, foods, workouts, etc. 
 
@@ -18,7 +18,7 @@ For example:
 - 🍎 Ate an apple
 - 🏋️‍♀️ Did 30 mins workout
 
-Of course, just write on the go without emojis, I can also deal with grammar mistakes and typos! 🤓
+FYI, I can deal with grammar mistakes and typos! 🤓
 
 You can also send me pictures of your meals, workouts, drinks, etc. 📸. I'll try to understand what's in the picture and tag it for you! 🤖
 
@@ -29,9 +29,9 @@ If you want to know more about your health, just ask me questions like:
 - How can I reduce my stress?
 - What's my focus score?
 
-If you have any feedback or questions ❓ about Mediar, just join the Discord community or email 💌 at louis@mediar.ai
+If you have any feedback or questions ❓ about Mediar, just join the Discord community or email 💌 louis@mediar.ai.
 
-Let's unlock you`
+Your health matter ❤️🥦💪🧠`
 
 export async function POST(req: Request) {
     // get userId, phone, and token from the body

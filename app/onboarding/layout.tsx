@@ -4,6 +4,7 @@ import 'styles/main.css';
 import Steps from './Steps';
 import MobileWarning from './MobileWarning';
 import { getSession, saveOnboarding } from '../supabase-server';
+export const dynamic = "force-dynamic";
 
 const meta = {
     title: 'Mediar',
