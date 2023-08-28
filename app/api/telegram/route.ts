@@ -244,7 +244,7 @@ export async function POST(req: Request) {
 
   // return if group 
 
-  if (body.message.chat.type !== 'private') {
+  if (body.my_chat_member) {
     console.log("Message from group, ignoring");
     return new Response('', { status: 200 });
   }
