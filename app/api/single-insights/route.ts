@@ -21,7 +21,7 @@ export async function POST(req: Request) {
 
   if (!userId || !timezone || !telegramChatId) {
     console.log("Missing userId, timezone, fullName, or telegramChatId:", userId, timezone, fullName, telegramChatId);
-    return NextResponse.json({ message: "Missing userId, timezone, fullName, or telegramChatId" }, { status: 400 });
+    return NextResponse.json({ message: "Missing userId, timezone, fullName, or telegramChatId" }, { status: 200 });
   }
 
   console.log("Got user:", userId, timezone, fullName, telegramChatId);
@@ -54,7 +54,7 @@ export async function POST(req: Request) {
   // If an insight has already been sent today, skip to the next user
   if (todaysInsights && todaysInsights.length > 0) {
     console.log("Insight already sent today for user:", user);
-    return;
+    return NextResponse.json({ message: "Insight already sent today" }, { status: 200 });
   }
 
   const { data } = await supabase
@@ -98,7 +98,7 @@ export async function POST(req: Request) {
 
   if (!tags && (!neuros || neuros.length === 0) && (!ouras || ouras.length === 0)) {
     console.log("No tags, neuros, or ouras for user:", user);
-    return;
+    return NextResponse.json({ message: "No tags, neuros, or ouras" }, { status: 200 });
   }
   console.log("User has neuros of length:", neuros?.length, "and ouras of length:", ouras?.length);
   console.log("User has tags of length:", tags?.length);
@@ -139,7 +139,7 @@ export async function POST(req: Request) {
 
   if (!insights) {
     console.error("No insights generated for user:", user);
-    return;
+    return NextResponse.json({ message: "No insights generated" }, { status: 200 });
   }
 
   // return NextResponse.json({ message: "Success" }, { status: 200 });
