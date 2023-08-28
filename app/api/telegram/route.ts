@@ -249,12 +249,14 @@ export async function POST(req: Request) {
     return new Response('', { status: 200 });
   }
 
-  if (body.message.photo) {
-    console.log("Image received", JSON.stringify(body.message.photo));
-    // Handle the image here
-  } else {
-    console.log("No image in the message");
+  // return in no message 
+
+  if (!body.message) {
+    console.log("No message, ignoring");
+    return new Response('', { status: 200 });
   }
+
+
   const supabase = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_KEY!
