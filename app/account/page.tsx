@@ -81,8 +81,8 @@ export default async function Account() {
           subscription={subscription || undefined}
           session={session}
         > */}
-        <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
-          startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
+        {/* <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined} */}
+          {/* startVerification={startVerificationServer} verifyOtp={checkVerificationServer} /> */}
         <TelegramConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
           sendTelegramMessage={sendTelegramMessageServer} />
 
