@@ -235,12 +235,7 @@ export async function POST(req: Request) {
   const bot = new TelegramBot(token);
   // await bot.sendChatAction(body.message.chat.id, "typing");
   console.log("Incoming request:", body);
-  // return if bot 
 
-  if (body.message.from.is_bot) {
-    console.log("Message from bot, ignoring");
-    return new Response('', { status: 200 });
-  }
 
   // return if group 
 
@@ -249,6 +244,8 @@ export async function POST(req: Request) {
     return new Response('', { status: 200 });
   }
 
+
+
   // return in no message 
 
   if (!body.message) {
@@ -256,6 +253,13 @@ export async function POST(req: Request) {
     return new Response('', { status: 200 });
   }
 
+
+  // return if bot 
+
+  if (body.message.from.is_bot) {
+    console.log("Message from bot, ignoring");
+    return new Response('', { status: 200 });
+  }
 
   const supabase = createClient<Database>(
     process.env.SUPABASE_URL!,
