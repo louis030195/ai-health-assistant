@@ -6,7 +6,7 @@
     },
     {
       "path": "/api/multi-insights",
-      "schedule": "0 8 * * * *"
+      "schedule": "0 1 * * * *"
     }
   ]
 }
