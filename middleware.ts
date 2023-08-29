@@ -12,6 +12,7 @@ const apiRoutes = [
   '/api/insights',
   '/api/telegram',
 ]
+
 export async function middleware(req: NextRequest) {
   if (req.method === 'OPTIONS') {
     return new Response(null, {
@@ -27,6 +28,21 @@ export async function middleware(req: NextRequest) {
   }
   const supabase = createMiddlewareClient<Database>({ req, res })
   const { data: { session } } = await supabase.auth.getSession()
+
+  if (process.env.NEXT_RUNTIME === 'nodejs' && req.url.includes('mediar.ai')) {
+    /** Conditional import required for use with Next middleware to avoid a webpack error 
+         * https://nextjs.org/docs/pages/building-your-application/routing/middleware */
+    try {
+      const { registerHighlight } = await import('@highlight-run/next/server')
+
+      registerHighlight({
+        projectID: process.env.NEXT_PUBLIC_HIGHLIGHT_PROJECT_ID!,
+      })
+      console.log('Highlight instrumentation registered')
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
   // ugly hack due to https://github.com/orgs/supabase/discussions/16135#discussioncomment-6642592
   if (session) {
