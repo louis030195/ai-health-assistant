@@ -283,7 +283,7 @@ export async function POST(req: Request) {
   const userId = data[0].id
   await track(userId)
 
-  const date = new Date().toLocaleDateString('en-US');
+  const date = new Date().toLocaleDateString('en-US', { timeZone: data[0].timezone });
   const questionKey = QUESTION_PREFIX + userId + '_' + date;
   const tagKey = TAG_PREFIX + userId + '_' + date;
 
