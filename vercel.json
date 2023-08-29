@@ -3,6 +3,10 @@
     {
       "path": "/auth/oura/daily-sleep",
       "schedule": "*/30 * * * *"
+    },
+    {
+      "path": "/api/multi-insights",
+      "schedule": "0 8 * * * *"
     }
   ]
 }
