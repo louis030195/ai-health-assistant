@@ -3,22 +3,27 @@ import { Button } from '@/components/ui/button';
 import { postData } from '@/utils/helpers';
 import { getStripe } from '@/utils/stripe-client';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
 
 export default function DailyUsage({ kvGet, userId, limit, price }: { kvGet: any, userId: string, limit: number, price: any }) {
 
     const [stats, setStats] = useState<any>([]);
     const [isLoading, setIsLoading] = useState(false);
-
+    const router = useRouter();
 
     useEffect(() => {
         setIsLoading(true);
         const fetchData = async () => {
-            const date = new Date().toLocaleDateString('en-US');
+            // local date
+            const date = new Date().toLocaleDateString('en-US', {
+                timeZone: Intl.DateTimeFormat().resolvedOptions().timeZone,
+            });
 
             const questionKey = 'question_' + userId + '_' + date;
             const tagKey = 'tag_' + userId + '_' + date;
 
+            // console.log('questionKey,tagKey:', questionKey, tagKey);
             const questionCount = await kvGet(questionKey) || 0;
             const tagCount = await kvGet(tagKey) || 0;
             console.log('questions,tags:', questionCount, tagCount);
@@ -40,6 +45,12 @@ export default function DailyUsage({ kvGet, userId, limit, price }: { kvGet: any
 
         const stripe = await getStripe();
         stripe?.redirectToCheckout({ sessionId });
+    }
+
+    const onAthlete = async () => {
+        // https://cal.com/louis030195/athlete
+        const url = 'https://cal.com/louis030195/athlete';
+        router.push(url);
     }
 
     return (
@@ -69,10 +80,13 @@ export default function DailyUsage({ kvGet, userId, limit, price }: { kvGet: any
                 ))}
             </div>
             {
-                limit === 2 &&
-                <Button
-                    className="w-full"
-                    onClick={onBiohacker}>Upgrade</Button>
+                limit === 2 ?
+                    <Button
+                        className="w-full"
+                        onClick={onBiohacker}>Upgrade</Button>
+                    : <Button
+                        className="w-full"
+                        onClick={onAthlete}>Upgrade</Button>
             }
         </div>
     );
