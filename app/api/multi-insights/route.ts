@@ -4,6 +4,7 @@ import { createClient } from '@supabase/supabase-js';
 import { NextResponse } from 'next/server';
 
 export const runtime = 'edge'
+export const maxDuration = 300
 
 export async function GET(req: Request) {
   async function queueInsightTask(user: any) {
@@ -63,7 +64,11 @@ export async function GET(req: Request) {
   const filteredUsers = users?.filter((user) => user.timezone && user.telegram_chat_id) || [];
 
   console.log("Got users:", filteredUsers);
-  await Promise.all(filteredUsers.map(async (user) => await queueInsightTask(user)));
+  await Promise.all(filteredUsers.map(async (user) => await queueInsightTask(user)
+    .catch((error) => {
+      console.log("Error queuing task for user:", user, "with error:", error)
+      // H.captureException(error);
+    })));
 
   return NextResponse.json({ message: "Tasks queued successfully" }, { status: 200 });
 }
