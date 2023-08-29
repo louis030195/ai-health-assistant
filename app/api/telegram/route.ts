@@ -5,6 +5,8 @@ import fetch from 'node-fetch';
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
 // export const runtime = 'edge'
 
+export const maxDuration = 300
+
 const quotes = [
   "✨ Small daily improvements add up to big results over time. Keep logging your health data with Mediar!",
 
