@@ -14,12 +14,12 @@ export const maxDuration = 300
 
 
 export async function POST(req: Request) {
+  const { userId, timezone, fullName, telegramChatId } = await req.json()
   try {
     const supabase = createClient<Database>(
       process.env.SUPABASE_URL!,
       process.env.SUPABASE_KEY!
     )
-    const { userId, timezone, fullName, telegramChatId } = await req.json()
 
     if (!userId || !timezone || !telegramChatId) {
       console.log("Missing userId, timezone, fullName, or telegramChatId:", userId, timezone, fullName, telegramChatId);
@@ -169,7 +169,7 @@ export async function POST(req: Request) {
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (error) {
-    console.log("Error:", error);
+    console.log("Error:", error, userId, timezone, fullName, telegramChatId);
     return NextResponse.json({ message: "Error" }, { status: 200 });
   }
 }
