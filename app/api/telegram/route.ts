@@ -235,146 +235,146 @@ export async function POST(req: Request) {
   // await bot.sendChatAction(body.message.chat.id, "typing");
   console.log("Incoming request:", body);
 
+  try {
 
-  // return if group 
+    // return if group 
 
-  if (body.my_chat_member) {
-    console.log("Message from group, ignoring");
-    return new Response('', { status: 200 });
-  }
-
-
-
-  // return in no message 
-
-  if (!body.message) {
-    console.log("No message, ignoring");
-    return new Response('', { status: 200 });
-  }
-
-
-  // return if bot 
-
-  if (body.message.from.is_bot) {
-    console.log("Message from bot, ignoring");
-    return new Response('', { status: 200 });
-  }
-
-  const supabase = createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_KEY!
-  )
-
-  // 1. find username in users table
-  const { data, error } = await supabase
-    .from('users')
-    .select('id, phone, timezone, full_name, telegram_chat_id')
-    .eq('telegram_username', body.message.from.username)
-    .limit(1);
-
-  if (error || !data || data.length === 0) {
-    console.log(error, data)
-    const response = await bot.sendMessage(body.message.chat.id,
-      `I'm sorry I don't know you yet. Make sure to save your Telegram username is mediar.ai/account first.`, { parse_mode: 'Markdown' });
-    console.log("Response:", response);
-    return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 400 });
-  }
-  const userId = data[0].id
-  await track(userId)
-
-  const date = new Date().toLocaleDateString('en-US', { timeZone: data[0].timezone });
-  const questionKey = QUESTION_PREFIX + userId + '_' + date;
-  const tagKey = TAG_PREFIX + userId + '_' + date;
-
-  console.log("Question key:", questionKey, "Tag key:", tagKey);
-  const questionCount = await kv.get(questionKey);
-  const tagCount = await kv.get(tagKey);
-  console.log("Question count:", questionCount, "Tag count:", tagCount);
-
-  // 2. set telegram_chat_id in users table
-  if (!data[0].telegram_chat_id) {
-    const { error: e3 } = await supabase.from('users').update({
-      telegram_chat_id: body.message.chat.id.toString()
-    }).match({ id: userId });
-    if (e3) {
-      console.log("Error updating user:", e3.message);
-      return new Response(`Error updating user. Error: ${e3.message}`, { status: 400 });
+    if (body.my_chat_member) {
+      console.log("Message from group, ignoring");
+      return new Response('', { status: 200 });
     }
-    const response = await bot.sendMessage(body.message.chat.id, welcomeMessage, { parse_mode: 'Markdown' });
-    console.log("Welcome message sent:", response);
-    return new Response(welcomeMessage, { status: 200 });
-  }
 
-  const hasImage = body.message.photo && body.message.photo.length > 0;
-  if (hasImage) {
-    // const ww = await bot.sendMessage(body.message.chat.id, "Sorry my image engine is in maintenance, I'll be back soon!", { parse_mode: 'Markdown' })
-    // console.log("Response:", ww);
-    // return new Response('', { status: 200 });
-    // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
-    const response = await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️", { parse_mode: 'Markdown' })
-    console.log("Response:", response);
-    await kv.incr(tagKey);
-    console.log("Image received, sending to inference API");
 
-    const urlContentToDataUri = async (url: string) => {
-      const response = await fetch(url);
-      const buffer = await response.buffer();
-      const base64 = buffer.toString('base64');
-      return base64;
-    };
-    const fileId = body.message.photo![body.message.photo!.length - 1].file_id;
-    await supabase.from('chats').insert({
-      text: JSON.stringify(body.message.photo),
-      user_id: userId,
-      category: 'tag'
-    });
-    const fileUri = await bot.getFileLink(fileId)
-    const b64Image = await urlContentToDataUri(fileUri);
 
-    const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
-      getCaption('list each element in the image', b64Image),
-      getCaption('what is the person doing?', b64Image),
-      opticalCharacterRecognition(b64Image)
-    ]);
-    let captions = []
+    // return in no message 
 
-    // if detected caption is not "unanswerable", add it to the caption
-    // `elements: ${elementsCaption}, action: ${actionCaption}, text: ${textCaption}`;
-    if (elementsCaption !== 'unanswerable') {
-      captions.push('elements: ' + elementsCaption)
+    if (!body.message) {
+      console.log("No message, ignoring");
+      return new Response('', { status: 200 });
     }
-    if (actionCaption !== 'unanswerable') {
-      captions.push('action: ' + actionCaption)
+
+
+    // return if bot 
+
+    if (body.message.from.is_bot) {
+      console.log("Message from bot, ignoring");
+      return new Response('', { status: 200 });
     }
-    if (textCaption.length > 3) {
-      const escapeMarkdown = (text: string) => {
-        const specialChars = ['*', '_', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
-        return text.split('').map(char => specialChars.includes(char) ? '\\' + char : char).join('');
+
+    const supabase = createClient<Database>(
+      process.env.SUPABASE_URL!,
+      process.env.SUPABASE_KEY!
+    )
+
+    // 1. find username in users table
+    const { data, error } = await supabase
+      .from('users')
+      .select('id, phone, timezone, full_name, telegram_chat_id')
+      .eq('telegram_username', body.message.from.username)
+      .limit(1);
+
+    if (error || !data || data.length === 0) {
+      console.log(error, data)
+      const response = await bot.sendMessage(body.message.chat.id,
+        `I'm sorry I don't know you yet. Make sure to save your Telegram username is mediar.ai/account first.`, { parse_mode: 'Markdown' });
+      console.log("Response:", response);
+      return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 400 });
+    }
+    const userId = data[0].id
+    await track(userId)
+
+    const date = new Date().toLocaleDateString('en-US', { timeZone: data[0].timezone });
+    const questionKey = QUESTION_PREFIX + userId + '_' + date;
+    const tagKey = TAG_PREFIX + userId + '_' + date;
+
+    console.log("Question key:", questionKey, "Tag key:", tagKey);
+    const questionCount = await kv.get(questionKey);
+    const tagCount = await kv.get(tagKey);
+    console.log("Question count:", questionCount, "Tag count:", tagCount);
+
+    // 2. set telegram_chat_id in users table
+    if (!data[0].telegram_chat_id) {
+      const { error: e3 } = await supabase.from('users').update({
+        telegram_chat_id: body.message.chat.id.toString()
+      }).match({ id: userId });
+      if (e3) {
+        console.log("Error updating user:", e3.message);
+        return new Response(`Error updating user. Error: ${e3.message}`, { status: 400 });
       }
-      const sanitizedText = escapeMarkdown(textCaption);
-      captions.push('text: ' + sanitizedText)
+      const response = await bot.sendMessage(body.message.chat.id, welcomeMessage, { parse_mode: 'Markdown' });
+      console.log("Welcome message sent:", response);
+      return new Response(welcomeMessage, { status: 200 });
     }
-    const caption = captions.join('\n')
-    // list each element in the image
-    // what is the person doing?
-    console.log("Caption:", caption);
 
-    // Insert as tag
-    const { data: d2, error: e2 } = await supabase.from('tags').insert({
-      text: caption,
-      user_id: userId
-    });
+    const hasImage = body.message.photo && body.message.photo.length > 0;
+    if (hasImage) {
+      // const ww = await bot.sendMessage(body.message.chat.id, "Sorry my image engine is in maintenance, I'll be back soon!", { parse_mode: 'Markdown' })
+      // console.log("Response:", ww);
+      // return new Response('', { status: 200 });
+      // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
+      const response = await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️", { parse_mode: 'Markdown' })
+      console.log("Response:", response);
+      await kv.incr(tagKey);
+      console.log("Image received, sending to inference API");
 
-    console.log("Tag added:", d2, e2);
+      const urlContentToDataUri = async (url: string) => {
+        const response = await fetch(url);
+        const buffer = await response.buffer();
+        const base64 = buffer.toString('base64');
+        return base64;
+      };
+      const fileId = body.message.photo![body.message.photo!.length - 1].file_id;
+      await supabase.from('chats').insert({
+        text: JSON.stringify(body.message.photo),
+        user_id: userId,
+        category: 'tag'
+      });
+      const fileUri = await bot.getFileLink(fileId)
+      const b64Image = await urlContentToDataUri(fileUri);
 
-    const response2 = await bot.sendMessage(body.message.chat.id,
-      `I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
+      const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
+        getCaption('list each element in the image', b64Image),
+        getCaption('what is the person doing?', b64Image),
+        opticalCharacterRecognition(b64Image)
+      ]);
+      let captions = []
+
+      // if detected caption is not "unanswerable", add it to the caption
+      // `elements: ${elementsCaption}, action: ${actionCaption}, text: ${textCaption}`;
+      if (elementsCaption !== 'unanswerable') {
+        captions.push('elements: ' + elementsCaption)
+      }
+      if (actionCaption !== 'unanswerable') {
+        captions.push('action: ' + actionCaption)
+      }
+      if (textCaption.length > 3) {
+        const escapeMarkdown = (text: string) => {
+          const specialChars = ['*', '_', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+          return text.split('').map(char => specialChars.includes(char) ? '\\' + char : char).join('');
+        }
+        const sanitizedText = escapeMarkdown(textCaption);
+        captions.push('text: ' + sanitizedText)
+      }
+      const caption = captions.join('\n')
+      // list each element in the image
+      // what is the person doing?
+      console.log("Caption:", caption);
+
+      // Insert as tag
+      const { data: d2, error: e2 } = await supabase.from('tags').insert({
+        text: caption,
+        user_id: userId
+      });
+
+      console.log("Tag added:", d2, e2);
+
+      const response2 = await bot.sendMessage(body.message.chat.id,
+        `I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
 Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️!
 ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' })
-    console.log("Response:", response2);
-    return new Response('', { status: 200 });
-  }
-  try {
+      console.log("Response:", response2);
+      return new Response('', { status: 200 });
+    }
     console.log(`Message from ${body.message.from.username}: ${body.message.text}`);
 
     const intent = await isTagOrQuestion(body.message.text);
