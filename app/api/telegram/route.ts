@@ -5,7 +5,6 @@ import fetch from 'node-fetch';
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
 // export const runtime = 'edge'
 
-
 const quotes = [
   "✨ Small daily improvements add up to big results over time. Keep logging your health data with Mediar!",
 
@@ -449,9 +448,10 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
     return new Response('', { status: 200 });
   } catch (error) {
     console.log(error);
+    // H.
     return new Response(
       'Webhook handler failed. View your nextjs function logs.',
-      { status: 500 });
+      { status: 200 });
   }
 }
 
