@@ -47,6 +47,13 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
     }, []);
 
     const handleSetTelegramUsername = async (number: string) => {
+        const isValidTelegramUsername = /^[a-z0-9_]{5,32}$/i.test(number);
+        if (!isValidTelegramUsername) {
+            // Handle invalid username
+            toast.error('Invalid Telegram username. Please try again.');
+            return
+        }
+
         setTelegramUsernameLoading(true);
         // 1. check if this username is already taken
         const { data, error } = await supabase.from('users').select('id')
@@ -105,7 +112,7 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
 
             <div className="flex flex-col items-center justify-center">
                 <Input
-
+                    
                     value={telegramUsername}
                     onChange={(e) => setTelegramUsername(e.target.value)}
                     placeholder="Enter Telegram username"
