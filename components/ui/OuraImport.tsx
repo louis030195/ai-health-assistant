@@ -35,6 +35,10 @@ const OuraImport = ({ session }: { session: Session }) => {
     const { accessToken, setAccessToken, status } = useOuraToken(session.user.id)
 
     const handleClick = async () => {
+        if (!accessToken) {
+            toast.error("You must connect your Oura account first.");
+            return;
+        }
         setProgress(0); // Reset progress
         setCurrentDay(0); // Reset the current day counter
         setErrorMessage(null); // Clear any previous error
@@ -81,7 +85,7 @@ const OuraImport = ({ session }: { session: Session }) => {
             <Button
                 className=" text-white font-bold py-2 px-4 rounded"
                 onClick={handleClick}
-                disabled={!accessToken}
+                // disabled={!accessToken}
             >
                 <CloudArrowDownIcon className="w-5 h-5 mr-2" />
                 Import Oura Data
