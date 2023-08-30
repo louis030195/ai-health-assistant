@@ -758,7 +758,7 @@ async function deleteWebhook() {
   console.log(result);
 }
 
-// deleteWebhook();
+// deleteWebhook().then(() => setTelegramWebhook('https://mediar.ai/api/telegram'));
 // Usage
 // setTelegramWebhook('https://barely-honest-yak.ngrok-free.app/api/telegram');
-// setTelegramWebhook('https://mediar.ai/api/telegram');
+
