@@ -381,6 +381,10 @@ function Executive() {
                                     <CheckIcon className="h-6 w-5 flex-none text-indigo-600" />
                                     Instant support (max 20-minutes response time)
                                 </li>
+                                <li className="flex gap-x-3">
+                                    <CheckIcon className="h-6 w-5 flex-none text-indigo-600" />
+                                    Private AI and database
+                                </li>
                             </ul>
                         </div>
 
