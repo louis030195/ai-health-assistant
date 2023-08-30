@@ -53,7 +53,7 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
             toast.error('Invalid Telegram username. Please try again.');
             return
         }
-
+ 
         setTelegramUsernameLoading(true);
         // 1. check if this username is already taken
         const { data, error } = await supabase.from('users').select('id')
