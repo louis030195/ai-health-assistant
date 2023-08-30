@@ -3,10 +3,8 @@ import { createClient } from "@supabase/supabase-js";
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
-import { auth } from "google-auth-library";
-import { getURL } from "@/utils/helpers";
-import { NextResponse } from "next/server";
 import TelegramBot from "node-telegram-bot-api";
+import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 
 // export const runtime = 'edge'
 export const maxDuration = 300
@@ -291,11 +289,8 @@ export async function POST(req: Request) {
 
     const hasImage = body.message.photo && body.message.photo.length > 0;
     if (hasImage) {
-      // const ww = await bot.sendMessage(body.message.chat.id, "Sorry my image engine is in maintenance, I'll be back soon!", { parse_mode: 'Markdown' })
-      // console.log("Response:", ww);
-      // return new Response('', { status: 200 });
-      // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
-      const response = await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️", { parse_mode: 'Markdown' })
+      const msg = "Sure, give me a few seconds to understand your image 🙏."
+      const response = await bot.sendMessage(body.message.chat.id, msg, { parse_mode: 'Markdown' });
       console.log("Response:", response);
       await kv.incr(tagKey);
       console.log("Image received, sending to inference API");
@@ -351,10 +346,10 @@ export async function POST(req: Request) {
 
       console.log("Tag added:", d2, e2);
 
-      const response2 = await bot.sendMessage(body.message.chat.id,
-        `I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
+      const msg2 = `I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
 Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️!
-${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' })
+${quotes[Math.floor(Math.random() * quotes.length)]}`
+      const response2 = await bot.sendMessage(body.message.chat.id, msg2, { parse_mode: 'Markdown' })
       console.log("Response:", response2);
       return new Response('', { status: 200 });
     }
@@ -363,9 +358,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
     const intent = await isTagOrQuestion(body.message.text);
     if (intent === 'question') {
       await kv.incr(questionKey);
-      // await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️")
-      await bot.sendMessage(body.message.chat.id, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️",
-        { parse_mode: 'Markdown' })
+      const msg = "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: Any feedback appreciated ❤️"
+      await bot.sendMessage(body.message.chat.id, msg, { parse_mode: 'Markdown' })
       const prompt = await generatePromptForUser(userId, body.message.text);
       console.log("Prompt:", prompt);
       const response = await llm(prompt, 500)
@@ -376,10 +370,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
         category: 'answer'
       });
       console.log("Chat added:", data, error);
-      // await sendWhatsAppMessage(phoneNumber, response)
-      const response2 = await bot.sendMessage(body.message.chat.id,
-        response, { parse_mode: 'Markdown' })
-      // "If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️", { parse_mode: 'Markdown' })
+      const response2 = await bot.sendMessage(body.message.chat.id, response, { parse_mode: 'Markdown' })
       console.log("Response:", response2);
 
       return new Response('', { status: 200 });
@@ -395,11 +386,11 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
         user_id: userId,
         category: 'tag'
       });
-      const response = await bot.sendMessage(body.message.chat.id,
-        `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
+      const msg = `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
-
-${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' }
+      
+${quotes[Math.floor(Math.random() * quotes.length)]}`
+      const response = await bot.sendMessage(body.message.chat.id, msg, { parse_mode: 'Markdown' }
       );
       console.log("Response:", response);
       return new Response('', { status: 200 });
@@ -431,7 +422,6 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`, { parse_mode: 'Markdown' 
     return new Response('', { status: 200 });
   } catch (error) {
     console.log(error);
-    // H.
     return new Response(
       'Webhook handler failed. View your nextjs function logs.',
       { status: 200 });
@@ -570,101 +560,6 @@ const getTags = async (userId: string, date: string) => {
 
 
 
-const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
-const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
-
-const getIdToken = async () => {
-  const client = auth.fromJSON(JSON.parse(process.env.GOOGLE_SVC!));
-  // @ts-ignore
-  client.scopes = ["https://www.googleapis.com/auth/cloud-platform"];
-  // @ts-ignore
-  const idToken = await client.authorize();
-  return idToken.access_token;
-};
-
-const getCaption = async (prompt: string, base64Image: string) => {
-  const headers = {
-    Authorization: `Bearer ` + (await getIdToken()),
-    "Content-Type": "application/json",
-  };
-
-  const data = {
-    instances: [
-      {
-        prompt,
-        image: {
-          bytesBase64Encoded: base64Image,
-        },
-      },
-    ],
-    parameters: {
-      sampleCount: 1
-    }
-  }
-
-  const response = await fetch(URL, {
-    method: "POST",
-    headers,
-    body: JSON.stringify(data),
-  });
-
-  if (!response.ok) {
-    console.error(response.statusText);
-    throw new Error("Request failed " + response.statusText);
-  }
-
-  const result = await response.json();
-  return result.predictions[0]
-};
-
-const opticalCharacterRecognition = async (base64Image: string) => {
-  const headers = {
-    Authorization: `Bearer ` + (await getIdToken()),
-    "Content-Type": "application/json",
-    "x-goog-user-project": "mediar-394022"
-  };
-
-  const data = {
-    requests: [
-      {
-        image: {
-          content: base64Image
-        },
-        features: [
-          {
-            type: "TEXT_DETECTION"
-          }
-        ]
-      }
-    ]
-  }
-
-  const response = await fetch('https://vision.googleapis.com/v1/images:annotate', {
-    method: "POST",
-    headers,
-    body: JSON.stringify(data),
-  });
-  const result = await response.json();
-
-  if (!response.ok) {
-    console.error(response.statusText, result);
-    throw new Error("Request failed " + response.statusText);
-  }
-
-  return result?.responses?.[0]?.fullTextAnnotation?.text || ''
-}
-
-// import fs from 'fs';
-
-// Read the file into a Buffer
-// const buffer = fs.readFileSync('/Users/louisbeaumont/Downloads/IMG_2189.jpg');
-// const buffer = fs.readFileSync('/Users/louisbeaumont/Downloads/afcad06f-7ef8-456d-bca5-543a6cf070e4.jpeg');
-
-// Convert the Buffer to a base64 string
-// const base64Image = buffer.toString('base64');
-
-// Now you can pass the base64 string to your opticalCharacterRecognition function
-// opticalCharacterRecognition(base64Image);
 
 // Pure function to set webhook
 async function setTelegramWebhook(url?: string) {

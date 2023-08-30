@@ -1,16 +1,14 @@
-import { addTags } from "@/app/supabase-server";
 import { sendWhatsAppMessage } from "@/app/whatsapp-server";
 import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
-import { cookies } from 'next/headers';
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
 import { HfInference } from "@huggingface/inference";
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
 
-const inference = new HfInference(process.env.HF_API_KEY!);
 
 // export const runtime = 'edge'
+export const maxDuration = 300
 
 
 const quotes = [
@@ -74,10 +72,18 @@ const isTagOrQuestion = async (message: string) => {
 
   const prompt = `Human: ${baseMediarAI}
 
+Your task is to classify the following message into one of the following categories:
+
 YOU ONLY ANSWER:
+- 3 if it's a feedback
 - 2 if it's a tag 
 - 1 if it's a question
 - 0 otherwise
+
+Feedback examples:
+- i would rather have weekly insights
+- i dont like advices
+- you are awesome
 
 Tag examples: 
 - coffee
@@ -95,7 +101,9 @@ Assistant:`
 
   const response = await llm(prompt, 10)
 
-  if (response.trim().includes('2')) {
+  if (response.trim().includes('3')) {
+    return 'feedback'
+  } else if (response.trim().includes('2')) {
     return 'tag'
   } else if (response.trim().includes('1')) {
     return 'question'
@@ -131,7 +139,7 @@ export async function POST(req: Request) {
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_KEY!
   )
-  
+
   console.log(parsed);
   const phoneNumber = parsed.From.replace('whatsapp:', '')
   // get userId
@@ -147,13 +155,8 @@ export async function POST(req: Request) {
   if (!phoneVerified) {
     return new Response(`Your phone has not been verified!`);
   }
-  const { data: d2, error: e2 } = await supabase.from('chats').insert({
-    text: parsed.Body,
-    user_id: userId,
-    category: 'question',
-  });
-  console.log("Chat added:", d2, e2);
-  const date = new Date().toLocaleDateString('en-US');
+
+  const date = new Date().toLocaleDateString('en-US', { timeZone: data[0].timezone });
   const questionKey = QUESTION_PREFIX + userId + '_' + date;
   const tagKey = TAG_PREFIX + userId + '_' + date;
 
@@ -164,28 +167,28 @@ export async function POST(req: Request) {
 
   const hasImage = parsed.NumMedia > 0;
   if (hasImage) {
-    await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to understand your image 🙏. PS: I'm not very good at understanding images yet, any feedback appreciated ❤️")
+    const msg = "Sure, give me a few seconds to understand your image 🙏."
+    await sendWhatsAppMessage(phoneNumber, msg)
 
     await kv.incr(tagKey);
     console.log("Image received, sending to inference API");
 
-    // const response = await inference.imageToText({
-    //   data: await (await fetch(parsed.MediaUrl0)).blob(),
-    //   model: 'nlpconnect/vit-gpt2-image-captioning',
-    // })
     const urlContentToDataUri = async (url: string) => {
       const response = await fetch(url);
       const buffer = await response.buffer();
       const base64 = buffer.toString('base64');
       return base64;
     };
-    // const caption = response.generated_text;
+    await supabase.from('chats').insert({
+      text: JSON.stringify(parsed.MediaUrl0),
+      user_id: userId,
+      category: 'tag'
+    });
     const b64Image = await urlContentToDataUri(parsed.MediaUrl0);
-    // @ts-ignore
     const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
-        getCaption('list each element in the image', b64Image),
-        getCaption('what is the person doing?', b64Image),
-        getCaption('what is the written text?', b64Image)
+      getCaption('list each element in the image', b64Image),
+      getCaption('what is the person doing?', b64Image),
+      opticalCharacterRecognition(b64Image)
     ]);
     let captions = []
 
@@ -197,8 +200,13 @@ export async function POST(req: Request) {
     if (actionCaption !== 'unanswerable') {
       captions.push('action: ' + actionCaption)
     }
-    if (textCaption !== 'unanswerable') {
-      captions.push('text: ' + textCaption)
+    if (textCaption.length > 3) {
+      const escapeMarkdown = (text: string) => {
+        const specialChars = ['*', '_', '[', ']', '(', ')', '~', '`', '>', '#', '+', '-', '=', '|', '{', '}', '.', '!'];
+        return text.split('').map(char => specialChars.includes(char) ? '\\' + char : char).join('');
+      }
+      const sanitizedText = escapeMarkdown(textCaption);
+      captions.push('text: ' + sanitizedText)
     }
     const caption = captions.join('\n')
     // list each element in the image
@@ -213,10 +221,10 @@ export async function POST(req: Request) {
 
     console.log("Tag added:", d2, e2);
 
-    // Return response
-    return new Response(`I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
+    const msg2 = `I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
 Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️!
-${quotes[Math.floor(Math.random() * quotes.length)]}`);
+${quotes[Math.floor(Math.random() * quotes.length)]}`
+    return new Response(msg2);
   }
   try {
     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
@@ -224,7 +232,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
     const intent = await isTagOrQuestion(parsed.Body);
     if (intent === 'question') {
       await kv.incr(questionKey);
-      await sendWhatsAppMessage(phoneNumber, "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: I'm not very good at answering questions yet, any feedback appreciated ❤️")
+      const msg = "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: Any feedback appreciated ❤️"
+      await sendWhatsAppMessage(phoneNumber, msg)
       const prompt = await generatePromptForUser(userId, parsed.Body)
       console.log("Prompt:", prompt);
       const response = await llm(prompt, 500)
@@ -235,8 +244,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
         category: 'answer',
       });
       console.log("Chat added:", data, error);
-      await sendWhatsAppMessage(phoneNumber, response)
-      return new Response("If you have any feedback, please send it to me! I'm still learning and any feedback is appreciated ❤️");
+      return new Response(response);
     } else if (intent === 'tag') {
       await kv.incr(tagKey);
       const { data, error } = await supabase.from('tags').insert({
@@ -244,12 +252,28 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
         user_id: userId,
       });
       console.log("Tag added:", data, error);
-
-      return new Response(`Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
+      await supabase.from('chats').insert({
+        text: parsed.Body,
+        user_id: userId,
+        category: 'tag'
+      });
+      const msg = `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
+            
+${quotes[Math.floor(Math.random() * quotes.length)]}`
+      return new Response(msg);
+    } else if (intent === 'feedback') {
+      // New code for feedback intent
+      const { data, error } = await supabase.from('chats').insert({
+        text: parsed.Body,
+        user_id: userId,
+        category: 'feedback'
+      });
+      console.log("Feedback added:", data, error);
+      const msg = `Thank you for your feedback! We appreciate your input and will use it to improve our service. Feel free to send us more feedback anytime!
 
 ${quotes[Math.floor(Math.random() * quotes.length)]}`
-      );
+      return new Response(msg);
     }
 
     return new Response(`I'm sorry it seems you didn't ask a question neither tag an event from your life. My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
@@ -261,7 +285,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
     console.log(error);
     return new Response(
       'Webhook handler failed. View your nextjs function logs.',
-      { status: 500 });
+      { status: 200 });
   }
 }
 
@@ -291,6 +315,8 @@ async function generatePromptForUser(userId: string, question: string): Promise<
     .from('states')
     .select('created_at, probability')
     .eq('metadata->>label', 'focus')
+    .eq('user_id', user.id)
+
     .gte('created_at', yesterday)
     .order('created_at', { ascending: false });
 
@@ -312,7 +338,8 @@ async function generatePromptForUser(userId: string, question: string): Promise<
   const { data: ouras } = await supabase
     .from('states')
     .select()
-    .gte('oura->>day', yesterday.split(' ')[0])
+    .gte('oura->>day', new Date(yesterday).toISOString().split('T')[0])
+    .eq('user_id', user.id)
     .order('oura->>day', { ascending: false });
 
   // 5. Retrieve tags for the user
@@ -395,6 +422,7 @@ const getTags = async (userId: string, date: string) => {
 
 
 import { auth } from "google-auth-library";
+import { opticalCharacterRecognition } from "@/lib/google-cloud";
 const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
 const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
 
