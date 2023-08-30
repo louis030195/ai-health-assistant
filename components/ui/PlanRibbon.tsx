@@ -13,6 +13,8 @@ import { getStripe } from '@/utils/stripe-client';
 import { Loader2 } from 'lucide-react';
 import { Session, User } from '@supabase/supabase-js';
 import ManageSubscriptionButton from '@/app/account/ManageSubscriptionButton';
+import posthog from 'posthog-js'
+import { usePostHog } from 'posthog-js/react'
 
 type Subscription = Database['public']['Tables']['subscriptions']['Row'];
 type Price = Database['public']['Tables']['prices']['Row'];
@@ -29,52 +31,39 @@ interface RibbonProps {
 const PlanRibbon: React.FC<RibbonProps> = ({ session, price, subscription, displayText, children }) => {
   const [biohackerLoading, setBiohackerLoading] = React.useState(false);
   const router = useRouter();
+  const posthog = usePostHog()
+  const flag = posthog.isFeatureEnabled('whatsapp')
+
   const handleClick = async () => {
     setBiohackerLoading(true);
 
-    if (subscription) {
-      return router.push('/account');
-    }
-    try {
-      const { sessionId } = await postData({
-        url: '/api/create-checkout-session',
-        data: { price: price! },
-      });
+    // if (subscription) {
+    //   return router.push('/account');
+    // }
+    // try {
+    //   const { sessionId } = await postData({
+    //     url: '/api/create-checkout-session',
+    //     data: { price: price! },
+    //   });
 
-      const stripe = await getStripe();
-      stripe?.redirectToCheckout({ sessionId });
-    } catch (error) {
-      return alert((error as Error)?.message);
-    } finally {
-      setBiohackerLoading(false);
-    }
+    //   const stripe = await getStripe();
+    //   stripe?.redirectToCheckout({ sessionId });
+    // } catch (error) {
+    //   return alert((error as Error)?.message);
+    // } finally {
+    //   setBiohackerLoading(false);
+    // }
+
+
+    const url = 'https://cal.com/louis030195/beta';
+    router.push(url);
+
   };
 
   return (
     <div className="relative overflow-hidden rounded-lg">
-      {!subscription &&
-        <div className="relative z-20">
-          <div className="absolute top-5 left-5">
-            <HoverCard>
-              <HoverCardTrigger>
-                <QuestionMarkCircleIcon width={32} className="text-white" />
-              </HoverCardTrigger>
-              <HoverCardContent className="w-[800px] h-[1000px]">
-                <iframe src="https://link.excalidraw.com/p/readonly/cHcTRMmQ0XX3NzUpQZ6I" width="100%" height="100%"></iframe>
-              </HoverCardContent>
-            </HoverCard>
-          </div>
-        </div>
-      }
-      {subscription ?
-        <div className="flex flex-col items-center justify-center rounded-lg shadow p-6 z-0 gap-6">
-          <div className="flex flex-col items-center justify-center">
-            <CheckBadgeIcon className="ml-2 h-10 w-10 text-green-500" />
-            <p className="text-black font-bold text-sm">
-              Subscription active </p>
-          </div>
-          <ManageSubscriptionButton session={session} />
-        </div> :
+
+      {flag !== true &&
         <div
           className="absolute left-[-80px] top-[46px] w-72 h-10 bg-indigo-600 rounded-br-lg z-10 shadow-lg cursor-pointer transform -rotate-45 items-center justify-center"
           onClick={handleClick}
@@ -92,7 +81,7 @@ const PlanRibbon: React.FC<RibbonProps> = ({ session, price, subscription, displ
         {children} {/* Render the children here */}
       </div>
       {
-        !subscription && <div className="absolute top-0 left-0 right-0 bottom-0 bg-gray-500/50 rounded-lg z-0" />
+        flag !== true && <div className="absolute top-0 left-0 right-0 bottom-0 bg-gray-500/50 rounded-lg z-0" />
       }
     </div>
   );

@@ -3,8 +3,12 @@ import { createClient } from "@supabase/supabase-js";
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
 import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
-// export const runtime = 'edge'
+import { auth } from "google-auth-library";
+import { getURL } from "@/utils/helpers";
+import { NextResponse } from "next/server";
+import TelegramBot from "node-telegram-bot-api";
 
+// export const runtime = 'edge'
 export const maxDuration = 300
 
 const quotes = [
@@ -22,29 +26,6 @@ const quotes = [
 
   "🙌 The body and mind achieve what they believe. Believe in yourself and your health goals!"
 ]
-
-// Incoming request: {
-//   update_id: 313167669,
-//   my_chat_member: {
-//     chat: {
-//       id: -917440634,
-//       title: 'Louis, Mediar',
-//       type: 'group',
-//       all_members_are_administrators: false
-//     },
-//     from: {
-//       id: 5776185278,
-//       is_bot: false,
-//       first_name: 'Louis',
-//       last_name: 'Beaumont',
-//       username: 'louis030195',
-//       language_code: 'en'
-//     },
-//     date: 1693185440,
-//     old_chat_member: { user: [Object], status: 'left' },
-//     new_chat_member: { user: [Object], status: 'member' }
-//   }
-// }
 
 // Define the type for the incoming request
 interface IncomingRequest {
@@ -588,10 +569,7 @@ const getTags = async (userId: string, date: string) => {
 
 
 
-import { auth } from "google-auth-library";
-import { getURL } from "@/utils/helpers";
-import { NextResponse } from "next/server";
-import TelegramBot from "node-telegram-bot-api";
+
 const API_ENDPOINT = "us-central1-aiplatform.googleapis.com";
 const URL = `https://${API_ENDPOINT}/v1/projects/mediar-394022/locations/us-central1/publishers/google/models/imagetext:predict`;
 

@@ -57,7 +57,7 @@ export default function DailyUsage({ kvGet, userId, limit, price }: { kvGet: any
         // border
         <div
             // min size
-            className="p-4 flex gap-4 flex-col items-center justify-center border-2 border-gray-200 rounded-md min-w-[300px] min-h-[200px]">
+            className="p-4 flex gap-4 flex-col items-center justify-center border-1 border-gray-200 rounded-md min-w-[300px] min-h-[200px] shadow-md">
             <div className="text-2xl font-bold text-black">
                 Daily Usage
             </div>

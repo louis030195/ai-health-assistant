@@ -19,6 +19,7 @@ import DailyUsage from './DailyUsage';
 import { kv } from '@vercel/kv';
 import TelegramConnect from '@/components/ui/TelegramConnect';
 import { checkTelegramVerification, sendTelegramMessage, startTelegramVerification } from '../telegram-server';
+import Sub from './Sub';
 export const dynamic = "force-dynamic";
 
 export default async function Account() {
@@ -75,18 +76,20 @@ export default async function Account() {
         }
           price={products.find((product) => product.name === 'Biohacker')?.prices[0]!}
         />
-        {/* <PlanRibbon
-          displayText="Biohacker Plan"
+        <Sub session={session} subscription={subscription || undefined} displayText="Biohacker Plan" />
+        <PlanRibbon
+          displayText="Beta"
           price={products?.find((product) => product.name === 'Biohacker')?.prices[0]!}
           subscription={subscription || undefined}
           session={session}
-        > */}
-        {/* <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined} */}
-          {/* startVerification={startVerificationServer} verifyOtp={checkVerificationServer} /> */}
+        >
+          <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
+            startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
+        </PlanRibbon>
+
         <TelegramConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
           sendTelegramMessage={sendTelegramMessageServer} />
 
-        {/* </PlanRibbon> */}
         <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
           <NeurosityConnect session={session}
             className='w-4/5 shadow-none'
