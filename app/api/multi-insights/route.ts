@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       )
       const { error, data: users } = await supabase
         .from('users')
-        .select('id, timezone, full_name, telegram_chat_id')
+        .select('id, timezone, full_name, telegram_chat_id, phone')
         .gte('telegram_chat_id', '');
 
       if (error) {
@@ -51,7 +51,8 @@ const queueInsightTask = async (user: any) => {
     userId: user.id,
     timezone: user.timezone,
     fullName: user.full_name,
-    telegramChatId: user.telegram_chat_id
+    telegramChatId: user.telegram_chat_id,
+    phone: user.phone,
   };
 
   const baseUrl = getURL().replace(/\/$/, '')

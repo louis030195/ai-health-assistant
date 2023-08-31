@@ -182,7 +182,8 @@ export async function POST(req: Request) {
     await supabase.from('chats').insert({
       text: JSON.stringify(parsed.MediaUrl0),
       user_id: userId,
-      category: 'tag'
+      category: 'tag',
+      channel: 'whatsapp'
     });
     const b64Image = await urlContentToDataUri(parsed.MediaUrl0);
     const [elementsCaption, actionCaption, textCaption]: string[] = await Promise.all([
@@ -255,7 +256,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       await supabase.from('chats').insert({
         text: parsed.Body,
         user_id: userId,
-        category: 'tag'
+        category: 'tag',
+        channel: 'whatsapp'
       });
       const msg = `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
@@ -267,7 +269,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       const { data, error } = await supabase.from('chats').insert({
         text: parsed.Body,
         user_id: userId,
-        category: 'feedback'
+        category: 'feedback',
+        channel: 'whatsapp'
       });
       console.log("Feedback added:", data, error);
       const msg = `Thank you for your feedback! We appreciate your input and will use it to improve our service. Feel free to send us more feedback anytime!

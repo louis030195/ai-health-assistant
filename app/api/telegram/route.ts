@@ -305,7 +305,8 @@ export async function POST(req: Request) {
       await supabase.from('chats').insert({
         text: JSON.stringify(body.message.photo),
         user_id: userId,
-        category: 'tag'
+        category: 'tag',
+        channel: 'telegram'
       });
       const fileUri = await bot.getFileLink(fileId)
       const b64Image = await urlContentToDataUri(fileUri);
@@ -367,7 +368,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       const { data, error } = await supabase.from('chats').insert({
         text: response,
         user_id: userId,
-        category: 'answer'
+        category: 'answer',
+        channel: 'telegram'
       });
       console.log("Chat added:", data, error);
       const response2 = await bot.sendMessage(body.message.chat.id, response, { parse_mode: 'Markdown' })
@@ -384,7 +386,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       await supabase.from('chats').insert({
         text: body.message.text,
         user_id: userId,
-        category: 'tag'
+        category: 'tag',
+        channel: 'telegram'
       });
       const msg = `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
@@ -399,7 +402,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       const { data, error } = await supabase.from('chats').insert({
         text: body.message.text,
         user_id: userId,
-        category: 'feedback'
+        category: 'feedback',
+        channel: 'telegram'
       });
       console.log("Feedback added:", data, error);
       const response = await bot.sendMessage(body.message.chat.id,

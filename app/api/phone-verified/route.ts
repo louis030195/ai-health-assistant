@@ -7,7 +7,7 @@ export const runtime = 'edge'
 
 
 
-const welcomeMessage = (fullName?: string) => `🤖 Hi {{1}}! It's Mediar, your health assistant! 👋 
+const welcomeMessage = (fullName?: string) => `🤖 Hi ${fullName}! It's Mediar, your health assistant! 👋 
 
 To help me understand best how events in your life affect your health, simply send me tags about your daily activities, moods, foods, workouts, etc. 
 

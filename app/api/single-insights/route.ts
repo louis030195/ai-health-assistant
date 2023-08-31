@@ -6,15 +6,16 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import { llm } from '@/utils/llm';
 import TelegramBot from 'node-telegram-bot-api';
+import PostHogClient from '@/app/posthog-server';
 
 // export const runtime = 'edge'
 export const maxDuration = 300
 
-// curl -X POST -d '{"userId":"20284713-5cd6-4199-8313-0d883f0711a1","timezone":"America/Los_Angeles","fullName":"Louis","telegramChatId":"5776185278"}' -H "Content-Type: application/json" http://localhost:3000/api/single-insights
+// curl -X POST -d '{"userId":"20284713-5cd6-4199-8313-0d883f0711a1","timezone":"America/Los_Angeles","fullName":"Louis","telegramChatId":"5776185278", "phone": "+33648140738"}' -H "Content-Type: application/json" http://localhost:3000/api/single-insights
 
 
 export async function POST(req: Request) {
-  const { userId, timezone, fullName, telegramChatId } = await req.json()
+  const { userId, timezone, fullName, telegramChatId, phone } = await req.json()
   try {
     const supabase = createClient<Database>(
       process.env.SUPABASE_URL!,
@@ -152,7 +153,46 @@ export async function POST(req: Request) {
     });
     console.log("Inserted chat:", d2, "with error:", e2);
 
-    // const response = await sendWhatsAppMessage(user.phone!, insights);
+    const hasWhatsapp = await getFeatureFlag(user.id);
+    if (hasWhatsapp && phone) {
+      console.log("Sending whatsapp message to user:", user);
+      // 1. check when was the last whatsapp message with this user
+
+      const { data: lastWhatsappMessage, error: e4 } = await supabase
+        .from('chats')
+        .select()
+        .eq('user_id', user.id)
+        .eq('channel', 'whatsapp')
+        .gte('created_at', usersToday)
+        .order('created_at', { ascending: false })
+        .limit(1)
+
+      if (e4) {
+        console.log("Error fetching last whatsapp message:", e4.message);
+      } else {
+        console.log("Last whatsapp message:", lastWhatsappMessage);
+
+        // 2. if it was less than 24 hours ago, skip
+
+        // 3. if it was more than 24 hours ago, send the template message
+        const lastMessage = lastWhatsappMessage[0];
+        const lastMessageDate = lastMessage?.created_at ? new Date(lastMessage.created_at!).getTime() : 0;
+        const now = new Date().getTime();
+        const diff = now - lastMessageDate;
+        const hours = Math.floor(diff / 1000 / 60 / 60);
+        console.log("Last whatsapp message was:", hours, "hours ago");
+        if (!lastWhatsappMessage || lastWhatsappMessage.length === 0 || hours > 24) {
+
+          const template = `👋  Hey ${fullName}`
+
+          await sendWhatsAppMessage(phone, template);
+        }
+
+        // 4. send the insight
+        await sendWhatsAppMessage(phone, insights);
+      }
+
+    }
     const response = await bot.sendMessage(
       user.telegram_chat_id!,
       insights,
@@ -234,3 +274,37 @@ const getTags = async (userId: string, date: string) => {
   }
   return data || [];
 };
+
+// curl -v -L --header "Content-Type: application/json" -d '{
+//   "api_key": "<PH_PROJECT_API_KEY>",
+//   "distinct_id": "ian@posthog.com"
+// }' "https://app.posthog.com/decide/?v=3"
+// const getFeatureFlag = async (userId: string) => {
+//   await fetch(
+//     'https://app.posthog.com/decide/?v=3',
+//     {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify({
+//         api_key: 'phc_V7co1flWmfnd9Hd6LSyPRau9sARsxMEiOrmNvGeUhbJ',
+//         distinct_id: userId,
+//       }),
+//     }
+//   ).then((res) => res.json())
+// }
+
+const getFeatureFlag = async (userId: string) => {
+  const posthog = PostHogClient()
+  // const flags = await posthog.getAllFlags(
+  //   userId
+  // );
+  // console.log("Flags:", flags);
+  // await posthog.shutdownAsync()
+
+  const isMyFlagEnabledForUser = await posthog.isFeatureEnabled('whatsapp', userId);
+  console.log("isMyFlagEnabledForUser:", isMyFlagEnabledForUser);
+  return isMyFlagEnabledForUser;
+}
+// getFeatureFlag('20284713-5cd6-4199-8313-0d883f0711a1').then((res) => console.log(res))

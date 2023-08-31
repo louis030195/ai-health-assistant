@@ -22,6 +22,9 @@ export const sendWhatsAppMessage = async (to: string, body: string) => {
         throw new Error(`Failed to send WhatsApp message: ${response.status} ${response.statusText} ${text}`);
     }
 
+    const data = await response.json()
+    console.log("WhatsApp message sent successfully", data);
+
     return response;
 }
 
