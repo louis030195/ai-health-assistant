@@ -77,15 +77,15 @@ export default async function Account() {
           price={products.find((product) => product.name === 'Biohacker')?.prices[0]!}
         />
         <Sub session={session} subscription={subscription || undefined} displayText="Biohacker Plan" />
-        <PlanRibbon
+        {/* <PlanRibbon
           displayText="Beta"
           price={products?.find((product) => product.name === 'Biohacker')?.prices[0]!}
           subscription={subscription || undefined}
           session={session}
-        >
+        > */}
           <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
             startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
-        </PlanRibbon>
+        {/* </PlanRibbon> */}
 
         <TelegramConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
           sendTelegramMessage={sendTelegramMessageServer} />

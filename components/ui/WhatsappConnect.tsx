@@ -62,6 +62,11 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
                     const response = await verifyOtp(phoneNumber, otp);
                     if (response.status !== 'approved') throw new Error('Invalid OTP:' + response);
                     setShowOtpInput(false);
+                    const { error } = await supabase.from('users').update({
+                        phone: phoneNumber,
+                        phone_verified: true
+                    }).eq('id', session.user?.id);
+            
                     toast.success('WhatsApp connected successfully!', { id });
                 } catch (error: any) {
                     console.error(error);

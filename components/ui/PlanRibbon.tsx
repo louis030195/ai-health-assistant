@@ -32,7 +32,7 @@ const PlanRibbon: React.FC<RibbonProps> = ({ session, price, subscription, displ
   const [biohackerLoading, setBiohackerLoading] = React.useState(false);
   const router = useRouter();
   const posthog = usePostHog()
-  const flag = posthog.isFeatureEnabled('whatsapp')
+  const flag = posthog.isFeatureEnabled('whatsapp');
 
   const handleClick = async () => {
     setBiohackerLoading(true);
