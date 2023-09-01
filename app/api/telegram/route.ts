@@ -2,7 +2,7 @@ import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
-import { baseMediarAI, generalMediarAIInstructions } from "@/lib/utils";
+import { baseMediarAI, buildBothDataPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, generalMediarAIInstructions } from "@/lib/utils";
 import TelegramBot from "node-telegram-bot-api";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 
@@ -487,62 +487,40 @@ async function generatePromptForUser(userId: string, question: string): Promise<
   // 5. Retrieve tags for the user
   const tags = await getTags(userId, yesterday);
 
-  tags.forEach((tag) => tag.created_at = new Date(tag.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
-  neuros.forEach((neuro: any) => neuro.created_at = new Date(neuro.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
-  ouras?.forEach((oura) => oura.created_at = new Date(oura.created_at!).toLocaleString('en-US', { timeZone: user.timezone }))
+  let tagsString = '';
+  tags.forEach((tag) => {
+    tag.created_at = new Date(tag.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
+    tagsString += JSON.stringify(tag);
+  });
 
+  let neurosString = '';
+  neuros.forEach((neuro: any) => {
+    neuro.created_at = new Date(neuro.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
+    neurosString += JSON.stringify(neuro);
+  });
+
+  let ourasString = '';
+  ouras?.forEach((oura) => {
+    oura.created_at = new Date(oura.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
+    ourasString += JSON.stringify(oura);
+  });
 
   // 6. Construct the prompt based on available data
   let prompt = '';
   if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
     console.log("Both neuros and ouras data available");
-    prompt = buildBothDataPrompt(neuros, ouras, tags, user.full_name, question);
+    prompt = buildBothDataPrompt(neurosString, ourasString, tagsString, user, question);
   } else if (neuros && neuros.length > 0) {
     console.log("Only neuros data available");
-    prompt = buildOnlyNeurosityPrompt(neuros, tags, user.full_name, question);
+    prompt = buildOnlyNeurosityPrompt(neurosString, tagsString, user, question);
   } else if (ouras && ouras.length > 0) {
     console.log("Only ouras data available");
-    prompt = buildOnlyOuraRingPrompt(ouras, tags, user.full_name, question);
+    prompt = buildOnlyOuraRingPrompt(ourasString, tagsString, user, question);
   }
 
   return prompt;
 }
 
-
-
-function buildBothDataPrompt(neuros: object[], ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
-  const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
-given these tags: ${JSON.stringify(tags)} 
-And these Neurosity states: ${JSON.stringify(neuros)} 
-and these OuraRing states: ${JSON.stringify(ouras)} 
-That answer the user's question: ${question}
-${generalMediarAIInstructions}
-Assistant:`;
-}
-
-function buildOnlyNeurosityPrompt(neuros: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
-  const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
-given these tags: ${JSON.stringify(tags)} 
-And these Neurosity states: ${JSON.stringify(neuros)} 
-That answer the user's question: ${question}
-${generalMediarAIInstructions}
-Assistant:`;
-}
-
-function buildOnlyOuraRingPrompt(ouras: object[], tags: { text: string | null; created_at: string | null; }[], fullName: string | null, question: string) {
-  const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
-given these tags: ${JSON.stringify(tags)} 
-And these OuraRing states: ${JSON.stringify(ouras)} 
-That answer the user's question: ${question}
-${generalMediarAIInstructions}
-Assistant:`;
-}
 const getTags = async (userId: string, date: string) => {
   console.log("Getting tags for user:", userId, "since date:", date);
   const supabase = createClient<Database>(

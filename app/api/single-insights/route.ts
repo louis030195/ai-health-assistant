@@ -1,5 +1,5 @@
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
-import { baseMediarAI, generalMediarAIInstructions } from '@/lib/utils';
+import { baseMediarAI, buildBothDataPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, buildOnlyTagsPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
 import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -11,11 +11,11 @@ import PostHogClient from '@/app/posthog-server';
 // export const runtime = 'edge'
 export const maxDuration = 300
 
-// curl -X POST -d '{"userId":"20284713-5cd6-4199-8313-0d883f0711a1","timezone":"America/Los_Angeles","fullName":"Louis","telegramChatId":"5776185278", "phone": "+33648140738"}' -H "Content-Type: application/json" http://localhost:3000/api/single-insights
+// curl -X POST -d '{"userId":"20284713-5cd6-4199-8313-0d883f0711a1","timezone":"America/Los_Angeles","fullName":"Louis","telegramChatId":"5776185278", "phone": "+33648140738", "goal": "I aim to increase my productivity by improving my time management skills and maintaining a healthy work-life balance."}' -H "Content-Type: application/json" http://localhost:3000/api/single-insights
 
 
 export async function POST(req: Request) {
-  const { userId, timezone, fullName, telegramChatId, phone } = await req.json()
+  const { userId, timezone, fullName, telegramChatId, phone, goal } = await req.json()
   try {
     const supabase = createClient<Database>(
       process.env.SUPABASE_URL!,
@@ -35,7 +35,8 @@ export async function POST(req: Request) {
       id: userId,
       timezone,
       full_name: fullName,
-      telegram_chat_id: telegramChatId
+      telegram_chat_id: telegramChatId,
+      goal: goal || '',
     }
     console.log("Processing user:", user);
 
@@ -129,13 +130,13 @@ export async function POST(req: Request) {
 
 
     if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
-      insights = await llm(buildBothDataPrompt(neurosString, ourasString, tagsString, user.full_name));
+      insights = await llm(buildBothDataPrompt(neurosString, ourasString, tagsString, user));
     } else if (neuros && neuros.length > 0) {
-      insights = await llm(buildOnlyNeurosityPrompt(neurosString, tagsString, user.full_name));
+      insights = await llm(buildOnlyNeurosityPrompt(neurosString, tagsString, user));
     } else if (ouras && ouras.length > 0) {
-      insights = await llm(buildOnlyOuraRingPrompt(ourasString, tagsString, user.full_name));
+      insights = await llm(buildOnlyOuraRingPrompt(ourasString, tagsString, user));
     } else {
-      insights = await llm(buildOnlyTagsPrompt(tagsString, user.full_name));
+      insights = await llm(buildOnlyTagsPrompt(tagsString, user));
     }
 
     console.log("Generated insights:", insights);
@@ -183,8 +184,8 @@ export async function POST(req: Request) {
         console.log("Last whatsapp message was:", hours, "hours ago");
         if (!lastWhatsappMessage || lastWhatsappMessage.length === 0 || hours > 24) {
 
-          const template = `👋  Hey ${fullName}`
-
+          // const template = `👋  Hey! Your health matter a lot to me 🥦💪🧠. How can I become a better health assistant for you?`
+          const template = `👋 Hey! Your health matter a lot to me 🥦💪🧠. How can I become a better health assistant for you?`
           await sendWhatsAppMessage(phone, template);
         }
 
@@ -215,46 +216,6 @@ export async function POST(req: Request) {
 }
 
 // curl -X POST http://localhost:3000/api/insights
-
-function buildBothDataPrompt(neuros: string, ouras: string, tags: string, fullName: string | null) {
-  const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
-given these tags: ${JSON.stringify(tags)} 
-And these Neurosity states: ${JSON.stringify(neuros)} 
-and these OuraRing states: ${JSON.stringify(ouras)} 
-${generalMediarAIInstructions}
-Assistant:`;
-}
-
-function buildOnlyNeurosityPrompt(neuros: string, tags: string, fullName: string | null) {
-  const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
-given these tags: ${JSON.stringify(tags)} 
-And these Neurosity states: ${JSON.stringify(neuros)} 
-${generalMediarAIInstructions}
-Assistant:`;
-}
-
-function buildOnlyOuraRingPrompt(ouras: string, tags: string, fullName: string | null) {
-  const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
-given these tags: ${JSON.stringify(tags)} 
-And these OuraRing states: ${JSON.stringify(ouras)} 
-${generalMediarAIInstructions}
-Assistant:`;
-}
-
-function buildOnlyTagsPrompt(tags: string, fullName: string | null) {
-  const userReference = fullName ? ` for ${fullName}` : '';
-  return `Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
-given these tags: ${JSON.stringify(tags)} 
-${generalMediarAIInstructions}
-Assistant:`;
-}
 
 
 const getTags = async (userId: string, date: string) => {

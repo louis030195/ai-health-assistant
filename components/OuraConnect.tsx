@@ -67,7 +67,7 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
                     href="https://ouraring.com">Oura</Link> to get your ring data.</p>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col items-center">
                 {status === false &&
                     <div className='flex items-center space-x-2 justify-center text-red-500'>
                         <span className="text-sm">Connection invalid. Please reconnect.</span>
@@ -81,7 +81,7 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
                     </div>
                 }
                 <Button
-                    className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full rounded-md"
+                    className="text-white mx-auto w-[400px] "
                     onClick={handleConnect}
                 >
                     Connect

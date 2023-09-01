@@ -46,6 +46,7 @@ export default function NeurosityDisconnect({ session }: Props) {
             <Button
                 onClick={handleDisconnect}
                 disabled={!customToken}
+                className="w-[400px]"
             >
                 Disconnect your Neurosity account
             </Button>

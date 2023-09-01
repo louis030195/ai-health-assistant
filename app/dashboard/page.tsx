@@ -23,6 +23,7 @@ import Chat from './Chat';
 import { CommandDialogDemo } from './Command';
 import { OuraHrvChart } from './OuraHrvChart';
 import SaveTimezone from './SaveTimezone';
+import { GoalInput } from './GoalInput';
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
@@ -78,6 +79,11 @@ export default async function Dashboard() {
         className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
       />
 
+      <GoalInput userDetails={userDetails} />
+      <p className="text-black text-lg font-bold text-center">Everything happens in Telegram/WhatsApp.{" "}
+        <a
+          className="text-blue-500 underline"
+          href="/account">Connect your account</a> and head there.</p>
       {/* @ts-ignore */}
       {/* <iframe width="100%" height="400" src="https://www.youtube.com/embed/S0I5GDEoIkc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> */}
       {/* @ts-ignore */}
@@ -92,11 +98,7 @@ export default async function Dashboard() {
       </iframe>
       {/* <iframe width="100%" height="400" src="https://youtube.com/shorts/u4HlR_z49CA?feature=share" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> */}
 
-      {/* mention that we removed charts and everything happens in whatsapp now! */}
-      <p className="text-black text-lg font-bold text-center">The main Mediar interface is now in Telegram.
-        Please <a
-          className="text-blue-500 underline"
-          href="/account">connect your Telegram account</a> to get started.</p>
+
 
 
       {/* {

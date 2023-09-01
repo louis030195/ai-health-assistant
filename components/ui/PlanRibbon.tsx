@@ -65,7 +65,7 @@ const PlanRibbon: React.FC<RibbonProps> = ({ session, price, subscription, displ
 
       {flag !== true &&
         <div
-          className="absolute left-[-80px] top-[46px] w-72 h-10 bg-indigo-600 rounded-br-lg z-10 shadow-lg cursor-pointer transform -rotate-45 items-center justify-center"
+          className="absolute left-[-80px] top-[46px] w-72 h-10 bg-black rounded-br-lg z-10 shadow-lg cursor-pointer transform -rotate-45 items-center justify-center"
           onClick={handleClick}
         >
           <div className="text-white flex items-center justify-center font-bold text-lg">

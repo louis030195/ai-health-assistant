@@ -51,7 +51,7 @@ export default function NeurosityConnect({ session, className, onboarding }: Pro
             </div>
 
             {/* Form */}
-            <div className="space-y-4">
+            <div className="space-y-4 flex flex-col items-center">
                 {
                     customToken &&
                     // display green dot and text
@@ -63,7 +63,7 @@ export default function NeurosityConnect({ session, className, onboarding }: Pro
                 }
                 {/* Connect button */}
                 <Button
-                    className="transition duration-200 bg-indigo-500 text-white hover:bg-indigo-600 w-full rounded-md"
+                    className=" text-white w-[400px] mx-auto "
                     onClick={handleConnect}
                 >
                     Connect

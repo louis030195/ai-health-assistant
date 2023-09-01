@@ -83,7 +83,7 @@ const OuraImport = ({ session }: { session: Session }) => {
         <div className="flex flex-col items-center justify-center gap-4">
             <Toaster />
             <Button
-                className=" text-white font-bold py-2 px-4 rounded"
+                className=" text-white font-bold py-2 px-4 rounded w-[400px]"
                 onClick={handleClick}
                 // disabled={!accessToken}
             >

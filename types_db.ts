@@ -11,26 +11,26 @@ export interface Database {
     Tables: {
       chats: {
         Row: {
+          category: string | null
+          channel: string | null
           created_at: string
           id: number
-          is_insight: boolean | null
-          prev: string | null
           text: string | null
           user_id: string
         }
         Insert: {
+          category?: string | null
+          channel?: string | null
           created_at?: string
           id?: number
-          is_insight?: boolean | null
-          prev?: string | null
           text?: string | null
           user_id: string
         }
         Update: {
+          category?: string | null
+          channel?: string | null
           created_at?: string
           id?: number
-          is_insight?: boolean | null
-          prev?: string | null
           text?: string | null
           user_id?: string
         }
@@ -198,6 +198,7 @@ export interface Database {
         Row: {
           created_at: string
           id: number
+          measurement_date: string | null
           metadata: Json | null
           oura: Json | null
           probability: number | null
@@ -206,6 +207,7 @@ export interface Database {
         Insert: {
           created_at?: string
           id?: number
+          measurement_date?: string | null
           metadata?: Json | null
           oura?: Json | null
           probability?: number | null
@@ -214,6 +216,7 @@ export interface Database {
         Update: {
           created_at?: string
           id?: number
+          measurement_date?: string | null
           metadata?: Json | null
           oura?: Json | null
           probability?: number | null
@@ -371,6 +374,7 @@ export interface Database {
           avatar_url: string | null
           billing_address: Json | null
           full_name: string | null
+          goal: string | null
           id: string
           metadata: Json | null
           neurosity: Json | null
@@ -386,6 +390,7 @@ export interface Database {
           avatar_url?: string | null
           billing_address?: Json | null
           full_name?: string | null
+          goal?: string | null
           id: string
           metadata?: Json | null
           neurosity?: Json | null
@@ -401,6 +406,7 @@ export interface Database {
           avatar_url?: string | null
           billing_address?: Json | null
           full_name?: string | null
+          goal?: string | null
           id?: string
           metadata?: Json | null
           neurosity?: Json | null
@@ -423,7 +429,35 @@ export interface Database {
       }
     }
     Views: {
-      [_ in never]: never
+      states_and_tags_view: {
+        Row: {
+          state_created_at: string | null
+          state_id: number | null
+          state_measurement_date: string | null
+          state_metadata: Json | null
+          state_oura: Json | null
+          state_probability: number | null
+          state_user_id: string | null
+          tag_created_at: string | null
+          tag_id: number | null
+          tag_text: string | null
+          tag_user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "states_user_id_fkey"
+            columns: ["state_user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tags_user_id_fkey"
+            columns: ["tag_user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
     }
     Functions: {
       get_states: {
@@ -439,6 +473,25 @@ export interface Database {
           end_ts: string
           bucket_size: unknown
           avg_score: number
+        }[]
+      }
+      get_states_and_tags: {
+        Args: {
+          p_user_id: string
+          p_timezone: string
+        }
+        Returns: {
+          state_id: number
+          state_created_at: string
+          state_probability: number
+          state_metadata: Json
+          state_user_id: string
+          state_oura: Json
+          state_measurement_date: string
+          tag_id: number
+          tag_created_at: string
+          tag_text: string
+          tag_user_id: string
         }[]
       }
     }

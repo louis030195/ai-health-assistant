@@ -45,6 +45,7 @@ export default function OuraDisconnect({ revokeOuraAccessToken, className, sessi
             <Button
                 onClick={handleDisconnect}
                 disabled={!accessToken}
+                className="w-[400px]"
             >
                 Disconnect your Oura account
             </Button>
