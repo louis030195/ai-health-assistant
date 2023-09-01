@@ -23,6 +23,10 @@
     {
       "path": "/api/multi-insights",
       "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/multi-questions",
+      "schedule": "0 11 * * *"
     }
   ]
 }
