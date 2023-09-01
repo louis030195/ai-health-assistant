@@ -23,10 +23,11 @@ interface Prop {
     sendTelegramMessage: (to: string, text: string) => Promise<void>
     subscription?: Subscription;
     userDetails?: UserDetails;
+    className?: string;
 }
 
 
-export default function TelegramConnect({ session, userDetails, sendTelegramMessage }: Prop) {
+export default function TelegramConnect({ session, userDetails, sendTelegramMessage, className }: Prop) {
     const supabase = createClientComponentClient();
     const [telegramUsernameLoading, setTelegramUsernameLoading] = useState(false);
     const [telegramUsername, setTelegramUsername] = useState(userDetails?.telegram_username || '');
@@ -53,7 +54,7 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
             toast.error('Invalid Telegram username. Please try again.');
             return
         }
- 
+
         setTelegramUsernameLoading(true);
         // 1. check if this username is already taken
         const { data, error } = await supabase.from('users').select('id')
@@ -87,7 +88,7 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
 
 
     return (
-        <div className="bg-white rounded-lg shadow p-6 gap-4 flex-col justify-center items-center space-y-4">
+        <div className={"bg-white rounded-lg shadow p-6 gap-4 flex-col justify-center items-center space-y-4 " + className}>
             <Toaster />
 
             <h2 className="text-2xl font-bold mb-4 text-black text-center">Connect Telegram</h2>
@@ -112,7 +113,7 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
 
             <div className="flex flex-col items-center justify-center">
                 <Input
-                    
+
                     value={telegramUsername}
                     onChange={(e) => setTelegramUsername(e.target.value)}
                     placeholder="Enter Telegram username"

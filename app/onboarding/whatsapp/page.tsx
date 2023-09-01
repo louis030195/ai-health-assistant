@@ -34,9 +34,10 @@ export default async function Onboarding() {
         <div className="flex flex-col items-center justify-center mt-20 gap-20">
 
             <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
-                startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
+                startVerification={startVerificationServer} verifyOtp={checkVerificationServer}
+                className='w-3/5 shadow-none'
+            />
 
-            <GoToButton path="/dashboard" session={session} text="Finish" onClick={onFinished} />
         </div>
     )
 }

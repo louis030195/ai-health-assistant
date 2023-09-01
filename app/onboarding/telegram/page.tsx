@@ -25,10 +25,14 @@ export default async function Onboarding() {
     }
     return (
         // center stuff vertically and horizontally
-        <div className="flex flex-col items-center justify-center mt-20 gap-20">
-
+        <div className="flex flex-col items-center justify-center mt-20 gap-10">
+            <p className="text-xl font-bold text-center">
+                You can skip this step if you don't use Telegram and use WhatsApp instead.
+            </p>
             <TelegramConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
-                sendTelegramMessage={sendTelegramMessageServer} />
+                sendTelegramMessage={sendTelegramMessageServer}
+                className='shadow-none'
+            />
 
             <GoToButton path="/dashboard" session={session} text="Finish" onClick={onFinished} />
         </div>

@@ -22,9 +22,10 @@ interface Prop {
     verifyOtp: (phoneNumber: string, otp: string) => Promise<VerificationResponse>;
     subscription?: Subscription;
     userDetails?: UserDetails;
+    className?: string;
 }
 
-export default function WhatsappConnect({ session, subscription, userDetails, startVerification, verifyOtp }: Prop) {
+export default function WhatsappConnect({ session, subscription, userDetails, startVerification, verifyOtp, className }: Prop) {
     const supabase = createClientComponentClient();
     const [loading, setLoading] = useState(false);
     const [phoneNumber, setPhoneNumber] = useState(userDetails?.phone || '');
@@ -41,10 +42,10 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
 
     const handlePaste = (e: any) => {
         e.preventDefault();
-    
+
         const pastedData = e.clipboardData.getData('text/plain');
         const regex = /^\d{6}$/;
-    
+
         // remove all non-numeric characters from pasted data
         const pastedDataNumeric = pastedData.replace(/\D/g, '').split('').slice(0, 6).join('')
         console.log(pastedDataNumeric);
@@ -66,7 +67,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
                         phone: phoneNumber,
                         phone_verified: true
                     }).eq('id', session.user?.id);
-            
+
                     toast.success('WhatsApp connected successfully!', { id });
                 } catch (error: any) {
                     console.error(error);
@@ -116,7 +117,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
     }
 
     return (
-        <div className="bg-white rounded-lg shadow p-6">
+        <div className={"bg-white rounded-lg shadow p-6 " + className}>
             <Toaster />
 
             <h2 className="text-2xl font-bold mb-4">Connect WhatsApp</h2>

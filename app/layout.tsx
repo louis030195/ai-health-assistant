@@ -79,7 +79,8 @@ export default function RootLayout({
           <PHProvider>
             <Toaster />
             {/* <WhatsAppBanner /> */}
-            <FeedbackBanner />
+            {/* <FeedbackBanner /> */}
+            <DiscountBanner />
             <SupabaseProvider>
               <Navbar />
               <main
