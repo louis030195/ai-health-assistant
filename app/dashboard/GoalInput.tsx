@@ -18,7 +18,6 @@ import { createClientComponentClient } from "@supabase/auth-helpers-nextjs"
 import { Loader2 } from "lucide-react";
 
 
-
 const examples = [
     "I want to improve my mood by practicing mindfulness and meditation.",
     "I aim to increase my energy levels by incorporating regular exercise into my routine.",
@@ -34,6 +33,7 @@ export function GoalInput({ userDetails }: { userDetails: any }) {
     const [isLoading, setIsLoading] = useState(false);
     const supabase = createClientComponentClient()
     const [inputValue, setInputValue] = useState(userDetails.goal);
+    const [isDialogOpen, setIsDialogOpen] = useState(false); // Add this line
 
     const handleExampleClick = (example: string) => {
         setInputValue(example);
@@ -52,20 +52,21 @@ export function GoalInput({ userDetails }: { userDetails: any }) {
                 title: "Success",
                 description: "Goal saved successfully.",
             })
+            setIsDialogOpen(false);
         }
         setIsLoading(false);
 
     }
 
     return (
-        <Dialog>
+        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}> {/* Modify this line */}
             <DialogTrigger asChild>
                 <Button
                     className="w-1/2"
                 >
                     Set Goal</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[800px]">
+            <DialogContent className="sm:max-w-[800px] overflow-y-auto max-h-screen">
                 <DialogHeader>
                     <DialogTitle>Set your goal</DialogTitle>
                     <DialogDescription>
