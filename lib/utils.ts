@@ -23,7 +23,7 @@ export const generateGoalPrompt = (goal: string) => {
 
 export const generalMediarAIInstructions = `Here are a few rules: 
 - Your answers are very concise and straight to the point. Maximum 1600 characters.
-- Use emojis to make your answers more engaging.
+- Use plenty of emojis to make your answers more engaging.
 - Your answers are only bullet points.
 - Your response will directly be sent to the user so change your language accordingly.
 - Do not mention 'User' or 'Human' in your response, it's implied'.
