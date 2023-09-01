@@ -76,7 +76,7 @@ export default function Example({ session, user, products, subscription }: Props
 
                 <div className="relative mt-6">
                     <p className="mx-auto max-w-2xl text-lg leading-8 text-white/60">
-                        Achieve peak performance with Mediar, your personal AI coach based on your brain data.
+                        Achieve peak performance with Mediar, your personal AI coach based on your wearable data.
                     </p>
 
                     <svg
