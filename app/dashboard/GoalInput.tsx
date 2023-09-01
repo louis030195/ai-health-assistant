@@ -82,7 +82,7 @@ export function GoalInput({ userDetails }: { userDetails: any }) {
                             <span
                                 key={example}
                                 onClick={() => handleExampleClick(example)}
-                                className="cursor-pointer inline-flex items-center rounded-lg bg-gray-50 px-2 py-1 text-xs font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 sm:whitespace-nowrap whitespace-normal"
+                                className="cursor-pointer inline-flex items-center rounded-lg bg-gray-50 px-2 py-1  font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 sm:whitespace-nowrap whitespace-normal"
                             >
                                 {example}
                             </span>
