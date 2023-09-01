@@ -154,8 +154,7 @@ export async function POST(req: Request) {
     });
     console.log("Inserted chat:", d2, "with error:", e2);
 
-    const hasWhatsapp = await getFeatureFlag(user.id);
-    if (hasWhatsapp && phone) {
+    if (phone) {
       console.log("Sending whatsapp message to user:", user);
       // 1. check when was the last whatsapp message with this user
 

@@ -26,7 +26,7 @@ export async function GET(request: Request) {
         return;
       }
 
-      const filteredUsers = users?.filter((user) => user.timezone && user.telegram_chat_id) || [];
+      const filteredUsers = users?.filter((user) => user.timezone && user.telegram_chat_id || user.phone) || [];
 
       for (const user of filteredUsers) {
         try {
