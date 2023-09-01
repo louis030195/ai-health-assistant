@@ -245,7 +245,8 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
         category: 'answer',
       });
       console.log("Chat added:", data, error);
-      return new Response(response);
+      await sendWhatsAppMessage(phoneNumber, response)
+      return new Response('');
     } else if (intent === 'tag') {
       await kv.incr(tagKey);
       const { data, error } = await supabase.from('tags').insert({
@@ -263,6 +264,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
 By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
             
 ${quotes[Math.floor(Math.random() * quotes.length)]}`
+
       return new Response(msg);
     } else if (intent === 'feedback') {
       // New code for feedback intent
