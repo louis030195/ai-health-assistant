@@ -88,7 +88,9 @@ export function GoalInput({ userDetails }: { userDetails: any }) {
                             </span>
                         ))}
                     </div>
-                    <Textarea placeholder="Improve mood" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
+                    <Textarea
+                        maxLength={500}
+                        placeholder="Improve mood" value={inputValue} onChange={(e) => setInputValue(e.target.value)} />
                 </div>
                 <DialogFooter>
                     <Button type="submit"
