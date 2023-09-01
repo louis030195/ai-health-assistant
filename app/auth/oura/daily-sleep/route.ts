@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { Database } from "@/types_db";
 import { OuraDailySleep, OuraSleep, OuraWorkout, listDailySleep, listSleep, listWorkouts, renewOuraAccessToken } from "@/app/oura-server";
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 export const maxDuration = 300
 
 const supabase = createClient<Database>(
