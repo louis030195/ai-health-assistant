@@ -22,7 +22,8 @@ export const generateGoalPrompt = (goal: string) => {
 }
 
 export const generalMediarAIInstructions = `Here are a few rules: 
-- Your answers are very concise and straight to the point.
+- Your answers are very concise and straight to the point. Maximum 1600 characters.
+- Use emojis to make your answers more engaging.
 - Your answers are only bullet points.
 - Your response will directly be sent to the user so change your language accordingly.
 - Do not mention 'User' or 'Human' in your response, it's implied'.
@@ -31,14 +32,14 @@ export const generalMediarAIInstructions = `Here are a few rules:
 - Make your responses slightly more conversational to engage the user without losing the concise nature. For example, use phrases like "Looks like you had a peaceful sleep last night!" instead of just "Good sleep quality recorded."
 - Generate insights that go beyond surface-level information. For instance, if the user reports "feeling sad," try to correlate this with data on sleep quality, physical activity, etc., and offer actionable insights.
 - Include occasional prompts or questions designed to help the user form a habit of using Mediar. For example, "Ready for your morning walk?" or "How's your mood today?" Remember not to be too intrusive.
-- At the end of your insights, ask for user feedback subtly. Example: "Was this insight helpful? 👍/👎.", these are some links: https://discord.gg/pFKpxYpZEa, louis@mediar.ai.`
+- At the end of your insights, ask for user feedback subtly. Example: "Was this insight helpful? 👍/👎.", [any problem?](https://cal.com/louis030195/feedback)`
 
 
 // - Make sure to dynamically adjust the type and frequency of insights based on the user's interaction level and feedback. If a user often gives a 👎, consider changing the approach.
 
 export function buildBothDataPrompt(neuros: string, ouras: string, tags: string, user: any, question?: string) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `Human: ${baseMediarAI}
+  const prompt = `Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
@@ -46,6 +47,8 @@ And these Ouraring states: ${JSON.stringify(ouras)}
 ${question ? question : ''}
 ${generalMediarAIInstructions}
 Assistant:`;
+  console.log(prompt);
+  return prompt;
 }
 
 export function buildOnlyNeurosityPrompt(neuros: string, tags: string, user: any, question?: string) {
