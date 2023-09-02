@@ -182,12 +182,12 @@ export async function POST(req: Request) {
         const diff = now - lastMessageDate;
         const hours = Math.floor(diff / 1000 / 60 / 60);
         console.log("Last whatsapp message was:", hours, "hours ago");
-        if (!lastWhatsappMessage || lastWhatsappMessage.length === 0 || hours > 24) {
+        // if (!lastWhatsappMessage || lastWhatsappMessage.length === 0 || hours > 24) {
 
-          // const template = `👋  Hey! Your health matter a lot to me 🥦💪🧠. How can I become a better health assistant for you?`
-          const template = `👋 Hey! Your health matter a lot to me 🥦💪🧠. How can I become a better health assistant for you?`
-          await sendWhatsAppMessage(phone, template);
-        }
+        //   // const template = `👋  Hey! Your health matter a lot to me 🥦💪🧠. How can I become a better health assistant for you?`
+        //   const template = `👋 Hey! Your health matter a lot to me 🥦💪🧠. How can I become a better health assistant for you?`
+        //   await sendWhatsAppMessage(phone, template);
+        // }
 
         // 4. send the insight
         await sendWhatsAppMessage(phone, prompt);

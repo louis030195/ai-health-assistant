@@ -109,11 +109,10 @@ export const generalMediarAIInstructionsForQuestions = `Here are a few rules:
 - Do not mention 'User' or 'Human' in your response, it's implied'.
 - Your question are written in Markdown format.
 - Your question must make the user think and reflect on their recent behavior.
-- Just say the question, NOTHING ELSE. (example: "How confident are you today on a scale of 1 to 5?" - related to his goal of course)
+- Just say the question, NOTHING ELSE. (example: "How confident are you today on a scale of 1 to 5?" - related to his goal of course). DO NOT SAY THINGS LIKE "Based on the tags ..." or "Was this question helpful? Let me know!". JUST AS THE FUCKING QUESTION.
 - Prioritize accuracy by cross-referencing the tags and wearable data to ensure the question are relevant. If you are not sure about something, it's better to not include it.
 - Make your question slightly more conversational to engage the user without losing the concise nature. For example, use phrases like "How did you sleep last night?" instead of just "Sleep quality?"
-- Generate question that go beyond surface-level information. For instance, if the user reports "feeling sad," try to correlate this with data on sleep quality, physical activity, etc., and ask relevant question.
-- At the end of your question, ask for user feedback subtly. Example: "Was this question helpful? 👍/👎."`
+- Generate question that go beyond surface-level information. For instance, if the user reports "feeling sad," try to correlate this with data on sleep quality, physical activity, etc., and ask relevant question.`
 
 export function buildDayQuestionBothDataPrompt(neuros: string, ouras: string, tags: string, user: any) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
