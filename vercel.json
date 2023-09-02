@@ -25,7 +25,7 @@
       "schedule": "0 3 * * *"
     },
     {
-      "path": "/api/multi-questions",
+      "path": "/api/multi-prompts",
       "schedule": "0 11 * * *"
     }
   ]
