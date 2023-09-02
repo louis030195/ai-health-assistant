@@ -5,6 +5,7 @@ import fetch from 'node-fetch';
 import { baseMediarAI, buildBothDataPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, generalMediarAIInstructions } from "@/lib/utils";
 import TelegramBot from "node-telegram-bot-api";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
+import { llm } from "@/utils/llm";
 
 // export const runtime = 'edge'
 export const maxDuration = 300
@@ -96,28 +97,6 @@ interface IncomingRequest {
   }
 }
 
-const llm = async (message: string, maxTokens = 5) => {
-  const response = await fetch('https://api.anthropic.com/v1/complete', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.ANTHROPIC_API_KEY!
-    },
-    body: JSON.stringify({
-      prompt: message,
-      model: 'claude-instant-1.2', // 'claude-2',
-      max_tokens_to_sample: maxTokens,
-      stream: false
-    })
-  })
-  const data = await response.json()
-
-  if (data.error) {
-    throw new Error(`Anthropic API returned ${response.status} with error: ${JSON.stringify(data.error)}`)
-  }
-  return data.completion
-}
-
 
 const isTagOrQuestion = async (message: string) => {
 
@@ -150,7 +129,7 @@ This is the message sent by the user: "${message}"
 
 Assistant:`
 
-  const response = await llm(prompt, 10)
+  const response = await llm(prompt, 3, 'claude-instant-1.2', 10)
 
   if (response.trim().includes('3')) {
     return 'feedback'
@@ -363,7 +342,7 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       await bot.sendMessage(body.message.chat.id, msg, { parse_mode: 'Markdown' })
       const prompt = await generatePromptForUser(userId, body.message.text);
       console.log("Prompt:", prompt);
-      const response = await llm(prompt, 500)
+      const response = await llm(prompt, 3, 'claude-instant-2', 500)
       console.log("Response:", response);
       const { data, error } = await supabase.from('chats').insert({
         text: response,

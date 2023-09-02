@@ -47,11 +47,11 @@ const processQueue = async () => {
         }
     })();
  */
-export const llm = async (message: string, retries = MAX_RETRIES): Promise<any> => {
+export const llm = async (message: string, retries = MAX_RETRIES, model = 'claude-2', max_tokens_to_sample = 500): Promise<string> => {
     return new Promise(async (resolve, reject) => {
         const wrappedRequest = async () => {
             try {
-                const result = await executeRequest(message);
+                const result = await executeRequest(message, model, max_tokens_to_sample);
                 resolve(result);
             } catch (error: any) {
                 if (error.message.includes('429')) {
@@ -70,7 +70,7 @@ export const llm = async (message: string, retries = MAX_RETRIES): Promise<any> 
     });
 };
 
-const executeRequest = async (message: string) => {
+const executeRequest = async (message: string, model = 'claude-2', max_tokens_to_sample = 500): Promise<string> => {
     const response = await fetch('https://api.anthropic.com/v1/complete', {
         method: 'POST',
         headers: {
@@ -79,8 +79,8 @@ const executeRequest = async (message: string) => {
         },
         body: JSON.stringify({
             prompt: message,
-            model: 'claude-2',
-            max_tokens_to_sample: 500,
+            model: model,
+            max_tokens_to_sample: max_tokens_to_sample,
             stream: false
         })
     });
