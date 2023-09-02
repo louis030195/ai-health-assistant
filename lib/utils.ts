@@ -18,7 +18,8 @@ the user sending you a pic of his bike and the tag is "a bike put on the side of
 The goal is to have a better understanding of the users' body and mind, and show them patterns and insights about it in order to help them improve their wellbeing.`
 
 export const generateGoalPrompt = (goal: string) => {
-  return `The user's goal is: "${goal}". Please adapt your behavior and insights to help the user achieve this goal.`;
+  return `The user's goal is: "${goal}". Please adapt your behavior and insights to help the user achieve this goal.
+If the user has no goal, ask him to go to https://mediar.ai and set one.`;
 }
 
 export const generalMediarAIInstructions = `Here are a few rules: 
@@ -87,7 +88,8 @@ Assistant:`;
 }
 
 export const generateGoalPromptForQuestions = (goal: string) => {
-  return `The user's goal is: "${goal}". Please adapt your behavior and questions to help the user achieve this goal.`;
+  return `The user's goal is: "${goal}". Please adapt your behavior and questions to help the user achieve this goal.
+If the user has no goal, ask him to go to https://mediar.ai and set one.`;
 }
 
 export const baseMediarAIForQuestions = `You are an AI assistant that receive message through Telegram/WhatsApp by users.
