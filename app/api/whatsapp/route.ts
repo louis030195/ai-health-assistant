@@ -225,6 +225,7 @@ ONLY ANSWER A VERY CONCISE TAG, NOTHING ELSE, EXAMPLES:
     Assistant:`, 3, 'claude-instant-1.2', 100)
     captions.push('agi: ' + llmAugmented)
 
+    console.log("Captions:", captions);
     // const caption = captions.join('\n')
     const caption = llmAugmented
     // list each element in the image
