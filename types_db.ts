@@ -194,8 +194,37 @@ export interface Database {
         }
         Relationships: []
       }
+      prompts: {
+        Row: {
+          created_at: string
+          id: number
+          text: string | null
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          text?: string | null
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          text?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "prompts_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       states: {
         Row: {
+          apple_health_data: Json | null
           created_at: string
           id: number
           measurement_date: string | null
@@ -205,6 +234,7 @@ export interface Database {
           user_id: string
         }
         Insert: {
+          apple_health_data?: Json | null
           created_at?: string
           id?: number
           measurement_date?: string | null
@@ -214,6 +244,7 @@ export interface Database {
           user_id: string
         }
         Update: {
+          apple_health_data?: Json | null
           created_at?: string
           id?: number
           measurement_date?: string | null

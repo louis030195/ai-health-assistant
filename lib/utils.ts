@@ -1,3 +1,4 @@
+import { llm } from "@/utils/llm"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
  
@@ -40,13 +41,16 @@ export const generalMediarAIInstructions = `Here are a few rules:
 
 export function buildBothDataPrompt(neuros: string, ouras: string, tags: string, user: any, question?: string) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  const prompt = `Human: ${baseMediarAI}
+  const prompt = `
+
+Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
 And these Ouraring states: ${JSON.stringify(ouras)} 
 ${question ? question : ''}
 ${generalMediarAIInstructions}
+
 Assistant:`;
   console.log(prompt);
   return prompt;
@@ -54,36 +58,45 @@ Assistant:`;
 
 export function buildOnlyNeurosityPrompt(neuros: string, tags: string, user: any, question?: string) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `Human: ${baseMediarAI}
+  return `
+
+Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
 given these tags: ${JSON.stringify(tags)} 
 And these Neurosity states: ${JSON.stringify(neuros)} 
 ${generalMediarAIInstructions}
 ${question ? question : ''}
 Here are the goals of the user: ${generateGoalPrompt(user.goal)}
+
 Assistant:`;
 }
 
 export function buildOnlyOuraRingPrompt(ouras: string, tags: string, user: any, question?: string) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `Human: ${baseMediarAI}
+  return `
+
+Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
 given these tags: ${JSON.stringify(tags)} 
 And these Ouraring states: ${JSON.stringify(ouras)} 
 ${generalMediarAIInstructions}
 ${question ? question : ''}
 Here are the goals of the user: ${generateGoalPrompt(user.goal)}
+
 Assistant:`;
 }
 
 export function buildOnlyTagsPrompt(tags: string, user: any, question?: string) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `Human: ${baseMediarAI}
+  return `
+
+Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
 given these tags: ${JSON.stringify(tags)} 
 ${generalMediarAIInstructions}
 ${question ? question : ''}
 Here are the goals of the user: ${generateGoalPrompt(user.goal)}
+
 Assistant:`;
 }
 
@@ -118,40 +131,105 @@ export const generalMediarAIInstructionsForQuestions = `Here are a few rules:
 
 export function buildDayQuestionBothDataPrompt(neuros: string, ouras: string, tags: string, user: any) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `Human: ${baseMediarAIForQuestions}
+  return `
+  
+Human: ${baseMediarAIForQuestions}
 Based on these tags: ${JSON.stringify(tags)}, 
 Neurosity states: ${JSON.stringify(neuros)}, 
 and Ouraring states: ${JSON.stringify(ouras)}, 
 what question should we ask the user${userReference} to help them achieve their goal: ${generateGoalPromptForQuestions(user.goal)}?
 ${generalMediarAIInstructionsForQuestions}
+
 Assistant:`;
 }
 
 export function buildDayQuestionOnlyNeurosityPrompt(neuros: string, tags: string, user: any) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `Human: ${baseMediarAIForQuestions}
+  return `
+  
+Human: ${baseMediarAIForQuestions}
 Based on these tags: ${JSON.stringify(tags)}, 
 and Neurosity states: ${JSON.stringify(neuros)}, 
 what question should we ask the user${userReference} to help them achieve their goal: ${generateGoalPromptForQuestions(user.goal)}?
 ${generalMediarAIInstructionsForQuestions}
+
 Assistant:`;
 }
 
 export function buildDayQuestionOnlyOuraRingPrompt(ouras: string, tags: string, user: any) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `Human: ${baseMediarAIForQuestions}
+  return `
+  
+Human: ${baseMediarAIForQuestions}
 Based on these tags: ${JSON.stringify(tags)}, 
 and Ouraring states: ${JSON.stringify(ouras)}, 
 what question should we ask the user${userReference} to help them achieve their goal: ${generateGoalPromptForQuestions(user.goal)}?
 ${generalMediarAIInstructionsForQuestions}
+
 Assistant:`;
 }
 
 export function buildDayQuestionTagsPrompt(tags: string, user: any) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `Human: ${baseMediarAIForQuestions}
+  return `
+  
+Human: ${baseMediarAIForQuestions}
 Based on these tags: ${JSON.stringify(tags)}, 
 what question should we ask the user${userReference} to help them achieve their goal: ${generateGoalPromptForQuestions(user.goal)}?
 ${generalMediarAIInstructionsForQuestions}
+
 Assistant:`;
+}
+
+export const isTagOrQuestion = async (message: string) => {
+
+  const prompt = `
+
+Human: ${baseMediarAI}
+
+Your task is to classify the following message into one of the following categories:
+
+YOU ONLY ANSWER:
+- 4 if it's an answer to a question
+- 3 if it's a feedback
+- 2 if it's a tag 
+- 1 if it's a question
+- 0 otherwise
+
+Answer to a question examples:
+- 1 (the AI asked "How is your energy today on a scale from 1 to 5?")
+- 3 (the AI asked "How is your sleep today on a scale from 1 to 5?")
+- great (the AI asked "How do you feel today?")
+
+Feedback examples:
+- i would rather have weekly insights
+- i dont like advices
+- you are awesome
+
+Tag examples: 
+- coffee
+- workout 1 hour ago
+- no sun today
+- poor sleep
+
+Question examples:
+- What is my average heart rate last week?
+- How can I improve my sleep?
+
+This is the message sent by the user: "${message}"
+
+Assistant:`
+
+  const response = await llm(prompt, 3, 'claude-instant-1.2', 10)
+  if (response.trim().includes('4')) {
+    return 'answer'
+  } else if (response.trim().includes('3')) {
+    return 'feedback'
+  } else if (response.trim().includes('2')) {
+    return 'tag'
+  } else if (response.trim().includes('1')) {
+    return 'question'
+  } else {
+    return 'none'
+  }
 }
