@@ -134,19 +134,7 @@ export default function Example({ session, user, products, subscription }: Props
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Apple shortcuts to tag within seconds
-                                        </li>
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Simple analytics
-                                        </li>
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Email support
-                                        </li>
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Discord support
+                                            Email, Discord support
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
@@ -155,6 +143,10 @@ export default function Example({ session, user, products, subscription }: Props
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
                                             14 days of data retention
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Private Data Controls
                                         </li>
                                     </ul>
                                 </div>
