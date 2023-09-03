@@ -221,6 +221,8 @@ ONLY ANSWER A VERY CONCISE TAG, NOTHING ELSE, EXAMPLES:
 - eating an apple, 100 calories
 - lifting a 120 kg barbell
 - a happy selfie
+- working on the laptop
+- playing games
     
     Assistant:`, 3, 'claude-instant-1.2', 100)
     captions.push('agi: ' + llmAugmented)
