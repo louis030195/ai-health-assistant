@@ -66,7 +66,7 @@ export function GoalInput({ userDetails }: { userDetails: any }) {
                 >
                     Set Goal</Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[800px] overflow-y-auto max-h-screen">
+            <DialogContent className="sm:max-w-[800px] overflow-y-auto max-h-[calc(100vh-10rem)]">
                 <DialogHeader>
                     <DialogTitle>Set your goal</DialogTitle>
                     <DialogDescription>
@@ -82,7 +82,7 @@ export function GoalInput({ userDetails }: { userDetails: any }) {
                             <span
                                 key={example}
                                 onClick={() => handleExampleClick(example)}
-                                className="cursor-pointer inline-flex items-center rounded-lg bg-gray-50 px-2 py-1  font-medium text-gray-600 ring-1 ring-inset ring-gray-500/10 sm:whitespace-nowrap whitespace-normal"
+                                className="cursor-pointer inline-flex items-center rounded-lg bg-gray-50 px-2 py-1 text-gray-600 ring-1 ring-inset ring-gray-500/10 sm:whitespace-nowrap whitespace-normal"
                             >
                                 {example}
                             </span>
