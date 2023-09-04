@@ -25,12 +25,16 @@
       "schedule": "0 3 * * *"
     },
     {
-      "path": "/api/multi-prompts",
+      "path": "/api/multi-static-prompts",
       "schedule": "0 15 * * *"
     },
     {
       "path": "/api/multi-prompts",
       "schedule": "0 1 * * *"
+    },
+    {
+      "path": "/api/multi-prompts",
+      "schedule": "0 20 * * *"
     }
   ]
 }
