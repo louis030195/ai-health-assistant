@@ -53,6 +53,7 @@ export async function POST(req: Request) {
       .from("prompts")
       .select()
       .eq("user_id", user.id)
+      .eq('type', 'dynamic')
       .gte('created_at', usersToday)
 
     // If an insight has already been sent today, skip to the next user
@@ -204,6 +205,7 @@ export async function POST(req: Request) {
     const { error: e3 } = await supabase.from('prompts').insert({
       text: prompt,
       user_id: user.id,
+      type: 'dynamic',
     });
 
     console.log("Inserted question:", prompt, "with error:", e3);
