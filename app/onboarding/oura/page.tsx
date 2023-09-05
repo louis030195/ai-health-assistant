@@ -25,7 +25,7 @@ export default async function Onboarding() {
                 // remove shadow
                 className='w-4/5 shadow-none'
                 getOuraAccessToken={getOuraAccessTokenServerServer} />
-            <OuraImport session={session} />
+            {/* <OuraImport session={session} /> */}
         </div>
     )
 }

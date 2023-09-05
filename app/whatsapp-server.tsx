@@ -1,5 +1,5 @@
 
-export const sendWhatsAppMessage = async (to: string, body: string) => {
+export const sendWhatsAppMessage = async (to: string, body: string, retryCount = 3): Promise<Response> => {
     const from = process.env.TWILIO_PHONE_NUMBER
     const accountSid = process.env.TWILIO_ACCOUNT_SID;
     const authToken = process.env.TWILIO_AUTH_TOKEN;
@@ -20,7 +20,14 @@ export const sendWhatsAppMessage = async (to: string, body: string) => {
 
     if (!response.ok) {
         const text = await response.text();
-        throw new Error(`Failed to send WhatsApp message: ${response.status} ${response.statusText} ${text}`);
+        console.error(`Failed to send WhatsApp message: ${response.status} ${response.statusText} ${text}`);
+        if (retryCount > 0) {
+            console.log(`Retrying... attempts left: ${retryCount - 1}`);
+            await new Promise(r => setTimeout(r, 2000)); // wait for 2 seconds before retrying
+            return sendWhatsAppMessage(to, body, retryCount - 1);
+        } else {
+            throw new Error(`Failed to send WhatsApp message after ${retryCount} attempts`);
+        }
     }
 
     const data = await response.json()

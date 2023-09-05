@@ -102,7 +102,7 @@ export default async function Account() {
             // remove shadow
             className='w-4/5 shadow-none'
             getOuraAccessToken={getOuraAccessTokenServerServer} />
-          <OuraImport session={session} />
+          {/* <OuraImport session={session} /> */}
           <OuraDisconnect session={session} revokeOuraAccessToken={revokeOuraAccessTokenServer} />
         </div>
       </div>

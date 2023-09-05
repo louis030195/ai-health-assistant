@@ -30,6 +30,8 @@ export const generalMediarAIInstructions = `Here are a few rules:
 - Your response will directly be sent to the user so change your language accordingly.
 - Do not mention 'User' or 'Human' in your response, it's implied'.
 - Your answers are written in Markdown format.
+- YOUR ANSWERS ARE BASED ON DATA AND DATE. DO NOT SAY "YOUR HEART RATE IS 55" WHEN IT WAS YESTERDAY DATA FOR EXAMPLE.
+- THE MOST IMPORTANT RULE, MAKE SURE TO DOUBLE CHECK DATES, DO NOT MAKE DATES MISTAKES.
 - Prioritize accuracy by cross-referencing the tags and wearable data to ensure the insights are accurate. If you are not sure about something, it's better to not include it.
 - Make your responses slightly more conversational to engage the user without losing the concise nature. For example, use phrases like "Looks like you had a peaceful sleep last night!" instead of just "Good sleep quality recorded."
 - Generate insights that go beyond surface-level information. For instance, if the user reports "feeling sad," try to correlate this with data on sleep quality, physical activity, etc., and offer actionable insights.
@@ -38,6 +40,40 @@ export const generalMediarAIInstructions = `Here are a few rules:
 
 
 // - Make sure to dynamically adjust the type and frequency of insights based on the user's interaction level and feedback. If a user often gives a 👎, consider changing the approach.
+
+export function buildInsightCleanerPrompt(data: string, user: any) {
+  const userReference = user.fullName ? ` for ${user.fullName}` : '';
+  const prompt = `
+
+Human: ${baseMediarAI}
+The end goal is to generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
+based on this data provided by the wearable devices: ${JSON.stringify(data)}
+User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
+${generalMediarAIInstructions}
+
+PLEASE REMOVE THE NOISE FROM THIS DATA THAT WILL BE FED INTO ANOTHER LLM.
+REMOVE USELESS OR REDUNDANT DATA, BUT DO NOT REMOVE ANYTHING THAT CAN BE USEFUL FOR THE LLM.
+
+Assistant:`;
+  console.log(prompt);
+  return prompt;
+}
+
+export function buildInsightPrompt(data: string, user: any, question?: string) {
+  const userReference = user.fullName ? ` for ${user.fullName}` : '';
+  const prompt = `
+
+Human: ${baseMediarAI}
+Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
+based on this data provided by the wearable devices: ${JSON.stringify(data)}
+User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
+${question ? question : ''}
+${generalMediarAIInstructions}
+
+Assistant:`;
+  console.log(prompt);
+  return prompt;
+}
 
 export function buildBothDataPrompt(neuros: string, ouras: string, tags: string, user: any, question?: string) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';

@@ -1,5 +1,5 @@
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
-import { baseMediarAI, buildBothDataPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, buildOnlyTagsPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
+import { baseMediarAI, buildBothDataPrompt, buildInsightCleanerPrompt, buildInsightPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, buildOnlyTagsPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
 import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -84,27 +84,62 @@ export async function POST(req: Request) {
         return acc;
       }, []);
 
-    console.log(threeDaysAgoFromOneAm.split(' ')[0])
+    console.log(new Date(threeDaysAgoFromOneAm).toISOString().split('T')[0])
     const { data: ouras } = await supabase
       .from('states')
       .select()
-      // format as YYYY-MM-DD instead of dd/mm/yyyy
-      .gte('oura->>day', new Date(threeDaysAgoFromOneAm).toISOString().split('T')[0])
       .eq('user_id', user.id)
+      // format as YYYY-MM-DD instead of dd/mm/yyyy 2023-08-26
+      .gte('oura->>day', new Date(threeDaysAgoFromOneAm).toISOString().split('T')[0])
+      // order by timeout retarded
       .order('oura->>day', { ascending: false })
       .limit(100)
     console.log("Retrieved Oura data:", ouras?.length);
+
+    let { data: appleHealths } = await supabase
+      .from('states')
+      .select("created_at, apple_health_data")
+      .not('apple_health_data', 'is', null)
+      .gte('created_at', threeDaysAgoFromOneAm)
+      .eq('user_id', user.id)
+      .order('created_at', { ascending: false })
+      .limit(100)
+    console.log("Retrieved Apple Health data:", appleHealths?.length);
+
+    // group apple health data by date
+    const appleHealthActivities = appleHealths?.reduce((acc: any, curr: any) => {
+      if (curr.apple_health_data.activitiesData) {
+        curr.apple_health_data.activitiesData.forEach((activity: any) => {
+          const dayOfTheWalking = new Date(activity.activityTime).toLocaleString('en-US', { timeZone: user.timezone }).split(' ')[0];
+          if (!acc[dayOfTheWalking]) acc[dayOfTheWalking] = { activityCalories: 0, activityDuration: 0 };
+          acc[dayOfTheWalking].activityCalories += activity.activityCalories;
+          // }
+        });
+      }
+      return acc;
+    }, {});
+
+    console.log("appleHealthActivities", appleHealthActivities);
+
+    // remove activites
+    // @ts-ignore
+    appleHealths?.forEach((appleHealth: any) => {
+      if (appleHealth.apple_health_data.activitiesData) {
+        delete appleHealth.apple_health_data.activitiesData;
+      }
+    });
+    console.log("Filtered Apple Health data:", appleHealths);
 
     const tags = await getTags(user.id, threeDaysAgoFromOneAm);
     console.log("Retrieved tags:", tags);
 
     // if the user has nor tags, neuros, ouras, skip to next user
 
-    if (!tags && (!neuros || neuros.length === 0) && (!ouras || ouras.length === 0)) {
+    if (!tags && (!neuros || neuros.length === 0) && (!ouras || ouras.length === 0) && (!appleHealths || appleHealths.length === 0)) {
       console.log("No tags, neuros, or ouras for user:", user);
-      return NextResponse.json({ message: "No tags, neuros, or ouras" }, { status: 200 });
+      return NextResponse.json({ message: "No tags and health data" }, { status: 200 });
     }
-    console.log("User has neuros of length:", neuros?.length, "and ouras of length:", ouras?.length);
+    console.log("User has neuros of length:", neuros?.length, "and ouras of length:", ouras?.length, "and appleHealths of length:", appleHealths?.length);
     console.log("User has tags of length:", tags?.length);
     let insights = ''
 
@@ -128,16 +163,20 @@ export async function POST(req: Request) {
       ourasString += JSON.stringify(oura);
     });
 
+    let appleHealthString = '';
+    appleHealths?.forEach((appleHealth) => {
+      appleHealth.created_at = new Date(appleHealth.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
+      appleHealthString += JSON.stringify(appleHealth);
+    });
+    Object.keys(appleHealthActivities).forEach((key) => {
+      appleHealthString += JSON.stringify(appleHealthActivities[key]);
+    });
 
-    if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
-      insights = await llm(buildBothDataPrompt(neurosString, ourasString, tagsString, user));
-    } else if (neuros && neuros.length > 0) {
-      insights = await llm(buildOnlyNeurosityPrompt(neurosString, tagsString, user));
-    } else if (ouras && ouras.length > 0) {
-      insights = await llm(buildOnlyOuraRingPrompt(ourasString, tagsString, user));
-    } else {
-      insights = await llm(buildOnlyTagsPrompt(tagsString, user));
-    }
+    // const prompt = await llm(buildInsightCleanerPrompt(
+    //   `Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`, user));
+
+    // console.log("Prompt:", prompt);
+    insights = await llm(buildInsightPrompt(`Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`, user));
 
     console.log("Generated insights:", insights);
 
@@ -146,7 +185,6 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "No insights generated" }, { status: 200 });
     }
 
-    // return NextResponse.json({ message: "Success" }, { status: 200 });
 
     const { data: d2, error: e2 } = await supabase.from('chats').insert({
       text: insights,

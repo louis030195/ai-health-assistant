@@ -41,3 +41,5 @@ yarn-error.log*
 # Jupyter hacks
 *.ipynb
 
+*.csv
+
