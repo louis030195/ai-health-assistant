@@ -99,7 +99,7 @@ const HeroVideo = ({ children, image, className }: HeroVideoProps) => {
                     src="https://cdn.magicuikit.com/globe.mp4"
                   /> */}
                   <iframe width="100%" height="600"
-                    src="https://www.youtube.com/embed/u4HlR_z49CA"
+                    src="https://www.youtube.com/embed/4MUQUWnkzOs"
                     title="Mediar"
                     // frameborder="0"
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
