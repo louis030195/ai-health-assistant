@@ -53,9 +53,11 @@ You will need to connect your accounts to Mediar to allow **access to your data*
   
 2. If you own an [Ouraring](https://ouraring.com), connect it to Mediar. This amazing device **senses your heart 💗 and sleep 😴** as you go about your days.
 
-3. Connect your Telegram account to Mediar. This allows Mediar to **send you insights** and **receive tags** from you directly on Telegram. 📲
+3. If you have neither, you can [join the private beta](https://tally.so/r/wL7g9z) for Apple Health 🍎 which would let you receive personalized insights based on any health/fitness 🥦💪 apps or devices compatible with Apple Health. 🍎
 
-4. As you wear Neurosity and Ouraring, **use Mediar** to send tags - mark down how you were feeling, what you were doing, send pics etc. to Mediar, it This **trains** Mediar's AI over time. 🏷
+4. Connect your Telegram account to Mediar. This allows Mediar to **send you insights** and **receive tags** from you directly on Telegram. 📲
+
+5. As you wear Neurosity and Ouraring, **use Mediar** to send tags - mark down how you were feeling, what you were doing, send pics etc. to Mediar, it This **trains** Mediar's AI over time. 🏷
 
 Soon, you'll start getting **personalized insights** and recommendations from Mediar to lower anxiety 🥰, and **upgrade your health 💪**!
 `
