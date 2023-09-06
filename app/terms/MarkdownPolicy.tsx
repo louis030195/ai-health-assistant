@@ -4,7 +4,7 @@ import React from 'react';
 const MarkdownPolicy = () => {
   return (
     <div className="mt-20 prose prose-lg">
-      
+
       <h1>Terms of Service</h1>
 
       <p>Last updated: August 22, 2023</p>
@@ -33,7 +33,10 @@ const MarkdownPolicy = () => {
 
       <p><strong>User Content</strong></p>
 
-      <p>You own all user content you submit or upload to the Services. You can request for a deletion of your content at any time by contacting us.</p>
+      <p>
+        We commit not to sell your data, but rather use it to your advantage. Corporate uses data to optimize their ads, we use it to optimize your life.
+        You own all user content you submit or upload to the Services. You can request for a deletion of your content at any time by contacting us.
+      </p>
 
       <p><strong>Privacy</strong></p>
 
