@@ -33,7 +33,7 @@ const MarkdownPolicy = () => {
 
       <p><strong>User Content</strong></p>
 
-      <p>You own all user content you submit or upload to the Services. You grant Mediar a worldwide, royalty-free license to host, store, use, copy, display, reproduce, adapt, edit, publish and distribute that content in order to provide and promote the Services. This license remains in effect until you delete your content or account.</p>
+      <p>You own all user content you submit or upload to the Services. You can request for a deletion of your content at any time by contacting us.</p>
 
       <p><strong>Privacy</strong></p>
 
