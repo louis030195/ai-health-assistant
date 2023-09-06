@@ -69,6 +69,19 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
                     }).eq('id', session.user?.id);
 
                     toast.success('WhatsApp connected successfully!', { id });
+                    // fetch /api/phone-verified
+                    const welcomeMessage = await fetch('/api/phone-verified', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            user_id: session.user?.id,
+                            phone: phoneNumber,
+                            full_name: userDetails?.full_name
+                        })
+                    });
+                    toast.success('You should receive a welcome message on WhatsApp shortly.', { id });
                 } catch (error: any) {
                     console.error(error);
                     toast.error('Error verifying OTP. Please try again.', { id });
