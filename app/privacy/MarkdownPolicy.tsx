@@ -86,6 +86,10 @@ const MarkdownPolicy = () => {
       <h2>Data Security</h2>
 
       <p>
+        <a href="https://evervault.com/use-cases/ai-privacy">We utilize state-of-the-art AI technology</a> to anonymize your data before shared to AI providers.
+      </p>
+
+      <p>
         We utilize encryption, access controls, data minimization, and other
         safeguards to protect your personal information. However, no data
         transmission over the internet is 100% secure, so we cannot guarantee
