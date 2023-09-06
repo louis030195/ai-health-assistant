@@ -8,7 +8,7 @@ export async function POST(req: Request) {
 
   console.log('evervaulty', body)
   // add \n\nAssistant: to the prompt
-  const prompt = body.prompt + "\n\nAssistant:"
+  const prompt = body.prompt.trim() + "\n\nAssistant:"
   const response = await llm(prompt, 3, body.model || "claude-2", body.max_tokens_to_sample || 500)
   return new Response(JSON.stringify({ completion: response }), {
     headers: { 'content-type': 'application/json' },
