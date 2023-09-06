@@ -7,7 +7,7 @@ const MarkdownPolicy = () => {
       <h1>Privacy Policy</h1>
 
       <p>
-        At Mediar, we take privacy very seriously. This policy outlines how we 
+        At Mediar, we take privacy very seriously. This policy outlines how we
         collect, use, disclose, and protect your personal information.
       </p>
 
@@ -17,16 +17,16 @@ const MarkdownPolicy = () => {
 
       <ul>
         <li>
-          <strong>Account information</strong> such as your name, email address, 
+          <strong>Account information</strong> such as your name, email address,
           and password when you register for an account.
         </li>
         <li>
           <strong>Health information</strong> such as such as EEG signals, heart, sleep,
-          and physical activity. That allow us to provide you personalized insights. 
+          and physical activity. That allow us to provide you personalized insights.
         </li>
         <li>
-          <strong>Usage information</strong> such as how you interact with our 
-          services and website. This is collected through cookies, log files, 
+          <strong>Usage information</strong> such as how you interact with our
+          services and website. This is collected through cookies, log files,
           and tracking tools.
         </li>
       </ul>
@@ -39,14 +39,14 @@ const MarkdownPolicy = () => {
 
       <ul>
         <li>
-          Provide our services to you, which includes analyzing your health data 
+          Provide our services to you, which includes analyzing your health data
           to generate personalized insights.
         </li>
         <li>
           Improve and develop our products, including our AI algorithms.
         </li>
         <li>
-          Personalize content and experiences for you on our platform. 
+          Personalize content and experiences for you on our platform.
         </li>
         <li>
           Communicate with you, such as through email, notifications, or ads.
@@ -67,47 +67,50 @@ const MarkdownPolicy = () => {
 
       <ul>
         <li>
-          Service providers under contract who help operate our business, such as 
+          Service providers under contract who help operate our business, such as
           cloud hosting and AI providers.
+        </li>
+        <li>
+          <b>We commit not to sell your data</b>, but rather use it to your advantage. Corporate uses data to optimize their ads, we use it to optimize your life.
         </li>
       </ul>
 
       <h2>Your Data Rights</h2>
 
       <p>
-        As a user, you have the right to access, correct, delete, restrict, or 
-        object to our use of your personal data. Please contact us if you wish 
+        As a user, you have the right to access, correct, delete, restrict, or
+        object to our use of your personal data. Please contact us if you wish
         to exercise these rights.
       </p>
 
       <h2>Data Security</h2>
 
       <p>
-        We utilize encryption, access controls, data minimization, and other 
-        safeguards to protect your personal information. However, no data 
-        transmission over the internet is 100% secure, so we cannot guarantee 
+        We utilize encryption, access controls, data minimization, and other
+        safeguards to protect your personal information. However, no data
+        transmission over the internet is 100% secure, so we cannot guarantee
         security.
       </p>
 
       <h2>Data Retention</h2>
 
       <p>
-        We retain your personal information for as long as you have an account 
-        plus a reasonable period afterward in case you reactivate services. Health data may be retained longer for research purposes after removing 
+        We retain your personal information for as long as you have an account
+        plus a reasonable period afterward in case you reactivate services. Health data may be retained longer for research purposes after removing
         identifiers.
       </p>
 
       <h2>Updates to this Policy</h2>
 
       <p>
-        We may occasionally update this policy as our services evolve. You should  
+        We may occasionally update this policy as our services evolve. You should
         revisit this page periodically to stay aware of any changes.
       </p>
 
       <h2>Contact Us</h2>
 
       <p>
-        If you have any questions about this privacy policy or use of your 
+        If you have any questions about this privacy policy or use of your
         personal data, please email us at louis@mediar.ai.
       </p>
 
