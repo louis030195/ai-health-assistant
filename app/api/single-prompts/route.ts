@@ -1,5 +1,5 @@
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
-import { baseMediarAI, buildBothDataPrompt, buildDayQuestionBothDataPrompt, buildDayQuestionOnlyNeurosityPrompt, buildDayQuestionOnlyOuraRingPrompt, buildDayQuestionTagsPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, buildOnlyTagsPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
+import { baseMediarAI, buildDayQuestionBothDataPrompt, buildDayQuestionOnlyNeurosityPrompt, buildDayQuestionOnlyOuraRingPrompt, buildDayQuestionTagsPrompt, buildInsightPrompt, buildIntrospectionPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
 import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -7,6 +7,7 @@ import { NextResponse } from 'next/server';
 import { llm, llmPrivate } from '@/utils/llm';
 import TelegramBot from 'node-telegram-bot-api';
 import PostHogClient from '@/app/posthog-server';
+import { generateDataStringsAndFetchData } from '@/lib/get-data';
 
 // export const runtime = 'edge'
 export const maxDuration = 300
@@ -62,95 +63,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "Prompt already sent today" }, { status: 200 });
     }
 
-    const { data } = await supabase
-      .from('states')
-      .select()
-      .eq('metadata->>label', 'focus')
-      .eq('user_id', user.id)
-      .gte('created_at', threeDaysAgoFromOneAm)
-      .order('created_at', { ascending: false })
-      .limit(10000)
-    console.log("Retrieved Neurosity data:", data?.length);
+    const { success, neurosString, tagsString, ourasString, appleHealthString } = await generateDataStringsAndFetchData(user, threeDaysAgoFromOneAm);
 
-    // Group by 300 samples and average the probability
-    const neuros = data
-      // filter out < 0.3 probability
-      ?.filter((item) => item.probability && item.probability! > 0.3)
-      ?.reduce((acc: any, curr, index, array) => {
-        if (index % 300 === 0) {
-          const slice = array.slice(index, index + 300);
-          const avgProbability = slice.reduce((sum, item) => sum + (item.probability || 0), 0) / slice.length;
-          acc.push({ created_at: curr.created_at, probability: avgProbability });
-        }
-        return acc;
-      }, []);
-
-    console.log(threeDaysAgoFromOneAm.split(' ')[0])
-    const { data: ouras } = await supabase
-      .from('states')
-      .select()
-      // format as YYYY-MM-DD instead of dd/mm/yyyy
-      .gte('oura->>day', new Date(threeDaysAgoFromOneAm).toISOString().split('T')[0])
-      .eq('user_id', user.id)
-      .order('oura->>day', { ascending: false })
-      .limit(100)
-    console.log("Retrieved Oura data:", ouras?.length);
-
-    const tags = await getTags(user.id, threeDaysAgoFromOneAm);
-    console.log("Retrieved tags:", tags);
-
-    // if the user has nor tags, neuros, ouras, skip to next user
-
-    if (!tags && (!neuros || neuros.length === 0) && (!ouras || ouras.length === 0)) {
-      console.log("No tags, neuros, or ouras for user:", user);
-      return NextResponse.json({ message: "No tags, neuros, or ouras" }, { status: 200 });
-    }
-    console.log("User has neuros of length:", neuros?.length, "and ouras of length:", ouras?.length);
-    console.log("User has tags of length:", tags?.length);
-    let prompt = ''
-
-    console.log("Generating prompt for user:", user);
-
-    let tagsString = '';
-    tags.forEach((tag) => {
-      tag.created_at = new Date(tag.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
-      tagsString += JSON.stringify(tag);
-    });
-
-    let neurosString = '';
-    neuros.forEach((neuro: any) => {
-      neuro.created_at = new Date(neuro.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
-      neurosString += JSON.stringify(neuro);
-    });
-
-    let ourasString = '';
-    ouras?.forEach((oura) => {
-      oura.created_at = new Date(oura.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
-      ourasString += JSON.stringify(oura);
-    });
+    if (!success) return NextResponse.json({ message: "No tags and health data" }, { status: 200 });
 
 
-    if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
-      prompt = await llm(buildDayQuestionBothDataPrompt(neurosString, ourasString, tagsString, user));
-    } else if (neuros && neuros.length > 0) {
-      prompt = await llm(buildDayQuestionOnlyNeurosityPrompt(neurosString, tagsString, user));
-    } else if (ouras && ouras.length > 0) {
-      prompt = await llm(buildDayQuestionOnlyOuraRingPrompt(ourasString, tagsString, user));
-    } else {
-      prompt = await llm(buildDayQuestionTagsPrompt(tagsString, user));
-    }
+    const intro = await llm(buildIntrospectionPrompt(`Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`, user));
 
-    console.log("Generated prompt:", prompt);
+    console.log("Generated intro:", intro);
 
-    if (!prompt) {
-      console.error("No prompt generated for user:", user);
-      return NextResponse.json({ message: "No prompt generated" }, { status: 200 });
+    if (!intro) {
+      console.error("No intro generated for user:", user);
+      return NextResponse.json({ message: "No intro generated" }, { status: 200 });
     }
 
     // return NextResponse.json({ message: "Success" }, { status: 200 });
 
     const { data: d2, error: e2 } = await supabase.from('chats').insert({
-      text: prompt,
+      text: intro,
       user_id: user.id,
     });
     console.log("Inserted chat:", d2, "with error:", e2);
@@ -191,19 +121,19 @@ export async function POST(req: Request) {
         // }
 
         // 4. send the question
-        await sendWhatsAppMessage(phone, prompt);
+        await sendWhatsAppMessage(phone, intro);
       }
 
     }
     const response = await bot.sendMessage(
       user.telegram_chat_id!,
-      prompt,
+      intro,
       { parse_mode: 'Markdown' }
     )
     console.log("Message sent to:", user.telegram_chat_id, "with response:", response);
 
     const { error: e3 } = await supabase.from('prompts').insert({
-      text: prompt,
+      text: intro,
       user_id: user.id,
       type: 'dynamic',
     });

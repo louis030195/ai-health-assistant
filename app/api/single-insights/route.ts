@@ -1,5 +1,5 @@
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
-import { baseMediarAI, buildInsightCleanerPrompt, buildInsightPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, buildOnlyTagsPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
+import { baseMediarAI, buildInsightCleanerPrompt, buildInsightPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
 import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';

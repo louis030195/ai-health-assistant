@@ -59,6 +59,21 @@ Assistant:`;
   return prompt;
 }
 
+export function buildIntrospectionPrompt(data: string, user: any) {
+  const userReference = user.fullName ? ` for ${user.fullName}` : '';
+  const prompt = `
+
+Human: ${baseMediarAI}
+Generate a question${userReference} to get some information about the user's progress on his goal of: ${generateGoalPrompt(user.goal)}
+based on this user data: ${JSON.stringify(data)}.
+User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
+${generalMediarAIInstructions}
+
+Assistant:`;
+  console.log(prompt);
+  return prompt;
+}
+
 export function buildInsightPrompt(data: string, user: any) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
   const prompt = `
