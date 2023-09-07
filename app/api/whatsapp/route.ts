@@ -4,9 +4,10 @@ import { createClient } from "@supabase/supabase-js";
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
 import { HfInference } from "@huggingface/inference";
-import { baseMediarAI, buildBothDataPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
+import { baseMediarAI, buildQuestionPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
 import { llm, llmPrivate } from "@/utils/llm";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
+import { generateDataStringsAndFetchData } from "@/lib/get-data";
 
 
 // export const runtime = 'edge'
@@ -228,15 +229,49 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
       await kv.incr(questionKey);
       const msg = "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: Any feedback appreciated ❤️"
       await sendWhatsAppMessage(phoneNumber, msg)
-      const prompt = await generatePromptForUser(userId, parsed.Body)
-      console.log("Prompt:", prompt);
-      const response = await llm(prompt, 3, 'claude-2', 500)
+      const supabase = createClient<Database>(
+        process.env.SUPABASE_URL!,
+        process.env.SUPABASE_KEY!
+      )
+
+      // 1. Fetch the user's information
+      const { error: e2, data: users } = await supabase
+        .from('users')
+        .select('id, phone, timezone, full_name')
+        .eq('id', userId);
+
+      if (e2 || !users || users.length === 0) {
+        throw new Error(`Error fetching user or user not found. Error: ${e2?.message}`);
+      }
+
+      const user = users[0];
+
+      // 2. Compute yesterday's date for the user
+
+      const usersToday = new Date().toLocaleString('en-US', { timeZone: user.timezone })
+      const threeDaysAgo = new Date(new Date().setDate(new Date().getDate() - 3)).toLocaleString('en-US', { timeZone: user.timezone });
+
+      // const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone })
+      console.log("Yesterday's date for user:", threeDaysAgo);
+      // const yesterdayFromOneAm = new Date(new Date(yesterday).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone })
+      const threeDaysAgoFromOneAm = new Date(new Date(threeDaysAgo).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone });
+
+      const { success, neurosString, tagsString, ourasString, appleHealthString } = await generateDataStringsAndFetchData(user, threeDaysAgoFromOneAm);
+      if (!success) return new Response(``, { status: 200 });
+      const response = await llm(buildQuestionPrompt(
+        `Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`,
+        user,
+        parsed.Body
+      ));
+
       console.log("Response:", response);
       const { data, error } = await supabase.from('chats').insert({
         text: response,
         user_id: userId,
         category: 'answer',
       });
+
+
       console.log("Chat added:", data, error);
       await sendWhatsAppMessage(phoneNumber, response)
       return new Response('');
@@ -306,114 +341,4 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`);
       { status: 200 });
   }
 }
-
-async function generatePromptForUser(userId: string, question: string): Promise<string> {
-  const supabase = createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_KEY!
-  )
-
-  // 1. Fetch the user's information
-  const { error, data: users } = await supabase
-    .from('users')
-    .select('id, phone, timezone, full_name')
-    .eq('id', userId);
-
-  if (error || !users || users.length === 0) {
-    throw new Error(`Error fetching user or user not found. Error: ${error?.message}`);
-  }
-
-  const user = users[0];
-
-  // 2. Compute yesterday's date for the user
-  const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone });
-
-  // 3. Retrieve Neurosity data for the user
-  const { data } = await supabase
-    .from('states')
-    .select('created_at, probability')
-    .eq('metadata->>label', 'focus')
-    .eq('user_id', user.id)
-
-    .gte('created_at', yesterday)
-    .order('created_at', { ascending: false });
-
-  // Group by 300 samples and average the probability
-  const neuros = data
-    // filter out < 0.3 probability
-    ?.filter((item) => item.probability && item.probability! > 0.3)
-    ?.reduce((acc: any, curr, index, array) => {
-      if (index % 300 === 0) {
-        const slice = array.slice(index, index + 300);
-        const avgProbability = slice.reduce((sum, item) => sum + (item.probability || 0), 0) / slice.length;
-        acc.push({ created_at: curr.created_at, probability: avgProbability });
-      }
-      return acc;
-    }, []);
-
-
-  // 4. Retrieve Oura data for the user
-  const { data: ouras } = await supabase
-    .from('states')
-    .select()
-    .gte('oura->>day', new Date(yesterday).toISOString().split('T')[0])
-    .eq('user_id', user.id)
-    .order('oura->>day', { ascending: false });
-
-  // 5. Retrieve tags for the user
-  const tags = await getTags(userId, yesterday);
-
-  let tagsString = '';
-  tags.forEach((tag) => {
-    tag.created_at = new Date(tag.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
-    tagsString += JSON.stringify(tag);
-  });
-
-  let neurosString = '';
-  neuros.forEach((neuro: any) => {
-    neuro.created_at = new Date(neuro.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
-    neurosString += JSON.stringify(neuro);
-  });
-
-  let ourasString = '';
-  ouras?.forEach((oura) => {
-    oura.created_at = new Date(oura.created_at!).toLocaleString('en-US', { timeZone: user.timezone });
-    ourasString += JSON.stringify(oura);
-  });
-
-  // 6. Construct the prompt based on available data
-  let prompt = '';
-  if (neuros && neuros.length > 0 && ouras && ouras.length > 0) {
-    console.log("Both neuros and ouras data available");
-    prompt = buildBothDataPrompt(neurosString, ourasString, tagsString, user, question);
-  } else if (neuros && neuros.length > 0) {
-    console.log("Only neuros data available");
-    prompt = buildOnlyNeurosityPrompt(neurosString, tagsString, user, question);
-  } else if (ouras && ouras.length > 0) {
-    console.log("Only ouras data available");
-    prompt = buildOnlyOuraRingPrompt(ourasString, tagsString, user, question);
-  }
-
-  return prompt;
-}
-
-
-const getTags = async (userId: string, date: string) => {
-  console.log("Getting tags for user:", userId, "since date:", date);
-  const supabase = createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_KEY!
-  )
-  const { data, error } = await supabase
-    .from('tags')
-    .select('text, created_at')
-    .eq('user_id', userId)
-    .gt('created_at', date)
-
-  if (error) {
-    console.log("Error fetching tags:", error.message);
-  }
-  return data || [];
-};
-
 

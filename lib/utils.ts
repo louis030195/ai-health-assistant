@@ -59,15 +59,14 @@ Assistant:`;
   return prompt;
 }
 
-export function buildInsightPrompt(data: string, user: any, question?: string) {
+export function buildInsightPrompt(data: string, user: any) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
   const prompt = `
 
 Human: ${baseMediarAI}
 Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
-based on this data provided by the wearable devices: ${JSON.stringify(data)}
+based on this user data: ${JSON.stringify(data)}. Eventually provide actionable insights.
 User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
-${question ? question : ''}
 ${generalMediarAIInstructions}
 
 Assistant:`;
@@ -75,65 +74,20 @@ Assistant:`;
   return prompt;
 }
 
-export function buildBothDataPrompt(neuros: string, ouras: string, tags: string, user: any, question?: string) {
+export function buildQuestionPrompt(data: string, user: any, question: string) {
   const userReference = user.fullName ? ` for ${user.fullName}` : '';
   const prompt = `
 
 Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
-given these tags: ${JSON.stringify(tags)} 
-And these Neurosity states: ${JSON.stringify(neuros)} 
-And these Ouraring states: ${JSON.stringify(ouras)} 
-${question ? question : ''}
+Generate an answer to ${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
+based on this user data: ${JSON.stringify(data)}. Eventually provide actionable insights.
+User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
+${question}
 ${generalMediarAIInstructions}
 
 Assistant:`;
   console.log(prompt);
   return prompt;
-}
-
-export function buildOnlyNeurosityPrompt(neuros: string, tags: string, user: any, question?: string) {
-  const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `
-
-Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their cognitive performance, 
-given these tags: ${JSON.stringify(tags)} 
-And these Neurosity states: ${JSON.stringify(neuros)} 
-${generalMediarAIInstructions}
-${question ? question : ''}
-Here are the goals of the user: ${generateGoalPrompt(user.goal)}
-
-Assistant:`;
-}
-
-export function buildOnlyOuraRingPrompt(ouras: string, tags: string, user: any, question?: string) {
-  const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `
-
-Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
-given these tags: ${JSON.stringify(tags)} 
-And these Ouraring states: ${JSON.stringify(ouras)} 
-${generalMediarAIInstructions}
-${question ? question : ''}
-Here are the goals of the user: ${generateGoalPrompt(user.goal)}
-
-Assistant:`;
-}
-
-export function buildOnlyTagsPrompt(tags: string, user: any, question?: string) {
-  const userReference = user.fullName ? ` for ${user.fullName}` : '';
-  return `
-
-Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health, 
-given these tags: ${JSON.stringify(tags)} 
-${generalMediarAIInstructions}
-${question ? question : ''}
-Here are the goals of the user: ${generateGoalPrompt(user.goal)}
-
-Assistant:`;
 }
 
 export const generateGoalPromptForQuestions = (goal: string) => {
