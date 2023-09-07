@@ -80,7 +80,7 @@ export default function RootLayout({
             <Toaster />
             {/* <WhatsAppBanner /> */}
             {/* <FeedbackBanner /> */}
-            <DiscountBanner />
+            {/* <DiscountBanner /> */}
             <SupabaseProvider>
               <Navbar />
               <main
