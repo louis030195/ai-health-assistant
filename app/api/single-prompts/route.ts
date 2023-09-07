@@ -1,5 +1,5 @@
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
-import { baseMediarAI, buildDayQuestionBothDataPrompt, buildDayQuestionOnlyNeurosityPrompt, buildDayQuestionOnlyOuraRingPrompt, buildDayQuestionTagsPrompt, buildInsightPrompt, buildIntrospectionPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
+import { baseMediarAI, buildInsightPrompt, buildIntrospectionPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
 import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -138,7 +138,7 @@ export async function POST(req: Request) {
       type: 'dynamic',
     });
 
-    console.log("Inserted question:", prompt, "with error:", e3);
+    console.log("Inserted question:", intro, "with error:", e3);
 
     return NextResponse.json({ message: "Success" }, { status: 200 });
   } catch (error) {
@@ -147,23 +147,4 @@ export async function POST(req: Request) {
   }
 }
 
-
-
-const getTags = async (userId: string, date: string) => {
-  console.log("Getting tags for user:", userId, "since date:", date);
-  const supabase = createClient<Database>(
-    process.env.SUPABASE_URL!,
-    process.env.SUPABASE_KEY!
-  )
-  const { data, error } = await supabase
-    .from('tags')
-    .select('text, created_at')
-    .eq('user_id', userId)
-    .gt('created_at', date)
-
-  if (error) {
-    console.log("Error fetching tags:", error.message);
-  }
-  return data || [];
-};
 
