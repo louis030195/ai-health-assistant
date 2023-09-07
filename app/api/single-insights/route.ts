@@ -12,7 +12,7 @@ import { generateDataStringsAndFetchData } from '@/lib/get-data';
 // export const runtime = 'edge'
 export const maxDuration = 300
 
-// curl -X POST -d '{"userId":"20284713-5cd6-4199-8313-0d883f0711a1","timezone":"America/Los_Angeles","fullName":"Louis","telegramChatId":"5776185278", "phone": "+33648140738", "goal": "I aim to increase my productivity by improving my time management skills and maintaining a healthy work-life balance."}' -H "Content-Type: application/json" http://localhost:3000/api/single-insights
+// curl -X POST -d '{"userId":"20284713-5cd6-4199-8313-0d883f0711a1","timezone":"America/Los_Angeles","fullName":"Louis","telegramChatId":"5776185278", "phone": "+33648140738", "goal": "Reduce my anxiety and find a partner to have a symbiotic relationship."}' -H "Content-Type: application/json" http://localhost:3000/api/single-insights
 
 
 export async function POST(req: Request) {

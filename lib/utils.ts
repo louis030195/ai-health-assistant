@@ -44,12 +44,6 @@ The end goal is to generate a list of insights${userReference} about how the use
 based on this data provided by the wearable devices: ${JSON.stringify(data)}
 User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
 ${generalMediarAIInstructions}
-- Your answers are only bullet points.
-- Prioritize accuracy by cross-referencing the tags and wearable data to ensure the insights are accurate. If you are not sure about something, it's better to not include it.
-- Make your responses slightly more conversational to engage the user without losing the concise nature. For example, use phrases like "Looks like you had a peaceful sleep last night!" instead of just "Good sleep quality recorded."
-- Generate insights that go beyond surface-level information. For instance, if the user reports "feeling sad," try to correlate this with data on sleep quality, physical activity, etc., and offer actionable insights.
-- Include occasional prompts or questions designed to help the user form a habit of using Mediar. For example, "Ready for your morning walk?" or "How's your mood today?" Remember not to be too intrusive.
-- At the end of your insights, ask for user feedback subtly. Example: "Was this insight helpful? 👍/👎."
 
 PLEASE REMOVE THE NOISE FROM THIS DATA THAT WILL BE FED INTO ANOTHER LLM.
 REMOVE USELESS OR REDUNDANT DATA, BUT DO NOT REMOVE ANYTHING THAT CAN BE USEFUL FOR THE LLM.
@@ -95,6 +89,12 @@ based on this user data: ${JSON.stringify(data)} and his/her goal of: ${generate
 Eventually provide actionable insights.
 User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
 ${generalMediarAIInstructions}
+- Your answers are only bullet points.
+- Prioritize accuracy by cross-referencing the tags and wearable data to ensure the insights are accurate. Example: "when you have a particularly hard workout in the morning, you tend to get more deep sleep". If you are not sure about something, it's better to not include it. 
+- Make your responses slightly more conversational to engage the user without losing the concise nature. For example, use phrases like "Looks like you had a peaceful sleep last night!" instead of just "Good sleep quality recorded."
+- Generate insights that go beyond surface-level information. For instance, if the user reports "feeling sad," try to correlate this with data on sleep quality, physical activity, etc., and offer actionable insights.
+- Include occasional prompts or questions designed to help the user form a habit of using Mediar. For example, "Ready for your morning walk?" or "How's your mood today?" Remember not to be too intrusive.
+- At the end of your insights, ask for user feedback subtly. Example: "Was this insight helpful? 👍/👎."
 
 Assistant:`;
   console.log(prompt);
@@ -111,7 +111,7 @@ based on this user data: ${JSON.stringify(data)} and his/her goal of: ${generate
 
 Eventually provide actionable insights.
 User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
-${question}
+Here is the user question: ${question}
 ${generalMediarAIInstructions}
 
 Assistant:`;
