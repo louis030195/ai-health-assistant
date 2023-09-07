@@ -5,7 +5,7 @@ import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
 import { HfInference } from "@huggingface/inference";
 import { baseMediarAI, buildBothDataPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
-import { llm } from "@/utils/llm";
+import { llm, llmPrivate } from "@/utils/llm";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 
 

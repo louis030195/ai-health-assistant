@@ -5,7 +5,7 @@ import fetch from 'node-fetch';
 import { baseMediarAI, buildBothDataPrompt, buildOnlyNeurosityPrompt, buildOnlyOuraRingPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
 import TelegramBot from "node-telegram-bot-api";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
-import { llm } from "@/utils/llm";
+import { llm, llmPrivate } from "@/utils/llm";
 
 // export const runtime = 'edge'
 export const maxDuration = 300

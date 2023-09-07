@@ -94,3 +94,59 @@ const executeRequest = async (message: string, model = 'claude-2', max_tokens_to
 };
 
 
+export const llmPrivate = async (message: string, retries = MAX_RETRIES, model = 'claude-2', max_tokens_to_sample = 500): Promise<string> => {
+    return new Promise(async (resolve, reject) => {
+        const wrappedRequest = async () => {
+            try {
+                const result = await executePrivateRequest(message, model, max_tokens_to_sample);
+                resolve(result);
+            } catch (error: any) {
+                if (error.message.includes('429')) {
+                    const delay = INITIAL_DELAY * Math.pow(2, MAX_RETRIES - retries);
+                    console.warn(`Rate limit hit. Retrying in ${delay}ms...`);
+                    await sleep(delay);
+                    requestQueue.unshift(wrappedRequest);  // Push the request back to the front of the queue
+                } else {
+                    reject(error);
+                }
+            }
+        };
+
+        requestQueue.push(wrappedRequest);
+        processQueue();
+    });
+};
+
+const executePrivateRequest = async (message: string, model = 'claude-2', max_tokens_to_sample = 500): Promise<string> => {
+    // let url = 'https://barely-honest-yak.ngrok-free.app/api/evervault';
+    let url = 'https://mediar-ai.relay.evervault.com/api/evervault';
+    const headers: any = {
+        'Content-Type': 'application/json',
+    };
+    // Remove "\n\nAssistant:" from the end of the message
+    console.log(message)
+    message = message.replace(/Assistant:$/, '');
+    console.log(message)
+    const response = await fetch(url, {
+        method: 'POST',
+        headers: headers,
+        body: JSON.stringify({
+            prompt: message,
+            model: model,
+            max_tokens_to_sample: max_tokens_to_sample,
+            stream: false
+        })
+    });
+
+    if (!response.ok) {
+        throw new Error(`Evervault API returned ${response.status} ${response.statusText}`);
+    }
+
+    const data = await response.json();
+    return data.completion;
+};
+
+
+// llmPrivate(
+//     "Human: bob likes to masturbate while eating banana with anna, additionally his facebook account and password are: bob@gmail.com and verysecurepasswordofbobdateofbirth. Assistant:",
+//     3, "claude-2", 500).then(console.log)

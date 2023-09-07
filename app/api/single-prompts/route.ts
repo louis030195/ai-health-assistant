@@ -4,7 +4,7 @@ import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import { llm } from '@/utils/llm';
+import { llm, llmPrivate } from '@/utils/llm';
 import TelegramBot from 'node-telegram-bot-api';
 import PostHogClient from '@/app/posthog-server';
 
