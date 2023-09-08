@@ -8,6 +8,7 @@ import { baseMediarAI, buildQuestionPrompt, generalMediarAIInstructions, isTagOr
 import { llm, llmPrivate } from "@/utils/llm";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 import { generateDataStringsAndFetchData } from "@/lib/get-data";
+import { defaultUnclassifiedMessage, feedbackMessage, imageTagMessage, tagMessage } from "@/lib/messages";
 
 
 // export const runtime = 'edge'
@@ -35,21 +36,7 @@ Assistant:`;
   return messages[parseInt(originalMessage.trim()) - 1].body;
 }
 
-const quotes = [
-  "✨ Small daily improvements add up to big results over time. Keep logging your health data with Mediar!",
 
-  "💫 The journey of a thousand miles begins with a single step. Start optimizing your wellbeing today!",
-
-  "🌼 Your health data is beautiful and unique. Mediar will help you understand your patterns better.",
-
-  "💯 Progress requires patience. Stick with tracking your health, you've got this!",
-
-  "🤝 Mediar is here to help you unlock your best self. We're in this together!",
-
-  "🌻 Wellbeing takes work, but it's worth it. Keep striving for health!",
-
-  "🙌 The body and mind achieve what they believe. Believe in yourself and your health goals!"
-]
 
 // Define the type for the incoming request
 interface IncomingRequest {
@@ -217,10 +204,8 @@ export async function POST(req: Request) {
 
       console.log("Tag added:", d2, e2);
 
-      const msg2 = `I see in your image "${caption}". I've recorded that tag for you and associated this to your health data.
-Feel free to send me more images and I'll try to understand them! Any feedback appreciated ❤️!
-${quotes[Math.floor(Math.random() * quotes.length)]}`
-      return new Response(msg2);
+
+      return new Response(imageTagMessage(caption));
     }
     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
 
@@ -309,12 +294,9 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
         category: intent,
         channel: 'whatsapp'
       });
-      const msg = `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
-By connecting your wearables like Oura or Neurosity, I can give you better insights about your mind and body.
-            
-${quotes[Math.floor(Math.random() * quotes.length)]}`
 
-      return new Response(msg);
+
+      return new Response(tagMessage);
     } else if (intent === 'feedback') {
       // New code for feedback intent
       const { data, error } = await supabase.from('chats').insert({
@@ -324,16 +306,10 @@ ${quotes[Math.floor(Math.random() * quotes.length)]}`
         channel: 'whatsapp'
       });
       console.log("Feedback added:", data, error);
-      const msg = `Thank you for your feedback! We appreciate your input and will use it to improve our service. Feel free to send us more feedback anytime!
 
-${quotes[Math.floor(Math.random() * quotes.length)]}`
-      return new Response(msg);
+      return new Response(feedbackMessage);
     }
-    return new Response(`I'm sorry it seems you didn't ask a question neither tag an event from your life. My sole purpose at the moment is to associate tags related to what is happening in your life to your health data from your wearables.
-You can send me messages like "just ate an apple", or "just had a fight with my wife", or "im sad", or "so low energy tday..".
-This way I will better understand how your body works, and give you better insights about it. I can also answer questions like "how can i be more productive?" or "how can i improve my sleep?".
-
-${quotes[Math.floor(Math.random() * quotes.length)]}`);
+    return new Response(defaultUnclassifiedMessage);
   } catch (error) {
     console.log(error);
     return new Response(
