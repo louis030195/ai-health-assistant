@@ -18,7 +18,8 @@ export default async function Home() {
             One health assistant for all your wearables
           </p>
           <p className="max-w-2xl mt-5 mx-auto text-xl text-gray-500">
-            Mediar is an AI assistant that analyzes multi-modal health data from wearables and user input, then delivers personalized insights and recommendations through Telegram to optimize wellbeing and performance.
+            Mediar is an AI health assistant that provides daily insights in WhatsApp based on what you eat, drink, do, and wearable data.
+            {/* Mediar is an AI assistant that analyzes multi-modal health data from wearables and user input, then delivers personalized insights and recommendations through Telegram to optimize wellbeing and performance. */}
             {/* Combine your brain activity data from Neurosity and/or biometric data from wearables like Oura ring for AI-driven insights, enhancing focus, reducing anxiety, and promoting optimal health. */}
           </p>
           <div className="inline-flex gap-4">
