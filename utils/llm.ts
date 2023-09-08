@@ -124,9 +124,7 @@ const executePrivateRequest = async (message: string, model = 'claude-2', max_to
         'Content-Type': 'application/json',
     };
     // Remove "\n\nAssistant:" from the end of the message
-    console.log(message)
     message = message.replace(/Assistant:$/, '');
-    console.log(message)
     const response = await fetch(url, {
         method: 'POST',
         headers: headers,
@@ -148,5 +146,5 @@ const executePrivateRequest = async (message: string, model = 'claude-2', max_to
 
 
 // llmPrivate(
-//     "Human: bob likes to masturbate while eating banana with anna, additionally his facebook account and password are: bob@gmail.com and verysecurepasswordofbobdateofbirth. Assistant:",
+//     "Human: bob likes to masturbate while eating banana with anna, additionally his facebook account and password are: bob@gmail.com and verysecurepasswordofbobdateofbirth. Assistant:".repeat(10),
 //     3, "claude-2", 500).then(console.log)

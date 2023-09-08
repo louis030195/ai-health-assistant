@@ -97,6 +97,7 @@ ${generalMediarAIInstructions}
 - MAKE SURE THAT YOUR INSIGHTS ARE USEFUL FOR THE USER TO GET CLOSER TO HIS GOAL.
 - DO NOT MENTION THE USER HAVING A SPECIFIC WEARABLE IF YOU DONT KNOW WHERE THE DATA IS COMING FROM.
 - Try to be as concise as possible. Just the useful information that will bring the user closer to his goal.
+- If there is no tags, nor wearable data, nothing, tell the user that he/she needs to connect a wearable or send tags to get insights.
 - At the end of your insights, ask for user feedback subtly. Example: "Was this insight helpful? 👍/👎."
 
 Assistant:`;

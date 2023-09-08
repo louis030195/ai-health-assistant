@@ -50,18 +50,31 @@ export async function POST(req: Request) {
     // const yesterdayFromOneAm = new Date(new Date(yesterday).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone })
     const threeDaysAgoFromOneAm = new Date(new Date(threeDaysAgo).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone });
 
-    // check if there is already an insight at the today timezone of the user
-    const { data: todaysPrompts } = await supabase
+    // Get the current time in the user's timezone
+    const currentTime = new Date().toLocaleString('en-US', { timeZone: user.timezone });
+
+    // Get the time three hours ago in the user's timezone
+    const threeHoursAgo = new Date(new Date().setHours(new Date().getHours() - 3)).toLocaleString('en-US', { timeZone: user.timezone });
+
+    // Check if there is already a prompt sent in the last 3 hours
+    const { data: recentPrompts } = await supabase
       .from("prompts")
       .select()
       .eq("user_id", user.id)
       .eq('type', 'dynamic')
-      .gte('created_at', usersToday)
+      .gte('created_at', threeHoursAgo)
 
-    // If an insight has already been sent today, skip to the next user
-    if (todaysPrompts && todaysPrompts.length > 0) {
-      console.log("Prompt already sent today for user:", user);
-      return NextResponse.json({ message: "Prompt already sent today" }, { status: 200 });
+    // If a prompt has been sent in the last 3 hours, skip to the next user
+    if (recentPrompts && recentPrompts.length > 0) {
+      console.log("Prompt already sent in the last 3 hours for user:", user);
+      return NextResponse.json({ message: "Prompt already sent in the last 3 hours" }, { status: 200 });
+    }
+
+    // Check if the current time is during the day (e.g., between 7 AM and 7 PM)
+    const currentHour = new Date(currentTime).getHours();
+    if (currentHour < 7 || currentHour > 19) {
+      console.log("It's not daytime for user:", user);
+      return NextResponse.json({ message: "It's not daytime" }, { status: 200 });
     }
 
     const { success, neurosString, tagsString, ourasString, appleHealthString } = await generateDataStringsAndFetchData(user, threeDaysAgoFromOneAm);

@@ -14,11 +14,7 @@
     },
     {
       "path": "/api/multi-prompts",
-      "schedule": "0 1 * * *"
-    },
-    {
-      "path": "/api/multi-prompts",
-      "schedule": "0 20 * * *"
+      "schedule": "0 */2 * * *"
     }
   ]
 }
