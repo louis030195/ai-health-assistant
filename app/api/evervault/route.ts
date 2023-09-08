@@ -1,6 +1,7 @@
 import { llm } from "@/utils/llm"
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
+export const maxDuration = 300
 
 export async function POST(req: Request) {
   // message: string, retries = MAX_RETRIES, model = 'claude-2', max_tokens_to_sample = 500, anonymise = false
