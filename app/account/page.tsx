@@ -20,6 +20,7 @@ import { kv } from '@vercel/kv';
 import TelegramConnect from '@/components/ui/TelegramConnect';
 import { checkTelegramVerification, sendTelegramMessage, startTelegramVerification } from '../telegram-server';
 import Sub from './Sub';
+import { GoalInput } from '../dashboard/GoalInput';
 export const dynamic = "force-dynamic";
 
 export default async function Account() {
@@ -77,14 +78,21 @@ export default async function Account() {
           price={products.find((product) => product.name === 'Biohacker')?.prices[0]!}
         />
         <Sub session={session} subscription={subscription || undefined} displayText="Biohacker Plan" />
+        <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-bold mb-2">Set Your Goal</h2>
+          <p className="text-sm text-gray-600 mb-4">Your goal will influence the insights of the AI, the questions asked, and the prompts given to you. You can update your goal here at any time.</p>
+          <div className="w-full sm:w-2/3 flex flex-col items-center justify-center gap-2">
+            <GoalInput userDetails={userDetails} />
+          </div>
+        </div>
         {/* <PlanRibbon
           displayText="Beta"
           price={products?.find((product) => product.name === 'Biohacker')?.prices[0]!}
           subscription={subscription || undefined}
           session={session}
         > */}
-          <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
-            startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
+        <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
+          startVerification={startVerificationServer} verifyOtp={checkVerificationServer} />
         {/* </PlanRibbon> */}
 
         <TelegramConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}
@@ -94,7 +102,9 @@ export default async function Account() {
           <NeurosityConnect session={session}
             className='w-4/5 shadow-none'
             onboarding={false} />
-          <NeurosityDisconnect session={session} />
+          <NeurosityDisconnect
+            className='w-4/5 shadow-none'
+            session={session} />
         </div>
         {/* shadow */}
         <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
@@ -103,7 +113,9 @@ export default async function Account() {
             className='w-4/5 shadow-none'
             getOuraAccessToken={getOuraAccessTokenServerServer} />
           {/* <OuraImport session={session} /> */}
-          <OuraDisconnect session={session} revokeOuraAccessToken={revokeOuraAccessTokenServer} />
+          <OuraDisconnect
+            className='w-4/5 shadow-none'
+            session={session} revokeOuraAccessToken={revokeOuraAccessTokenServer} />
         </div>
       </div>
     </section >

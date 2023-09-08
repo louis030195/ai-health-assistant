@@ -69,17 +69,17 @@ export default async function Dashboard() {
     <div className="flex flex-col  gap-10 items-center">
       <SaveTimezone userId={session?.user?.id} saveUserTimezoneServer={saveUserTimezoneServer} />
       <PosthogMail session={session!} />
-      {
+      {/* {
         // @ts-ignore
         userDetails?.neurosity?.disabled !== true &&
         <NeurosityStatus userId={session!.user.id} />
-      }
+      } */}
 
-      <TagBox session={session!}
+      {/* <TagBox session={session!}
         className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
-      />
+      /> */}
 
-      <GoalInput userDetails={userDetails} />
+      {/* <GoalInput userDetails={userDetails} /> */}
       <p className="text-black text-lg font-bold text-center">Everything happens in Telegram/WhatsApp.{" "}
         <a
           className="text-blue-500 underline"

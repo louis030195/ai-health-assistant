@@ -38,29 +38,14 @@ import Markdown from '@/components/ui/Markdown';
 // DO NOT SAY "Unfortunately I don't feel comfortable generating marketing content. Perhaps we could have a thoughtful discussion about technology and society instead?" OR ANYTHING LIKE THAT.
 
 
-const story = `
-Back in the day, computers were giant machines that took up entire rooms! 😮 People had to use punch cards just to get them to do basic math. 😴 It was so tedious! But then along came personal computers like the Apple II. They were a bit clunky but way easier to use. 💻 People started playing games like Oregon Trail on them! 🎮
+const story = `Have you ever wished for a personal assistant who really **gets** you? 💭 Someone who looks out for your health 24/7? An advisor who sends you **personalized insights** to help you sleep better 😴, eat healthier ✅, exercise smarter 💪, and boost your mental wellbeing 🧠?
 
-Steve Jobs envisioned computers as "**bicycles for the mind**" - tools that could leverage the most complex object in the universe, the human brain! And the tech kept getting smaller and smarter over the years, bringing us closer to that vision. Laptops, smartphones, wireless earbuds - each generation was a **huge leap** forward in what technology could do! 📱🎧
+Well the future is now! AI like Mediar can **interact directly with your body and mind**. 🤯 It reads your health data and learns your habits over time. Then it provides **tailored recommendations** to help you **upgrade** your whole lifestyle. 🆙 
 
-Now, we're entering a **new era** - one where technology **interact directly with our very bodies**! 🧠 Mediar is developing mind-body-modelling AI algorithms to give you **insights** into your own body. 🤯
+This is a **new era** where technology **leverages** our brains instead of vice versa. Steve Jobs envisioned computers as "**bicycles for the mind**" after all! The tech has evolved from giant machines 😮 to smartphones to wearables **seamlessly integrated** into our lives. 📱
 
-It's easy to get started with Mediar.
+Mediar will be your own **personal 24/7 health advisor** to chat with anytime. Let's look forward to a future where AI truly **understands** us! 🤖🤝🧑`
 
-You will need to connect your accounts to Mediar to allow **access to your data** and **to train its AI** to give you **personalized insights**. 📈
-
-1. If you own a [Neurosity](https://neurosity.co) headset, connect it to Mediar. This lightweight device **senses your brainwaves 🧠** as you go about your days. 📟
-  
-2. If you own an [Ouraring](https://ouraring.com), connect it to Mediar. This amazing device **senses your heart 💗 and sleep 😴** as you go about your days.
-
-3. If you have neither, you can [join the private beta](https://tally.so/r/wL7g9z) for Apple Health 🍎 which would let you receive personalized insights based on any health/fitness 🥦💪 apps or devices compatible with Apple Health. 🍎
-
-4. Connect your Telegram account to Mediar. This allows Mediar to **send you insights** and **receive tags** from you directly on Telegram. 📲
-
-5. As you wear Neurosity and Ouraring, **use Mediar** to send tags - mark down how you were feeling, what you were doing, send pics etc. to Mediar, it This **trains** Mediar's AI over time. 🏷
-
-Soon, you'll start getting **personalized insights** and recommendations from Mediar to lower anxiety 🥰, and **upgrade your health 💪**!
-`
 
 export function LLMStoryDistraction({className}: {className?: string}) {
 

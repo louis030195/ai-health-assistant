@@ -3,11 +3,10 @@ import { useEffect, useState } from "react"
 
 const defaultSteps = [
     { id: '1. Intro', name: 'Intro', href: '/onboarding/intro', status: 'current' },
-    { id: '2. 🧠 Setup Neurosity', name: 'Neurosity', href: '/onboarding/neurosity', status: 'upcoming' },
-    { id: '3. ❤️😴 Setup Ouraring', name: 'Ouraring', href: '/onboarding/oura', status: 'upcoming' },
-    { id: '4. 📞 Setup WhatsApp', name: 'WhatsApp', href: '/onboarding/whatsapp', status: 'upcoming' },
-    { id: '5. 📲 Setup Telegram', name: 'Telegram', href: '/onboarding/telegram', status: 'upcoming' },
-    { id: '6. 👉 Finish', name: 'Finish', href: '/dashboard', status: 'upcoming' },
+    { id: '2. 🎯 Setup your goals', name: 'Goals', href: '/onboarding/goals', status: 'upcoming' },
+    { id: '3. 📞 Setup WhatsApp or Telegram', name: 'Communication', href: '/onboarding/communication', status: 'upcoming' },
+    { id: '4. 🥦💪🧠 Setup your health data', name: 'Health', href: '/onboarding/health', status: 'upcoming' },
+    { id: '5. 👉 Finish', name: 'Finish', href: '/dashboard', status: 'upcoming' },
 ]
 
 export default function Example({ className, onEnd }: { className?: string, onEnd?: () => void }) {

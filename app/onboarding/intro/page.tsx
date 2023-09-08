@@ -7,10 +7,10 @@ export default async function Onboarding() {
     const session = await getSession();
     if (!session) return redirect('/signin');
     console.log('session', session);
-    const hasOnboarded = await getOnboarding(session.user.id);
-    if (hasOnboarded) {
-        return redirect('/dashboard');
-    }
+    // const hasOnboarded = await getOnboarding(session.user.id);
+    // if (hasOnboarded) {
+    //     return redirect('/dashboard');
+    // }
     // await saveOnboarding(session.user.id);
 
     return (

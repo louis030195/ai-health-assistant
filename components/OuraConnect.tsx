@@ -81,7 +81,7 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
                     </div>
                 }
                 <Button
-                    className="text-white mx-auto w-[400px] "
+                    className="text-white mx-auto w-[80%] lg:w-[50%]"
                     onClick={handleConnect}
                 >
                     Connect

@@ -12,9 +12,10 @@ import { createClientComponentClient } from '@supabase/auth-helpers-nextjs';
 
 interface Props {
     session: Session;
+    className?: string;
 }
 
-export default function NeurosityDisconnect({ session }: Props) {
+export default function NeurosityDisconnect({ session, className }: Props) {
     const { customToken } = useNeurosityToken(session.user.id);
     const handleDisconnect = async () => {
         if (customToken) {
@@ -41,12 +42,13 @@ export default function NeurosityDisconnect({ session }: Props) {
     };
 
     return (
-        <div >
+        <div className={`items-top justify-center flex space-x-2 text-black ${className}`}>
+
             <Toaster />
             <Button
                 onClick={handleDisconnect}
                 disabled={!customToken}
-                className="w-[400px]"
+                className="w-[80%] lg:w-[50%]"
             >
                 Disconnect your Neurosity account
             </Button>

@@ -63,7 +63,7 @@ export default function NeurosityConnect({ session, className, onboarding }: Pro
                 }
                 {/* Connect button */}
                 <Button
-                    className=" text-white w-[400px] mx-auto "
+                    className=" text-white  w-[80%] lg:w-[50%] mx-auto "
                     onClick={handleConnect}
                 >
                     Connect
