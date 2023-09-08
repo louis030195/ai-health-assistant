@@ -182,7 +182,7 @@ export async function POST(req: Request) {
       const response = await bot.sendMessage(body.message.chat.id,
         `I'm sorry I don't know you yet. Make sure to save your Telegram username is mediar.ai/account first.`, { parse_mode: 'Markdown' });
       console.log("Response:", response);
-      return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 400 });
+      return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 200 });
     }
     const userId = data[0].id
     await track(userId)
@@ -203,7 +203,7 @@ export async function POST(req: Request) {
       }).match({ id: userId });
       if (e3) {
         console.log("Error updating user:", e3.message);
-        return new Response(`Error updating user. Error: ${e3.message}`, { status: 400 });
+        return new Response(`Error updating user. Error: ${e3.message}`, { status: 200 });
       }
       const response = await bot.sendMessage(body.message.chat.id, welcomeMessage, { parse_mode: 'Markdown' });
       console.log("Welcome message sent:", response);
