@@ -15,7 +15,7 @@ const quotes = [
   ]
 
 export const tagMessage = `Got it! I've recorded your tag. Keep sending me more tags it will help me understand you better.
-I can also read your wearable data, make sure to install the [iOS app](https://testflight.apple.com/join/ofhHbnbd), I can give you better insights about your mind and body.
+I can also read your wearable data, make sure to install Mediar iOS app, I can give you better insights about your mind and body.
             
 ${quotes[Math.floor(Math.random() * quotes.length)]}`
 
