@@ -66,7 +66,7 @@ export async function POST(req: Request) {
         const start_time = `${date}T${hour}:00Z` // Construct start_time from date and hour
         const end_time = start_time // For simplicity, let's assume end_time is the same as start_time
 
-        await supabase
+        const { error } = await supabase
           .from('biometrics')
           .insert({
             user_id: userExists.id,
@@ -81,6 +81,9 @@ export async function POST(req: Request) {
             error: metadata.error
             // Add other biometrics fields here as needed
           })
+        if (error) {
+          console.error('Error inserting biometrics:', error)
+        }
       }
       // Process sleep data
       const sleepData = user?.sleep ?? []
@@ -97,7 +100,7 @@ export async function POST(req: Request) {
           light_seconds
         } = durations
 
-        await supabase
+        const { error } = await supabase
           .from('sleep')
           .insert({
             user_id: userExists.id,
@@ -115,6 +118,9 @@ export async function POST(req: Request) {
             data_source: metadata.data_source,
             error: metadata.error
           })
+        if (error) {
+          console.error('Error inserting sleep:', error)
+        }
       }
 
       // Process nutrition data
@@ -131,7 +137,7 @@ export async function POST(req: Request) {
           metadata
         } = food
 
-        await supabase
+        const { error } = await supabase
           .from('foods')
           .insert({
             user_id: userExists.id,
@@ -148,6 +154,9 @@ export async function POST(req: Request) {
             data_source: metadata.data_source,
             error: metadata.error
           })
+        if (error) {
+          console.error('Error inserting food:', error)
+        }
       }
 
       // Process activity data
@@ -173,7 +182,7 @@ export async function POST(req: Request) {
             max_heart_rate
           } = summary.biometrics
 
-          await supabase
+          const { error } = await supabase
             .from('activities')
             .insert({
               user_id: userExists.id,
@@ -191,12 +200,15 @@ export async function POST(req: Request) {
               data_source: metadata.data_source,
               error: metadata.error
             })
+          if (error) {
+            console.error('Error inserting activity:', error)
+          }
         } else if (summary?.energy_expenditure?.active_kcal) {
           const {
             energy_expenditure
           } = summary
           const start_time = `${metadata.date}T${metadata.hour}:00Z`
-          await supabase
+          const { error } = await supabase
             .from('activities')
             .insert({
               user_id: userExists.id,
@@ -208,6 +220,9 @@ export async function POST(req: Request) {
               data_source: metadata.data_source,
               error: metadata.error
             })
+          if (error) {
+            console.error('Error inserting activity:', error)
+          }
         }
       }
     })
