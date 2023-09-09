@@ -141,7 +141,7 @@ export async function POST(req: Request) {
 
 
         // Check if durations exists and contains active_minutes
-        if (activity.summary.durations && 'active_minutes' in activity.summary.durations) {
+        if (activity.summary?.durations?.active_minutes) {
           const {
             start_time,
             end_time,
@@ -171,7 +171,7 @@ export async function POST(req: Request) {
               max_heart_rate,
               heart_rate_zones // insert the whole JSON
             })
-        } else {
+        } else if (activity?.summary?.energy_expenditure?.active_kcal) {
 
           const {
             energy_expenditure
