@@ -72,3 +72,9 @@ Let me know if you would like any other changes or additions!
   - [ ] ...
 - [ ] Self-hosted 
 - [ ] Your own LLM, 100% private
+
+### Other resources
+
+- https://youtube.com/shorts/4MUQUWnkzOs?feature=share
+- https://youtube.com/shorts/GEHBJYm1sCs?feature=share
+- https://twitter.com/louis030195/status/1699955529576222890
