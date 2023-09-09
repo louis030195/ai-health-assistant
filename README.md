@@ -48,3 +48,12 @@ Ask questions and get support in our [Discord community](https://discord.gg/pFKp
 Please read [CONTRIBUTING.md](https://github.com/mediar/mediar/CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests.
 
 Let me know if you would like any other changes or additions!
+
+### Roadmap
+
+- [ ] Evervault data anonymization 
+- [ ] Supabase column encryption
+- [ ] More health sources
+  - [ ] Google Fit
+  - [ ] ...
+- [ ] Customisations
