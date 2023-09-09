@@ -71,4 +71,5 @@ Let me know if you would like any other changes or additions!
 - [ ] More health sources
   - [ ] Google Fit
   - [ ] ...
-- [ ] Customisations
+- [ ] Self-hosted 
+- [ ] Your own LLM, 100% private
