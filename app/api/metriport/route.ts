@@ -203,7 +203,7 @@ export async function POST(req: Request) {
           if (error) {
             console.error('Error inserting activity:', error)
           }
-        } else if (summary?.energy_expenditure?.active_kcal) {
+        } else if (summary?.energy_expenditure) {
           const {
             energy_expenditure
           } = summary
@@ -213,7 +213,7 @@ export async function POST(req: Request) {
             .insert({
               user_id: userExists.id,
               start_time: start_time,
-              calories_burned: energy_expenditure.active_kcal,
+              energy_expenditure: energy_expenditure,
               date: metadata.date,
               hour: metadata.hour,
               source: metadata.source,
