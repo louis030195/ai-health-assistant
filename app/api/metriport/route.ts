@@ -5,7 +5,7 @@ import { NextRequest } from "next/server"
 export const runtime = 'edge'
 // export const maxDuration = 300
 
-export async function POST(req: NextRequest) {
+export async function POST(req: Request) {
   const body = await req.json()
   const webhookKey = process.env.METRIPORT_WEBHOOK_KEY
 
@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
       // Check if user exists in the 'users' table
       const { data: userExists, error } = await supabase
         .from('users')
-        .select('metriport_user_id')
+        .select('metriport_user_id, id')
         .eq('metriport_user_id', userId)
         .single()
 
@@ -56,8 +56,29 @@ export async function POST(req: NextRequest) {
         return  // Skip to the next user
       }
 
+      // Process biometrics data
+      const biometricsData = user?.biometrics ?? []
+      for (const biometric of biometricsData) {
+        const { metadata, heart_rate, respiration } = biometric
+
+        const { date, hour, source } = metadata
+        const start_time = `${date}T${hour}:00Z` // Construct start_time from date and hour
+        const end_time = start_time // For simplicity, let's assume end_time is the same as start_time
+
+        await supabase
+          .from('biometrics')
+          .insert({
+            user_id: userExists.id,
+            start_time,
+            end_time,
+            heart_rate, // Insert the whole heart_rate JSON
+            respiration // Insert the whole respiration JSON
+            // Add other biometrics fields here as needed
+          })
+      }
+
       // Process sleep data
-      const sleepData = user.sleep
+      const sleepData = user?.sleep ?? []
       for (const sleep of sleepData) {
         const { start_time, end_time, durations, biometrics } = sleep
 
@@ -74,7 +95,7 @@ export async function POST(req: NextRequest) {
         await supabase
           .from('sleep')
           .insert({
-            user_id: userId,
+            user_id: userExists.id,
             start_time,
             end_time,
             total_minutes: total_seconds / 60,
@@ -86,7 +107,7 @@ export async function POST(req: NextRequest) {
           })
       }
 
-      const nutritionData = user.nutrition
+      const nutritionData = user?.nutrition ?? []
 
 
       for (const food of nutritionData.foods) {
@@ -104,7 +125,7 @@ export async function POST(req: NextRequest) {
         await supabase
           .from('foods')
           .insert({
-            user_id: userId,
+            user_id: userExists.id,
             start_time,
             end_time,
             name,
@@ -115,7 +136,7 @@ export async function POST(req: NextRequest) {
           })
 
       }
-      const activityData = user.activity
+      const activityData = user?.activity ?? []
       for (const activity of activityData) {
 
         const {
@@ -138,7 +159,7 @@ export async function POST(req: NextRequest) {
         await supabase
           .from('activities')
           .insert({
-            user_id: userId,
+            user_id: userExists.id,
             name,
             type,
             start_time,
@@ -152,8 +173,10 @@ export async function POST(req: NextRequest) {
       }
     })
 
-    // @ts-ignore
-    req.waitUntil(Promise.all(promises))
+    // // @ts-ignore
+    // req.waitUntil(Promise.all(promises))
+    await Promise.all(promises)
+
 
     return new Response(JSON.stringify({}), {
       status: 200,
