@@ -1,0 +1,514 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		A648D1ED2AAB87900077574B /* WhatsappConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A648D1EC2AAB87900077574B /* WhatsappConnectView.swift */; };
+		A648D1EF2AAB87980077574B /* WhatsappConnectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A648D1EE2AAB87980077574B /* WhatsappConnectViewModel.swift */; };
+		A648D1F22AABEB640077574B /* MetriportSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A648D1F12AABEB640077574B /* MetriportSDK */; };
+		A648D1F62AACD8FA0077574B /* Metriport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A648D1F52AACD8FA0077574B /* Metriport.swift */; };
+		BF5FC0342AA2461A00BD9125 /* MediarAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0332AA2461A00BD9125 /* MediarAIApp.swift */; };
+		BF5FC0362AA2461A00BD9125 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0352AA2461A00BD9125 /* ContentView.swift */; };
+		BF5FC0382AA2461A00BD9125 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5FC0372AA2461A00BD9125 /* Assets.xcassets */; };
+		BF5FC03B2AA2461A00BD9125 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5FC03A2AA2461A00BD9125 /* Preview Assets.xcassets */; };
+		BF5FC0422AA2462B00BD9125 /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0412AA2462B00BD9125 /* AlertView.swift */; };
+		BF5FC0442AA248DC00BD9125 /* TabsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0432AA248DC00BD9125 /* TabsView.swift */; };
+		BF5FC0462AA2493700BD9125 /* SigninView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0452AA2493700BD9125 /* SigninView.swift */; };
+		BF5FC0492AA24AF500BD9125 /* Colors.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0482AA24AF500BD9125 /* Colors.swift */; };
+		BF5FC04B2AA24F5200BD9125 /* Button.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC04A2AA24F5200BD9125 /* Button.swift */; };
+		BF5FC04D2AA254E500BD9125 /* LabelTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC04C2AA254E500BD9125 /* LabelTextField.swift */; };
+		BF5FC0522AA255DD00BD9125 /* AppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0512AA255DD00BD9125 /* AppView.swift */; };
+		BF5FC0552AA2561F00BD9125 /* Supabase in Frameworks */ = {isa = PBXBuildFile; productRef = BF5FC0542AA2561F00BD9125 /* Supabase */; };
+		BF5FC0572AA2563B00BD9125 /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0562AA2563B00BD9125 /* Model.swift */; };
+		BF5FC0592AA2565700BD9125 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0582AA2565700BD9125 /* Constants.swift */; };
+		BF5FC05B2AA258FB00BD9125 /* SyncView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC05A2AA258FB00BD9125 /* SyncView.swift */; };
+		BF5FC05F2AA348B100BD9125 /* HealthKitService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC05E2AA348B100BD9125 /* HealthKitService.swift */; };
+		BF5FC0612AA348DF00BD9125 /* HealthModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0602AA348DF00BD9125 /* HealthModel.swift */; };
+		BF5FC0652AA34A5100BD9125 /* SyncViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0642AA34A5100BD9125 /* SyncViewModel.swift */; };
+		BF5FC0672AA34B4400BD9125 /* HealthDatabaseService.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0662AA34B4400BD9125 /* HealthDatabaseService.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		A648D1EC2AAB87900077574B /* WhatsappConnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsappConnectView.swift; sourceTree = "<group>"; };
+		A648D1EE2AAB87980077574B /* WhatsappConnectViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsappConnectViewModel.swift; sourceTree = "<group>"; };
+		A648D1F52AACD8FA0077574B /* Metriport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Metriport.swift; sourceTree = "<group>"; };
+		BF5FC0302AA2461A00BD9125 /* MediarAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediarAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		BF5FC0332AA2461A00BD9125 /* MediarAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediarAIApp.swift; sourceTree = "<group>"; };
+		BF5FC0352AA2461A00BD9125 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		BF5FC0372AA2461A00BD9125 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		BF5FC03A2AA2461A00BD9125 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		BF5FC0412AA2462B00BD9125 /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
+		BF5FC0432AA248DC00BD9125 /* TabsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabsView.swift; sourceTree = "<group>"; };
+		BF5FC0452AA2493700BD9125 /* SigninView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SigninView.swift; sourceTree = "<group>"; };
+		BF5FC0482AA24AF500BD9125 /* Colors.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Colors.swift; sourceTree = "<group>"; };
+		BF5FC04A2AA24F5200BD9125 /* Button.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Button.swift; sourceTree = "<group>"; };
+		BF5FC04C2AA254E500BD9125 /* LabelTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabelTextField.swift; sourceTree = "<group>"; };
+		BF5FC0512AA255DD00BD9125 /* AppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppView.swift; sourceTree = "<group>"; };
+		BF5FC0562AA2563B00BD9125 /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
+		BF5FC0582AA2565700BD9125 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
+		BF5FC05A2AA258FB00BD9125 /* SyncView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncView.swift; sourceTree = "<group>"; };
+		BF5FC05C2AA33F0E00BD9125 /* MediarAI.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MediarAI.entitlements; sourceTree = "<group>"; };
+		BF5FC05E2AA348B100BD9125 /* HealthKitService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthKitService.swift; sourceTree = "<group>"; };
+		BF5FC0602AA348DF00BD9125 /* HealthModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthModel.swift; sourceTree = "<group>"; };
+		BF5FC0642AA34A5100BD9125 /* SyncViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncViewModel.swift; sourceTree = "<group>"; };
+		BF5FC0662AA34B4400BD9125 /* HealthDatabaseService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HealthDatabaseService.swift; sourceTree = "<group>"; };
+		BF5FC0682AA3AB1F00BD9125 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		BF5FC02D2AA2461A00BD9125 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				A648D1F22AABEB640077574B /* MetriportSDK in Frameworks */,
+				BF5FC0552AA2561F00BD9125 /* Supabase in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		BF5FC0272AA2461A00BD9125 = {
+			isa = PBXGroup;
+			children = (
+				BF5FC0322AA2461A00BD9125 /* MediarAI */,
+				BF5FC0312AA2461A00BD9125 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		BF5FC0312AA2461A00BD9125 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				BF5FC0302AA2461A00BD9125 /* MediarAI.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		BF5FC0322AA2461A00BD9125 /* MediarAI */ = {
+			isa = PBXGroup;
+			children = (
+				BF5FC0682AA3AB1F00BD9125 /* Info.plist */,
+				BF5FC05D2AA348A100BD9125 /* Services */,
+				BF5FC05C2AA33F0E00BD9125 /* MediarAI.entitlements */,
+				BF5FC0502AA2559300BD9125 /* Models */,
+				BF5FC04F2AA2558000BD9125 /* ViewModels */,
+				BF5FC04E2AA2557B00BD9125 /* Views */,
+				BF5FC0472AA24AEC00BD9125 /* Components */,
+				BF5FC0332AA2461A00BD9125 /* MediarAIApp.swift */,
+				BF5FC0352AA2461A00BD9125 /* ContentView.swift */,
+				BF5FC0372AA2461A00BD9125 /* Assets.xcassets */,
+				BF5FC0392AA2461A00BD9125 /* Preview Content */,
+				BF5FC0512AA255DD00BD9125 /* AppView.swift */,
+				BF5FC0582AA2565700BD9125 /* Constants.swift */,
+			);
+			path = MediarAI;
+			sourceTree = "<group>";
+		};
+		BF5FC0392AA2461A00BD9125 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				BF5FC03A2AA2461A00BD9125 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		BF5FC0472AA24AEC00BD9125 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				A648D1F52AACD8FA0077574B /* Metriport.swift */,
+				BF5FC0482AA24AF500BD9125 /* Colors.swift */,
+				BF5FC04A2AA24F5200BD9125 /* Button.swift */,
+				BF5FC04C2AA254E500BD9125 /* LabelTextField.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		BF5FC04E2AA2557B00BD9125 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				A648D1EC2AAB87900077574B /* WhatsappConnectView.swift */,
+				BF5FC0452AA2493700BD9125 /* SigninView.swift */,
+				BF5FC0412AA2462B00BD9125 /* AlertView.swift */,
+				BF5FC0432AA248DC00BD9125 /* TabsView.swift */,
+				BF5FC05A2AA258FB00BD9125 /* SyncView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		BF5FC04F2AA2558000BD9125 /* ViewModels */ = {
+			isa = PBXGroup;
+			children = (
+				A648D1EE2AAB87980077574B /* WhatsappConnectViewModel.swift */,
+				BF5FC0642AA34A5100BD9125 /* SyncViewModel.swift */,
+			);
+			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		BF5FC0502AA2559300BD9125 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				BF5FC0562AA2563B00BD9125 /* Model.swift */,
+				BF5FC0602AA348DF00BD9125 /* HealthModel.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		BF5FC05D2AA348A100BD9125 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				BF5FC05E2AA348B100BD9125 /* HealthKitService.swift */,
+				BF5FC0662AA34B4400BD9125 /* HealthDatabaseService.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		BF5FC02F2AA2461A00BD9125 /* MediarAI */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = BF5FC03E2AA2461A00BD9125 /* Build configuration list for PBXNativeTarget "MediarAI" */;
+			buildPhases = (
+				BF5FC02C2AA2461A00BD9125 /* Sources */,
+				BF5FC02D2AA2461A00BD9125 /* Frameworks */,
+				BF5FC02E2AA2461A00BD9125 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = MediarAI;
+			packageProductDependencies = (
+				BF5FC0542AA2561F00BD9125 /* Supabase */,
+				A648D1F12AABEB640077574B /* MetriportSDK */,
+			);
+			productName = MediarAI;
+			productReference = BF5FC0302AA2461A00BD9125 /* MediarAI.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		BF5FC0282AA2461A00BD9125 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1430;
+				LastUpgradeCheck = 1430;
+				TargetAttributes = {
+					BF5FC02F2AA2461A00BD9125 = {
+						CreatedOnToolsVersion = 14.3.1;
+					};
+				};
+			};
+			buildConfigurationList = BF5FC02B2AA2461A00BD9125 /* Build configuration list for PBXProject "MediarAI" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = BF5FC0272AA2461A00BD9125;
+			packageReferences = (
+				BF5FC0532AA2561F00BD9125 /* XCRemoteSwiftPackageReference "supabase-swift" */,
+				A648D1F02AABEB640077574B /* XCRemoteSwiftPackageReference "metriport-ios-sdk" */,
+			);
+			productRefGroup = BF5FC0312AA2461A00BD9125 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				BF5FC02F2AA2461A00BD9125 /* MediarAI */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		BF5FC02E2AA2461A00BD9125 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF5FC03B2AA2461A00BD9125 /* Preview Assets.xcassets in Resources */,
+				BF5FC0382AA2461A00BD9125 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		BF5FC02C2AA2461A00BD9125 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				BF5FC05F2AA348B100BD9125 /* HealthKitService.swift in Sources */,
+				BF5FC04D2AA254E500BD9125 /* LabelTextField.swift in Sources */,
+				BF5FC0592AA2565700BD9125 /* Constants.swift in Sources */,
+				A648D1F62AACD8FA0077574B /* Metriport.swift in Sources */,
+				A648D1ED2AAB87900077574B /* WhatsappConnectView.swift in Sources */,
+				BF5FC04B2AA24F5200BD9125 /* Button.swift in Sources */,
+				BF5FC0522AA255DD00BD9125 /* AppView.swift in Sources */,
+				BF5FC0422AA2462B00BD9125 /* AlertView.swift in Sources */,
+				BF5FC0672AA34B4400BD9125 /* HealthDatabaseService.swift in Sources */,
+				BF5FC0652AA34A5100BD9125 /* SyncViewModel.swift in Sources */,
+				BF5FC0492AA24AF500BD9125 /* Colors.swift in Sources */,
+				BF5FC0572AA2563B00BD9125 /* Model.swift in Sources */,
+				BF5FC0362AA2461A00BD9125 /* ContentView.swift in Sources */,
+				BF5FC0462AA2493700BD9125 /* SigninView.swift in Sources */,
+				BF5FC05B2AA258FB00BD9125 /* SyncView.swift in Sources */,
+				BF5FC0442AA248DC00BD9125 /* TabsView.swift in Sources */,
+				A648D1EF2AAB87980077574B /* WhatsappConnectViewModel.swift in Sources */,
+				BF5FC0612AA348DF00BD9125 /* HealthModel.swift in Sources */,
+				BF5FC0342AA2461A00BD9125 /* MediarAIApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		BF5FC03C2AA2461A00BD9125 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.3;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		BF5FC03D2AA2461A00BD9125 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.3;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		BF5FC03F2AA2461A00BD9125 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MediarAI/MediarAI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MediarAI/Preview Content\"";
+				DEVELOPMENT_TEAM = URFF7QHPUR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MediarAI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Mediar;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Your health records will be used to make medical analysis";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Your health records will be shared to generate medical insights";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Your health data can be updated to provide more detailed insights";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.mediar.Mediar;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		BF5FC0402AA2461A00BD9125 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = MediarAI/MediarAI.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"MediarAI/Preview Content\"";
+				DEVELOPMENT_TEAM = URFF7QHPUR;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = MediarAI/Info.plist;
+				INFOPLIST_KEY_CFBundleDisplayName = Mediar;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.healthcare-fitness";
+				INFOPLIST_KEY_NSHealthClinicalHealthRecordsShareUsageDescription = "Your health records will be used to make medical analysis";
+				INFOPLIST_KEY_NSHealthShareUsageDescription = "Your health records will be shared to generate medical insights";
+				INFOPLIST_KEY_NSHealthUpdateUsageDescription = "Your health data can be updated to provide more detailed insights";
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ai.mediar.Mediar;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		BF5FC02B2AA2461A00BD9125 /* Build configuration list for PBXProject "MediarAI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BF5FC03C2AA2461A00BD9125 /* Debug */,
+				BF5FC03D2AA2461A00BD9125 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		BF5FC03E2AA2461A00BD9125 /* Build configuration list for PBXNativeTarget "MediarAI" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				BF5FC03F2AA2461A00BD9125 /* Debug */,
+				BF5FC0402AA2461A00BD9125 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		A648D1F02AABEB640077574B /* XCRemoteSwiftPackageReference "metriport-ios-sdk" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/metriport/metriport-ios-sdk";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.0.0;
+			};
+		};
+		BF5FC0532AA2561F00BD9125 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/supabase/supabase-swift.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		A648D1F12AABEB640077574B /* MetriportSDK */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A648D1F02AABEB640077574B /* XCRemoteSwiftPackageReference "metriport-ios-sdk" */;
+			productName = MetriportSDK;
+		};
+		BF5FC0542AA2561F00BD9125 /* Supabase */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = BF5FC0532AA2561F00BD9125 /* XCRemoteSwiftPackageReference "supabase-swift" */;
+			productName = Supabase;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = BF5FC0282AA2461A00BD9125 /* Project object */;
+}

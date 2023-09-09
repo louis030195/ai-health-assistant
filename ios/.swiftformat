@@ -1,0 +1,1 @@
+--binarygrouping none --decimalgrouping none --hexgrouping none --octalgrouping none --semicolons never --stripunusedargs closure-only --wrapcollections before-first
