@@ -82,7 +82,7 @@ export async function POST(req: Request) {
       for (const sleep of sleepData) {
         const { start_time, end_time, durations, biometrics } = sleep
 
-        const { avg_bpm } = biometrics.heart_rate
+        const { avg_bpm } = biometrics?.heart_rate ?? { avg_bpm: null }
 
         const {
           total_seconds,
@@ -139,37 +139,52 @@ export async function POST(req: Request) {
       const activityData = user?.activity ?? []
       for (const activity of activityData) {
 
-        const {
-          start_time,
-          end_time,
-          name,
-          type
-        } = activity.summary
 
-        const {
-          active_minutes,
-          heart_rate_zones
-        } = activity.summary.durations
-
-        const {
-          avg_heart_rate,
-          max_heart_rate
-        } = activity.summary.biometrics
-
-        await supabase
-          .from('activities')
-          .insert({
-            user_id: userExists.id,
-            name,
-            type,
+        // Check if durations exists and contains active_minutes
+        if (activity.summary.durations && 'active_minutes' in activity.summary.durations) {
+          const {
             start_time,
             end_time,
+            name,
+            type
+          } = activity.summary
+          const {
             active_minutes,
-            avg_heart_rate,
-            max_heart_rate,
-            heart_rate_zones // insert the whole JSON
-          })
+            heart_rate_zones
+          } = activity.summary.durations
 
+          const {
+            avg_heart_rate,
+            max_heart_rate
+          } = activity.summary.biometrics
+
+          await supabase
+            .from('activities')
+            .insert({
+              user_id: userExists.id,
+              name,
+              type,
+              start_time,
+              end_time,
+              active_minutes,
+              avg_heart_rate,
+              max_heart_rate,
+              heart_rate_zones // insert the whole JSON
+            })
+        } else {
+
+          const {
+            energy_expenditure
+          } = activity.summary
+          const start_time = `${activity.metadata.date}T${activity.metadata.hour}:00Z`
+          await supabase
+            .from('activities')
+            .insert({
+              user_id: userExists.id,
+              start_time: start_time,
+              calories_burned: energy_expenditure.active_kcal
+            })
+        }
       }
     })
 
