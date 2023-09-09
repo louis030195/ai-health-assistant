@@ -73,15 +73,19 @@ export async function POST(req: Request) {
             start_time,
             end_time,
             heart_rate, // Insert the whole heart_rate JSON
-            respiration // Insert the whole respiration JSON
+            respiration, // Insert the whole respiration JSON
+            date,
+            hour,
+            source,
+            data_source: metadata.data_source,
+            error: metadata.error
             // Add other biometrics fields here as needed
           })
       }
-
       // Process sleep data
       const sleepData = user?.sleep ?? []
       for (const sleep of sleepData) {
-        const { start_time, end_time, durations, biometrics } = sleep
+        const { start_time, end_time, durations, biometrics, metadata } = sleep
 
         const { avg_bpm } = biometrics?.heart_rate ?? { avg_bpm: null }
 
@@ -104,15 +108,18 @@ export async function POST(req: Request) {
             deep_minutes: deep_seconds / 60,
             rem_minutes: rem_seconds / 60,
             light_minutes: light_seconds / 60,
-            avg_heart_rate: avg_bpm
+            avg_heart_rate: avg_bpm,
+            date: metadata.date,
+            hour: metadata.hour,
+            source: metadata.source,
+            data_source: metadata.data_source,
+            error: metadata.error
           })
       }
 
+      // Process nutrition data
       const nutritionData = user?.nutrition ?? []
-
-
       for (const food of nutritionData?.foods ?? []) {
-
         const {
           start_time, // use start_time from sleep before food
           end_time, // and end_time from sleep after food
@@ -120,7 +127,8 @@ export async function POST(req: Request) {
           brand,
           servings,
           calories,
-          nutrition_facts // insert the whole nutrition JSON
+          nutrition_facts, // insert the whole nutrition JSON
+          metadata
         } = food
 
         await supabase
@@ -133,31 +141,37 @@ export async function POST(req: Request) {
             brand,
             servings,
             calories,
-            nutrition_facts
+            nutrition_facts,
+            date: metadata.date,
+            hour: metadata.hour,
+            source: metadata.source,
+            data_source: metadata.data_source,
+            error: metadata.error
           })
-
       }
+
+      // Process activity data
       const activityData = user?.activity ?? []
       for (const activity of activityData) {
-
+        const { summary, metadata } = activity
 
         // Check if durations exists and contains active_minutes
-        if (activity.summary?.durations?.active_minutes) {
+        if (summary?.durations?.active_minutes) {
           const {
             start_time,
             end_time,
             name,
             type
-          } = activity.summary
+          } = summary
           const {
             active_minutes,
             heart_rate_zones
-          } = activity.summary.durations
+          } = summary.durations
 
           const {
             avg_heart_rate,
             max_heart_rate
-          } = activity.summary.biometrics
+          } = summary.biometrics
 
           await supabase
             .from('activities')
@@ -170,20 +184,29 @@ export async function POST(req: Request) {
               active_minutes,
               avg_heart_rate,
               max_heart_rate,
-              heart_rate_zones // insert the whole JSON
+              heart_rate_zones, // insert the whole JSON
+              date: metadata.date,
+              hour: metadata.hour,
+              source: metadata.source,
+              data_source: metadata.data_source,
+              error: metadata.error
             })
-        } else if (activity?.summary?.energy_expenditure?.active_kcal) {
-
+        } else if (summary?.energy_expenditure?.active_kcal) {
           const {
             energy_expenditure
-          } = activity.summary
-          const start_time = `${activity.metadata.date}T${activity.metadata.hour}:00Z`
+          } = summary
+          const start_time = `${metadata.date}T${metadata.hour}:00Z`
           await supabase
             .from('activities')
             .insert({
               user_id: userExists.id,
               start_time: start_time,
-              calories_burned: energy_expenditure.active_kcal
+              calories_burned: energy_expenditure.active_kcal,
+              date: metadata.date,
+              hour: metadata.hour,
+              source: metadata.source,
+              data_source: metadata.data_source,
+              error: metadata.error
             })
         }
       }
