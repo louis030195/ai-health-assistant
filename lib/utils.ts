@@ -42,7 +42,10 @@ export function buildInsightCleanerPrompt(data: string, user: any) {
 Human: ${baseMediarAI}
 The end goal is to generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
 based on this data provided by the wearable devices: ${JSON.stringify(data)}
+
 User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
+User metadata: ${JSON.stringify(user)}
+
 ${generalMediarAIInstructions}
 
 PLEASE REMOVE THE NOISE FROM THIS DATA THAT WILL BE FED INTO ANOTHER LLM.
@@ -54,12 +57,13 @@ Assistant:`;
 }
 
 export function buildIntrospectionPrompt(data: string, user: any) {
-  const userReference = user.fullName ? ` for ${user.fullName}` : '';
   const prompt = `
 
 Human: ${baseMediarAI}
-Generate a question${userReference} to get some information about the user's progress on his goal of: ${generateGoalPrompt(user.goal)}
+Generate a question to get some information about the user's progress on his goal of: ${generateGoalPrompt(user.goal)}
 based on this user data: ${JSON.stringify(data)} and his/her goal of: ${generateGoalPrompt(user.goal)}.
+
+User metadata: ${JSON.stringify(user)}
 
 For example, if the user goal is to "increase my running performance", and his last run was 2 days ago, you could ask him "How was your last run?".
 Or if the user goal is to "Lose 5 kg", and his weight is 2 kg less than 2 weeks ago, you could ask him "How is your weight loss going?".
@@ -83,11 +87,14 @@ export function buildInsightPrompt(data: string, user: any) {
   const prompt = `
 
 Human: ${baseMediarAI}
-Generate a list of insights${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
+Generate a list of insights about how the user's activities (tags) influence their health and cognitive performance, 
 based on this user data: ${JSON.stringify(data)} and his/her goal of: ${generateGoalPrompt(user.goal)}.
 
 Eventually provide actionable insights.
+
 User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
+User metadata: ${JSON.stringify(user)}
+
 ${generalMediarAIInstructions}
 - Your answers are only bullet points.
 - Prioritize accuracy by cross-referencing the tags and wearable data to ensure the insights are accurate. Example: "when you have a particularly hard workout in the morning, you tend to get more deep sleep". If you are not sure about something, it's better to not include it. 
@@ -106,12 +113,14 @@ Assistant:`;
 }
 
 export function buildQuestionPrompt(data: string, user: any, question: string) {
-  const userReference = user.fullName ? ` for ${user.fullName}` : '';
   const prompt = `
 
 Human: ${baseMediarAI}
-Generate an answer to ${userReference} about how the user's activities (tags) influence their health and cognitive performance, 
+Generate an answer to the user's activities (tags) influence their health and cognitive performance, 
 based on this user data: ${JSON.stringify(data)} and his/her goal of: ${generateGoalPrompt(user.goal)}.
+
+User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
+User metadata: ${JSON.stringify(user)}
 
 Eventually provide actionable insights.
 User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}

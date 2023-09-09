@@ -7,7 +7,7 @@ import { HfInference } from "@huggingface/inference";
 import { baseMediarAI, buildQuestionPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
 import { llm, llmPrivate } from "@/utils/llm";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
-import { generateDataStringsAndFetchData } from "@/lib/get-data";
+import { generateDataStringsAndFetchData, generateMoreDataStrings } from "@/lib/get-data";
 import { defaultUnclassifiedMessage, feedbackMessage, imageTagMessage, tagMessage } from "@/lib/messages";
 
 
@@ -241,10 +241,16 @@ export async function POST(req: Request) {
       // const yesterdayFromOneAm = new Date(new Date(yesterday).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone })
       const threeDaysAgoFromOneAm = new Date(new Date(threeDaysAgo).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone });
 
-      const { success, neurosString, tagsString, ourasString, appleHealthString } = await generateDataStringsAndFetchData(user, threeDaysAgoFromOneAm);
-      if (!success) return new Response(``, { status: 200 });
+      const [healthDataOne, healthDataTwo] = await Promise.all([
+        generateDataStringsAndFetchData(user, threeDaysAgoFromOneAm),
+        generateMoreDataStrings(user, threeDaysAgoFromOneAm)
+      ]);
+
+      if (!healthDataOne && !healthDataTwo) return new Response(``, { status: 200 });
       const response = await llm(buildQuestionPrompt(
-        `Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`,
+        `Data since ${threeDaysAgoFromOneAm}:
+${healthDataOne}
+${healthDataTwo}`,
         user,
         parsed.Body
       ));
