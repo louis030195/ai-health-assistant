@@ -68,7 +68,8 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
             </div>
 
             <div className="space-y-4 flex flex-col items-center">
-                {status === false &&
+                {/* TODO: broken */}
+                {/* {status === false &&
                     <div className='flex items-center space-x-2 justify-center text-red-500'>
                         <span className="text-sm">Connection invalid. Please reconnect.</span>
                     </div>
@@ -79,7 +80,7 @@ export default function OuraConnect({ onboarding, className, getOuraAccessToken,
                         <div className="w-3 h-3 bg-green-500 rounded-full animate-ping" />
                         <span className="text-sm text-gray-400">Connected to Oura</span>
                     </div>
-                }
+                } */}
                 <Button
                     className="text-white mx-auto w-[80%] lg:w-[50%]"
                     onClick={handleConnect}

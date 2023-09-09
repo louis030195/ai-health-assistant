@@ -32,6 +32,11 @@ export default async function Onboarding() {
                 session={session} onboarding={true} />
 
             {/* <OuraImport session={session} /> */}
+            {/* user an other device? contact us ... mailto:louis@mediar.ai */}
+            <a href="mailto:louis@mediar.ai"
+            // blue underline
+                className="text-center text-sm mt-2 underline text-blue-500">
+                Use another device or health app? Contact us</a>
         </div>
     )
 }
