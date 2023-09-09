@@ -25,6 +25,7 @@ import { OuraHrvChart } from './OuraHrvChart';
 import SaveTimezone from './SaveTimezone';
 import { GoalInput } from './GoalInput';
 import AppleHealthConnect from '@/components/AppleHealthConnect';
+import MetriportConnect from '@/components/MetriportConnect';
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
@@ -70,6 +71,7 @@ export default async function Dashboard() {
     <div className="flex flex-col  gap-10 items-center">
       <SaveTimezone userId={session?.user?.id} saveUserTimezoneServer={saveUserTimezoneServer} />
       <PosthogMail session={session!} />
+      {/* <MetriportConnect userId={session!.user.id} /> */}
       <AppleHealthConnect
         customTitle="Connect Apple Health"
         appStoreLink="https://testflight.apple.com/join/ofhHbnbd" />

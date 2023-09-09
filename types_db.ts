@@ -199,18 +199,21 @@ export interface Database {
           created_at: string
           id: number
           text: string | null
+          type: string | null
           user_id: string
         }
         Insert: {
           created_at?: string
           id?: number
           text?: string | null
+          type?: string | null
           user_id: string
         }
         Update: {
           created_at?: string
           id?: number
           text?: string | null
+          type?: string | null
           user_id?: string
         }
         Relationships: [
@@ -408,6 +411,7 @@ export interface Database {
           goal: string | null
           id: string
           metadata: Json | null
+          metriport_user_id: string | null
           neurosity: Json | null
           oura: Json | null
           payment_method: Json | null
@@ -424,6 +428,7 @@ export interface Database {
           goal?: string | null
           id: string
           metadata?: Json | null
+          metriport_user_id?: string | null
           neurosity?: Json | null
           oura?: Json | null
           payment_method?: Json | null
@@ -440,6 +445,7 @@ export interface Database {
           goal?: string | null
           id?: string
           metadata?: Json | null
+          metriport_user_id?: string | null
           neurosity?: Json | null
           oura?: Json | null
           payment_method?: Json | null

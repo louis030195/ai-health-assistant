@@ -2,7 +2,7 @@ import { Database } from "@/types_db";
 import { MetriportDevicesApi, MetriportMedicalApi } from "@metriport/api-sdk";
 import { createClient } from "@supabase/supabase-js";
 
-export const runtime = 'edge'
+// export const runtime = 'edge'
 // export const maxDuration = 300
 
 const metriportClient = new MetriportDevicesApi(process.env.METRIPORT_API_KEY!, {
@@ -42,6 +42,7 @@ export async function POST(req: Request) {
   // create a session token to be used in the Metriport Connect widget
   const connectToken = await metriportClient.getConnectToken(metriportUserId);
 
+  console.log('metriport', { userId, metriportUserId, connectToken })
   return new Response(JSON.stringify({
     token: connectToken
   }), {
