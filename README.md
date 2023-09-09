@@ -1,7 +1,7 @@
 
 <p align="center">
 
-<img width="150" alt="mediarlogo" src="https://github.com/louis030195/mediar/assets/25003283/ef2e6639-483a-46f6-ae75-907f71add5b2">
+<img width="150" alt="mediarlogo" src="https://github.com/louis030195/mediar/assets/25003283/f55e6467-b5eb-45c1-932a-ad37c92debb8">
 
 <h1 align="center">Mediar</h1>  
 
@@ -16,8 +16,7 @@
 
 </p>
 
-https://github.com/louis030195/mediar/assets/25003283/2472b511-e225-4794-b6c0-9b64f2d806ea.mp4
-
+https://github.com/louis030195/mediar/assets/25003283/f4b44c25-0bb1-4687-b423-02125987997f
 
 Mediar is your personal AI-powered health assistant. It provides daily insights and prompts based on your health data, goals, and lifestyle to help you build healthy habits. 
 
