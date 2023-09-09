@@ -17,7 +17,7 @@
 
 <video 
   style="display: flex; justify-content: center;"
-  src='https://github.com/louis030195/mediar/assets/25003283/2472b511-e225-4794-b6c0-9b64f2d806ea' width="100%"/>
+  src='https://github.com/louis030195/mediar/assets/25003283/2472b511-e225-4794-b6c0-9b64f2d806ea.mp4' width="100%"/>
 
 
 </p>
