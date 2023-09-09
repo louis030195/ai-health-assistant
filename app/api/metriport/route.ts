@@ -30,12 +30,13 @@ export async function POST(req: Request) {
 
   const supabase = createClient<Database>(process.env.SUPABASE_URL!, process.env.SUPABASE_KEY!)
 
+  let promises: Promise<any>[] = []
   // Check for user health data
   if (body.meta.type === 'devices.health-data') {
 
     const usersData = body.users
 
-    const promises = usersData.map(async (user: any) => {
+    promises = usersData.map(async (user: any) => {
 
       const { userId } = user
 
@@ -190,14 +191,16 @@ export async function POST(req: Request) {
 
     // // @ts-ignore
     // req.waitUntil(Promise.all(promises))
-    await Promise.all(promises)
 
 
-    return new Response(JSON.stringify({}), {
-      status: 200,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+
   }
+  await Promise.all(promises)
+
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
 }
