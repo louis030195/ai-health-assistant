@@ -110,7 +110,7 @@ export async function POST(req: Request) {
       const nutritionData = user?.nutrition ?? []
 
 
-      for (const food of nutritionData.foods) {
+      for (const food of nutritionData?.foods ?? []) {
 
         const {
           start_time, // use start_time from sleep before food
