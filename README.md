@@ -23,15 +23,15 @@ Mediar uses [Metriport](https://metriport.com) for secure and private access to 
 
 ## Key features
 
-- Connects with your wearables and health apps via Apple Health
+- Connects with your wearables and health apps via Apple Health, Google Fit, Garmin, Fitbit, etc.
 - Set a health goal and get personalized prompts based on your progress  
-- Send messages, photos, voice notes to get tailored recommendations
+- Send messages, photos, voice notes of what you eat, drink, do, feel, to get tailored recommendations
 - Receive daily insights based on your lifestyle, habits and sensor data
-- Available on iOS, Android and Web
+- Available on WhatsApp and Telegram
 
 ## Getting started
 
-The fastest way to get started is to sign up on our [website](https://mediar.com) and connect your WhatsApp account.
+The fastest way to get started is to sign up on our [website](https://mediar.ai/signin) and connect your WhatsApp account.
 
 ![Onboarding Mockup](https://via.placeholder.com/300x200)
 
@@ -41,7 +41,7 @@ You'll then be guided through setting a health goal, connecting data sources lik
 
 Check out our [Docs](https://docs.mediar.com) for guides and API references.
 
-Ask questions and get support in our [Discord community](https://discord.gg/abcd).
+Ask questions and get support in our [Discord community](https://discord.gg/pFKpxYpZEa).
 
 ## Contributing
 
