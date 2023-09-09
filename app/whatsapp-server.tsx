@@ -195,6 +195,6 @@ export const listWhatsAppMessagesFromNumber = async (toNumber: string): Promise<
     const data = await response.json() as ListMessagesResponse;
     return data.messages as Message[];
 }
-// listWhatsAppMessagesFromNumber("+33648140738").then(console.log).catch(console.error);
+// listWhatsAppMessagesFromNumber("+...").then(console.log).catch(console.error);
 
 
