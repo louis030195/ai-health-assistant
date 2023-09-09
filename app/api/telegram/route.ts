@@ -2,7 +2,7 @@ import { Database } from "@/types_db";
 import { createClient } from "@supabase/supabase-js";
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
-import { baseMediarAI, buildQuestionPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
+import { anonymiseUser, baseMediarAI, buildQuestionPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
 import TelegramBot from "node-telegram-bot-api";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 import { llm, llmPrivate } from "@/utils/llm";
@@ -349,10 +349,12 @@ export async function POST(req: Request) {
 
       // console.log("Prompt:", prompt);
 
+      const anonymisousUser = await anonymiseUser(user);
+
       const response = await llm(buildQuestionPrompt(`Data since ${threeDaysAgoFromOneAm}:
 ${healthDataOne}
 ${healthDataTwo}`,
-        user,
+        anonymisousUser,
         body.message.text
       ));
       console.log("Response:", response);

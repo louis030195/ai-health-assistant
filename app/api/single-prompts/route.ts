@@ -1,5 +1,5 @@
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
-import { baseMediarAI, buildInsightPrompt, buildIntrospectionPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
+import { anonymiseUser, baseMediarAI, buildInsightPrompt, buildIntrospectionPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
 import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -88,10 +88,11 @@ export async function POST(req: Request) {
     //   `Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`, user));
 
     // console.log("Prompt:", prompt);
-    
+
+    const anonymisousUser = await anonymiseUser(user);
     const intro = await llm(buildIntrospectionPrompt(`Data since ${threeDaysAgoFromOneAm}:
 ${healthDataOne}
-${healthDataTwo}`, user));
+${healthDataTwo}`, anonymisousUser));
 
     console.log("Generated intro:", intro);
 

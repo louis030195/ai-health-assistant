@@ -56,6 +56,17 @@ Assistant:`;
   return prompt;
 }
 
+export async function anonymiseUser (user: any) {
+  const response = await fetch('https://mediar-ai.relay.evervault.com/api/evervault-any', {
+    method: 'POST',
+    body: JSON.stringify(user),
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then(res => res.json())
+  return response
+}
+
 export function buildIntrospectionPrompt(data: string, user: any) {
   const prompt = `
 

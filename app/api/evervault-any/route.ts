@@ -26,5 +26,5 @@ const user = {
 
 
 
-// curl -X POST -d '{"id": "qwde-dsds-ewew","timezone": "America/New_York","full_name": "Bobby","telegram_chat_id": 123456789,"goal": "lose weight w Alice"}' -H "Content-Type: application/json" https://mediar-ai.relay.evervault.com/api/evervault-any
+// curl -X POST -d '{"timezone": "America/New_York","full_name": "Bobby","goal": "lose weight w Alice"}' -H "Content-Type: application/json" https://mediar-ai.relay.evervault.com/api/evervault-any
 

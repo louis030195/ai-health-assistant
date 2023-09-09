@@ -51,7 +51,8 @@ Let me know if you would like any other changes or additions!
 
 ### Roadmap
 
-- [ ] Evervault data anonymization 
+- [x] Evervault user prompt data anonymization 
+- [ ] Evervault whole prompt data anonymization 
 - [ ] Supabase column encryption
 - [ ] More health sources
   - [ ] Google Fit

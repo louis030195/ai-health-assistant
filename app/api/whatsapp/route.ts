@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 import { kv } from '@vercel/kv';
 import fetch from 'node-fetch';
 import { HfInference } from "@huggingface/inference";
-import { baseMediarAI, buildQuestionPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
+import { anonymiseUser, baseMediarAI, buildQuestionPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
 import { llm, llmPrivate } from "@/utils/llm";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 import { generateDataStringsAndFetchData, generateMoreDataStrings } from "@/lib/get-data";
@@ -247,11 +247,13 @@ export async function POST(req: Request) {
       ]);
 
       if (!healthDataOne && !healthDataTwo) return new Response(``, { status: 200 });
+      const anonymisousUser = await anonymiseUser(user);
+
       const response = await llm(buildQuestionPrompt(
         `Data since ${threeDaysAgoFromOneAm}:
 ${healthDataOne}
 ${healthDataTwo}`,
-        user,
+        anonymisousUser,
         parsed.Body
       ));
 
