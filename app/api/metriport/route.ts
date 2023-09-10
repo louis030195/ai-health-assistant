@@ -210,7 +210,7 @@ export async function POST(req: Request) {
           const start_time = `${metadata.date}T${metadata.hour}:00Z`
           const { error } = await supabase
             .from('activities')
-            .insert({
+            .upsert({
               user_id: userExists.id,
               start_time: start_time,
               energy_expenditure: energy_expenditure,
@@ -219,7 +219,7 @@ export async function POST(req: Request) {
               source: metadata.source,
               data_source: metadata.data_source,
               error: metadata.error
-            })
+            }, { onConflict: 'start_time' })
           if (error) {
             console.error('Error inserting activity:', error)
           }
