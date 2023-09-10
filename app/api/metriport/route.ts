@@ -68,7 +68,7 @@ export async function POST(req: Request) {
 
         const { error } = await supabase
           .from('biometrics')
-          .insert({
+          .upsert({
             user_id: userExists.id,
             start_time,
             end_time,
@@ -80,7 +80,7 @@ export async function POST(req: Request) {
             data_source: metadata.data_source,
             error: metadata.error
             // Add other biometrics fields here as needed
-          })
+          }, { onConflict: 'start_time' })
         if (error) {
           console.error('Error inserting biometrics:', error)
         }
