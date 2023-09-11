@@ -176,31 +176,31 @@ export async function getHealthData(user: any, threeDaysAgoFromOneAm: string) {
 
   let activitiesString = ''
   activities.data?.forEach(activity => {
-    activity.start_time = new Date(activity.start_time).toLocaleString('en-US', { timeZone: user.timezone })
+    if (activity.start_time) activity.start_time = new Date(activity.start_time).toLocaleString('en-US', { timeZone: user.timezone })
     activitiesString += JSON.stringify(activity)
   })
 
   let biometricsString = ''
   biometrics.data?.forEach(biometric => {
-    biometric.start_time = new Date(biometric.start_time).toLocaleString('en-US', { timeZone: user.timezone })
+    if (biometric.start_time) biometric.start_time = new Date(biometric.start_time).toLocaleString('en-US', { timeZone: user.timezone })
     biometricsString += JSON.stringify(biometric)
   })
 
   let bodyString = ''
   body.data?.forEach(bodyData => {
-    bodyData.start_time = new Date(bodyData.start_time).toLocaleString('en-US', { timeZone: user.timezone })
+    if (bodyData.start_time) bodyData.start_time = new Date(bodyData.start_time).toLocaleString('en-US', { timeZone: user.timezone })
     bodyString += JSON.stringify(bodyData)
   })
 
   let foodsString = ''
   foods.data?.forEach(food => {
-    food.start_time = new Date(food.start_time).toLocaleString('en-US', { timeZone: user.timezone })
+    if (food.start_time) food.start_time = new Date(food.start_time).toLocaleString('en-US', { timeZone: user.timezone })
     foodsString += JSON.stringify(food)
   })
 
   let sleepString = ''
   sleep.data?.forEach(sleepData => {
-    sleepData.start_time = new Date(sleepData.start_time).toLocaleString('en-US', { timeZone: user.timezone })
+    if (sleepData.start_time) sleepData.start_time = new Date(sleepData.start_time).toLocaleString('en-US', { timeZone: user.timezone })
     sleepString += JSON.stringify(sleepData)
   })
 
