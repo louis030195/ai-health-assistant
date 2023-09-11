@@ -32,8 +32,8 @@ export default async function Onboarding() {
 
             <h2 className="text-lg font-bold mb-2">And/Or Connect All Other Health Apps</h2>
             <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md w-full">
-                <h2 className="text-lg font-bold mb-2">Connect to Metriport</h2>
-                <p className="text-sm text-gray-600 mb-4">Connect your account to Metriport to get your health data.</p>
+                <h2 className="text-lg font-bold mb-2">Connect your health data</h2>
+                <p className="text-sm text-gray-600 mb-4">Connect your health/fitness accounts to get your health data.</p>
                 <MetriportConnect userId={session.user.id} />
             </div>
             <a href="mailto:louis@mediar.ai"
