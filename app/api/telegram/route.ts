@@ -173,7 +173,7 @@ export async function POST(req: Request) {
     // 1. find username in users table
     const { data, error } = await supabase
       .from('users')
-      .select('id, phone, timezone, full_name, telegram_chat_id')
+      .select('id, phone, timezone, full_name, telegram_chat_id, plan')
       .eq('telegram_username', body.message.from.username)
       .limit(1);
 
@@ -185,6 +185,8 @@ export async function POST(req: Request) {
       return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 200 });
     }
     const userId = data[0].id
+    const userPlan = data[0].plan || 'free'
+
     await track(userId)
 
     const date = new Date().toLocaleDateString('en-US', { timeZone: data[0].timezone });
@@ -192,8 +194,8 @@ export async function POST(req: Request) {
     const tagKey = TAG_PREFIX + userId + '_' + date;
 
     console.log("Question key:", questionKey, "Tag key:", tagKey);
-    const questionCount = await kv.get(questionKey);
-    const tagCount = await kv.get(tagKey);
+    const questionCount = (await kv.get(questionKey)) as number || 0;
+    const tagCount = (await kv.get(tagKey)) as number || 0;
     console.log("Question count:", questionCount, "Tag count:", tagCount);
 
     // 2. set telegram_chat_id in users table
@@ -212,6 +214,13 @@ export async function POST(req: Request) {
 
     const hasImage = body.message.photo && body.message.photo.length > 0;
     if (hasImage) {
+      // Check if the user has more than two tags or questions and is not on the standard plan
+      if (tagCount > 2 && userPlan !== 'standard') {
+        // Send a message to the user asking them to upgrade their plan
+        const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
+        await bot.sendMessage(body.message.chat.id, upgradeMessage, { parse_mode: 'Markdown' });
+        return new Response('');
+      }
       const msg = "Sure, give me a few seconds to understand your image 🙏."
       const response = await bot.sendMessage(body.message.chat.id, msg, { parse_mode: 'Markdown' });
       console.log("Response:", response);
@@ -313,6 +322,13 @@ export async function POST(req: Request) {
 
     const intent = await isTagOrQuestion(body.message.text);
     if (intent === 'question') {
+      // Check if the user has more than two tags or questions and is not on the standard plan
+      if (questionCount > 2 && userPlan !== 'standard') {
+        // Send a message to the user asking them to upgrade their plan
+        const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
+        await bot.sendMessage(body.message.chat.id, upgradeMessage, { parse_mode: 'Markdown' });
+        return new Response('');
+      }
       await kv.incr(questionKey);
       const msg = "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: Any feedback appreciated ❤️"
       await bot.sendMessage(body.message.chat.id, msg, { parse_mode: 'Markdown' })
@@ -390,6 +406,14 @@ ${healthDataTwo}`,
           const originalMessage = lastPrompt![0].text;
 
           tag = originalMessage + '\n' + tag;
+        }
+      } else {
+        // Check if the user has more than two tags or questions and is not on the standard plan
+        if (tagCount > 2 && userPlan !== 'standard') {
+          // Send a message to the user asking them to upgrade their plan
+          const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
+          await bot.sendMessage(body.message.chat.id, upgradeMessage, { parse_mode: 'Markdown' });
+          return new Response('');
         }
       }
 

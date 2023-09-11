@@ -9,6 +9,198 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      activities: {
+        Row: {
+          biometrics: Json | null
+          data_source: string | null
+          date: string | null
+          durations: number | null
+          end_time: string | null
+          energy_expenditure: Json | null
+          error: string | null
+          hour: string | null
+          id: number
+          location: Json | null
+          movement: Json | null
+          name: string | null
+          source: string | null
+          start_time: string | null
+          type: string | null
+          user_id: string | null
+        }
+        Insert: {
+          biometrics?: Json | null
+          data_source?: string | null
+          date?: string | null
+          durations?: number | null
+          end_time?: string | null
+          energy_expenditure?: Json | null
+          error?: string | null
+          hour?: string | null
+          id?: number
+          location?: Json | null
+          movement?: Json | null
+          name?: string | null
+          source?: string | null
+          start_time?: string | null
+          type?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          biometrics?: Json | null
+          data_source?: string | null
+          date?: string | null
+          durations?: number | null
+          end_time?: string | null
+          energy_expenditure?: Json | null
+          error?: string | null
+          hour?: string | null
+          id?: number
+          location?: Json | null
+          movement?: Json | null
+          name?: string | null
+          source?: string | null
+          start_time?: string | null
+          type?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "activities_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      biometrics: {
+        Row: {
+          blood_glucose: Json | null
+          blood_pressure: Json | null
+          data_source: string | null
+          date: string | null
+          end_time: string | null
+          error: string | null
+          heart_rate: Json | null
+          hour: string | null
+          hrv: Json | null
+          id: number
+          respiration: Json | null
+          source: string | null
+          start_time: string | null
+          temperature: Json | null
+          user_id: string | null
+        }
+        Insert: {
+          blood_glucose?: Json | null
+          blood_pressure?: Json | null
+          data_source?: string | null
+          date?: string | null
+          end_time?: string | null
+          error?: string | null
+          heart_rate?: Json | null
+          hour?: string | null
+          hrv?: Json | null
+          id?: number
+          respiration?: Json | null
+          source?: string | null
+          start_time?: string | null
+          temperature?: Json | null
+          user_id?: string | null
+        }
+        Update: {
+          blood_glucose?: Json | null
+          blood_pressure?: Json | null
+          data_source?: string | null
+          date?: string | null
+          end_time?: string | null
+          error?: string | null
+          heart_rate?: Json | null
+          hour?: string | null
+          hrv?: Json | null
+          id?: number
+          respiration?: Json | null
+          source?: string | null
+          start_time?: string | null
+          temperature?: Json | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "biometrics_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      body: {
+        Row: {
+          body_fat_pct: number | null
+          bone_mass_kg: number | null
+          data_source: string | null
+          date: string | null
+          end_time: string | null
+          error: string | null
+          height_cm: number | null
+          hour: string | null
+          id: number
+          lean_mass_kg: number | null
+          max_heart_rate_bpm: number | null
+          muscle_mass_kg: number | null
+          source: string | null
+          start_time: string | null
+          user_id: string | null
+          weight_kg: number | null
+          weight_samples_kg: Json | null
+        }
+        Insert: {
+          body_fat_pct?: number | null
+          bone_mass_kg?: number | null
+          data_source?: string | null
+          date?: string | null
+          end_time?: string | null
+          error?: string | null
+          height_cm?: number | null
+          hour?: string | null
+          id?: number
+          lean_mass_kg?: number | null
+          max_heart_rate_bpm?: number | null
+          muscle_mass_kg?: number | null
+          source?: string | null
+          start_time?: string | null
+          user_id?: string | null
+          weight_kg?: number | null
+          weight_samples_kg?: Json | null
+        }
+        Update: {
+          body_fat_pct?: number | null
+          bone_mass_kg?: number | null
+          data_source?: string | null
+          date?: string | null
+          end_time?: string | null
+          error?: string | null
+          height_cm?: number | null
+          hour?: string | null
+          id?: number
+          lean_mass_kg?: number | null
+          max_heart_rate_bpm?: number | null
+          muscle_mass_kg?: number | null
+          source?: string | null
+          start_time?: string | null
+          user_id?: string | null
+          weight_kg?: number | null
+          weight_samples_kg?: Json | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "body_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
       chats: {
         Row: {
           category: string | null
@@ -60,6 +252,64 @@ export interface Database {
           {
             foreignKeyName: "customers_id_fkey"
             columns: ["id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      foods: {
+        Row: {
+          amount: number | null
+          brand: string | null
+          data_source: string | null
+          date: string | null
+          end_time: string | null
+          error: string | null
+          hour: string | null
+          id: number
+          name: string | null
+          nutrition_facts: Json | null
+          source: string | null
+          start_time: string | null
+          unit: string | null
+          user_id: string | null
+        }
+        Insert: {
+          amount?: number | null
+          brand?: string | null
+          data_source?: string | null
+          date?: string | null
+          end_time?: string | null
+          error?: string | null
+          hour?: string | null
+          id?: number
+          name?: string | null
+          nutrition_facts?: Json | null
+          source?: string | null
+          start_time?: string | null
+          unit?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          amount?: number | null
+          brand?: string | null
+          data_source?: string | null
+          date?: string | null
+          end_time?: string | null
+          error?: string | null
+          hour?: string | null
+          id?: number
+          name?: string | null
+          nutrition_facts?: Json | null
+          source?: string | null
+          start_time?: string | null
+          unit?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "foods_user_id_fkey"
+            columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
           }
@@ -219,6 +469,58 @@ export interface Database {
         Relationships: [
           {
             foreignKeyName: "prompts_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "users"
+            referencedColumns: ["id"]
+          }
+        ]
+      }
+      sleep: {
+        Row: {
+          biometrics: Json | null
+          data_source: string | null
+          date: string | null
+          durations: number | null
+          end_time: string | null
+          error: string | null
+          hour: string | null
+          id: number
+          source: string | null
+          start_time: string | null
+          user_id: string | null
+          wakeup_frequency: number | null
+        }
+        Insert: {
+          biometrics?: Json | null
+          data_source?: string | null
+          date?: string | null
+          durations?: number | null
+          end_time?: string | null
+          error?: string | null
+          hour?: string | null
+          id?: number
+          source?: string | null
+          start_time?: string | null
+          user_id?: string | null
+          wakeup_frequency?: number | null
+        }
+        Update: {
+          biometrics?: Json | null
+          data_source?: string | null
+          date?: string | null
+          durations?: number | null
+          end_time?: string | null
+          error?: string | null
+          hour?: string | null
+          id?: number
+          source?: string | null
+          start_time?: string | null
+          user_id?: string | null
+          wakeup_frequency?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "sleep_user_id_fkey"
             columns: ["user_id"]
             referencedRelation: "users"
             referencedColumns: ["id"]
@@ -417,6 +719,7 @@ export interface Database {
           payment_method: Json | null
           phone: string | null
           phone_verified: boolean
+          plan: string | null
           telegram_chat_id: string | null
           telegram_username: string | null
           timezone: string
@@ -434,6 +737,7 @@ export interface Database {
           payment_method?: Json | null
           phone?: string | null
           phone_verified?: boolean
+          plan?: string | null
           telegram_chat_id?: string | null
           telegram_username?: string | null
           timezone?: string
@@ -451,6 +755,7 @@ export interface Database {
           payment_method?: Json | null
           phone?: string | null
           phone_verified?: boolean
+          plan?: string | null
           telegram_chat_id?: string | null
           telegram_username?: string | null
           timezone?: string

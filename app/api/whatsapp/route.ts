@@ -97,6 +97,8 @@ export async function POST(req: Request) {
 
     }
     const userId = data[0].id
+    const userPlan = data[0].plan || 'free'
+
     const phoneVerified = data[0].phone_verified || false
     await track(userId)
     if (!phoneVerified) {
@@ -108,12 +110,19 @@ export async function POST(req: Request) {
     const tagKey = TAG_PREFIX + userId + '_' + date;
 
     console.log("Question key:", questionKey, "Tag key:", tagKey);
-    const questionCount = await kv.get(questionKey);
-    const tagCount = await kv.get(tagKey);
+    const questionCount = (await kv.get(questionKey)) as number || 0;
+    const tagCount = (await kv.get(tagKey)) as number || 0;
     console.log("Question count:", questionCount, "Tag count:", tagCount);
 
     const hasImage = parsed.NumMedia > 0;
     if (hasImage) {
+      // Check if the user has more than two tags or questions and is not on the standard plan
+      if (tagCount > 2 && userPlan !== 'standard') {
+        // Send a message to the user asking them to upgrade their plan
+        const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
+        await sendWhatsAppMessage(phoneNumber, upgradeMessage);
+        return new Response('');
+      }
       const msg = "Sure, give me a few seconds to understand your image 🙏."
       await sendWhatsAppMessage(phoneNumber, msg)
 
@@ -211,6 +220,13 @@ export async function POST(req: Request) {
 
     const intent = await isTagOrQuestion(parsed.Body);
     if (intent === 'question') {
+      // Check if the user has more than two tags or questions and is not on the standard plan
+      if (questionCount > 2 && userPlan !== 'standard') {
+        // Send a message to the user asking them to upgrade their plan
+        const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
+        await sendWhatsAppMessage(phoneNumber, upgradeMessage);
+        return new Response('');
+      }
       await kv.incr(questionKey);
       const msg = "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: Any feedback appreciated ❤️"
       await sendWhatsAppMessage(phoneNumber, msg)
@@ -288,6 +304,14 @@ ${healthDataTwo}`,
           const originalMessage = lastPrompt![0].text;
 
           tag = originalMessage + '\n' + tag;
+        }
+      } else {
+        // Check if the user has more than two tags or questions and is not on the standard plan
+        if (tagCount > 2 && userPlan !== 'standard') {
+          // Send a message to the user asking them to upgrade their plan
+          const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
+          await sendWhatsAppMessage(phoneNumber, upgradeMessage);
+          return new Response('');
         }
       }
 
