@@ -80,7 +80,7 @@ export async function POST(req: Request) {
             data_source: metadata.data_source,
             error: metadata.error
             // Add other biometrics fields here as needed
-          }, { onConflict: 'start_time' })
+          }, { onConflict: 'start_time, end_time, user_id' })
         if (error) {
           console.error('Error inserting biometrics:', error)
         }
@@ -117,7 +117,7 @@ export async function POST(req: Request) {
             source: metadata.source,
             data_source: metadata.data_source,
             error: metadata.error
-          }, { onConflict: 'start_time' })
+          }, { onConflict: 'start_time, end_time, user_id' })
         if (error) {
           console.error('Error inserting sleep:', error)
         }
@@ -153,7 +153,7 @@ export async function POST(req: Request) {
             source: metadata.source,
             data_source: metadata.data_source,
             error: metadata.error
-          }, { onConflict: 'start_time' })
+          }, { onConflict: 'start_time, end_time, user_id' })
         if (error) {
           console.error('Error inserting food:', error)
         }
@@ -199,7 +199,7 @@ export async function POST(req: Request) {
               source: metadata.source,
               data_source: metadata.data_source,
               error: metadata.error
-            }, { onConflict: 'start_time' })
+            }, { onConflict: 'start_time, end_time, user_id' })
           if (error) {
             console.error('Error inserting activity:', error)
           }
@@ -219,7 +219,7 @@ export async function POST(req: Request) {
               source: metadata.source,
               data_source: metadata.data_source,
               error: metadata.error
-            }, { onConflict: 'start_time' })
+            }, { onConflict: 'start_time, end_time, user_id' })
           if (error) {
             console.error('Error inserting activity:', error)
           }
