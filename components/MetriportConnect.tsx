@@ -24,7 +24,7 @@ const MetriportConnect = ({ userId }: { userId: string }) => {
     }, [userId]);
 
     const handleClick = () => {
-        window.open(`https://connect.metriport.com/?token=${connectToken}&sandbox=true&colorMode=light&providers=fitbit,garmin,withings`);
+        window.open(`https://connect.metriport.com/?token=${connectToken}&sandbox=true&colorMode=light&providers=fitbit,garmin,withings,oura,googlefit,whoop", "_blank", "noopener,noreferrer"`);
     };
 
     return (
