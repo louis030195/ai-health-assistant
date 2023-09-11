@@ -1,3 +1,4 @@
+import { syncHealthData } from "@/app/metriport"
 import { Database } from "@/types_db"
 import { createClient } from "@supabase/supabase-js"
 import { NextRequest } from "next/server"
@@ -57,170 +58,13 @@ export async function POST(req: Request) {
         return  // Skip to the next user
       }
 
-      // Process biometrics data
-      const biometricsData = user?.biometrics ?? []
-      for (const biometric of biometricsData) {
-        const { metadata, heart_rate, respiration } = biometric
+      const activities = user?.activities || []
+      const biometrics = user?.biometrics || []
+      const bodies = user?.bodies || []
+      const nutrition = user?.nutrition || []
+      const sleep = user?.sleep || []
+      await syncHealthData(activities, biometrics, bodies, nutrition, sleep, userId);
 
-        const { date, hour, source } = metadata
-        const start_time = `${date}T${hour}:00Z` // Construct start_time from date and hour
-        const end_time = start_time // For simplicity, let's assume end_time is the same as start_time
-
-        const { error } = await supabase
-          .from('biometrics')
-          .upsert({
-            user_id: userExists.id,
-            start_time,
-            end_time,
-            heart_rate, // Insert the whole heart_rate JSON
-            respiration, // Insert the whole respiration JSON
-            date,
-            hour,
-            source,
-            data_source: metadata.data_source,
-            error: metadata.error
-            // Add other biometrics fields here as needed
-          }, { onConflict: 'start_time, end_time, user_id' })
-        if (error) {
-          console.error('Error inserting biometrics:', error)
-        }
-      }
-      // Process sleep data
-      const sleepData = user?.sleep ?? []
-      for (const sleep of sleepData) {
-        const { start_time, end_time, durations, biometrics, metadata } = sleep
-
-        const { avg_bpm } = biometrics?.heart_rate ?? { avg_bpm: null }
-
-        const {
-          total_seconds,
-          awake_seconds,
-          deep_seconds,
-          rem_seconds,
-          light_seconds
-        } = durations
-
-        const { error } = await supabase
-          .from('sleep')
-          .upsert({
-            user_id: userExists.id,
-            start_time,
-            end_time,
-            total_minutes: total_seconds / 60,
-            awake_minutes: awake_seconds / 60,
-            deep_minutes: deep_seconds / 60,
-            rem_minutes: rem_seconds / 60,
-            light_minutes: light_seconds / 60,
-            avg_heart_rate: avg_bpm,
-            date: metadata.date,
-            hour: metadata.hour,
-            source: metadata.source,
-            data_source: metadata.data_source,
-            error: metadata.error
-          }, { onConflict: 'start_time, end_time, user_id' })
-        if (error) {
-          console.error('Error inserting sleep:', error)
-        }
-      }
-
-      // Process nutrition data
-      const nutritionData = user?.nutrition ?? []
-      for (const food of nutritionData?.foods ?? []) {
-        const {
-          name,
-          brand,
-          servings,
-          calories,
-          nutrition_facts, // insert the whole nutrition JSON
-          metadata
-        } = food
-
-        const { error } = await supabase
-          .from('foods')
-          .upsert({
-            user_id: userExists.id,
-            start_time: `${metadata.date}T${metadata.hour}:00Z`,
-            end_time: `${metadata.date}T${metadata.hour}:00Z`,
-            name,
-            brand,
-            servings,
-            calories,
-            nutrition_facts,
-            date: metadata.date,
-            hour: metadata.hour,
-            source: metadata.source,
-            data_source: metadata.data_source,
-            error: metadata.error
-          }, { onConflict: 'start_time, end_time, user_id' })
-        if (error) {
-          console.error('Error inserting food:', error)
-        }
-      }
-
-      // Process activity data
-      const activityData = user?.activity ?? []
-      for (const activity of activityData) {
-        const { summary, metadata } = activity
-
-        // Check if durations exists and contains active_minutes
-        if (summary?.durations?.active_minutes) {
-          const {
-            name,
-            type
-          } = summary
-          const {
-            active_minutes,
-            heart_rate_zones
-          } = summary.durations
-
-          const {
-            avg_heart_rate,
-            max_heart_rate
-          } = summary.biometrics
-
-          const { error } = await supabase
-            .from('activities')
-            .upsert({
-              user_id: userExists.id,
-              name,
-              type,
-              start_time: `${metadata.date}T${metadata.hour}:00Z`,
-              end_time: `${metadata.date}T${metadata.hour}:00Z`,
-              active_minutes,
-              avg_heart_rate,
-              max_heart_rate,
-              heart_rate_zones, // insert the whole JSON
-              date: metadata.date,
-              hour: metadata.hour,
-              source: metadata.source,
-              data_source: metadata.data_source,
-              error: metadata.error
-            }, { onConflict: 'start_time, end_time, user_id' })
-          if (error) {
-            console.error('Error inserting activity:', error)
-          }
-        } else if (summary?.energy_expenditure) {
-          const {
-            energy_expenditure
-          } = summary
-          const start_time = `${metadata.date}T${metadata.hour}:00Z`
-          const { error } = await supabase
-            .from('activities')
-            .upsert({
-              user_id: userExists.id,
-              start_time: start_time,
-              energy_expenditure: energy_expenditure,
-              date: metadata.date,
-              hour: metadata.hour,
-              source: metadata.source,
-              data_source: metadata.data_source,
-              error: metadata.error
-            }, { onConflict: 'start_time, end_time, user_id' })
-          if (error) {
-            console.error('Error inserting activity:', error)
-          }
-        }
-      }
     })
 
     // // @ts-ignore

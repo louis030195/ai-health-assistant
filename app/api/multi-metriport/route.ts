@@ -17,8 +17,7 @@ export async function GET(request: Request) {
       )
       const { error, data: users } = await supabase
         .from('users')
-        .select('id, timezone, full_name, telegram_chat_id, phone, goal, metriport_user_id')
-
+        .select('id, timezone, metriport_user_id')
       if (error) {
         controller.enqueue(encoder.encode("Error fetching users: " + error.message));
         controller.close();
@@ -50,13 +49,8 @@ const queueInsightTask = async (user: any) => {
   const taskData = {
     userId: user.id,
     timezone: user.timezone,
-    fullName: user.full_name,
-    telegramChatId: user.telegram_chat_id,
-    phone: user.phone,
-    goal: user.goal,
     metriportUserId: user.metriport_user_id
   };
-
   const baseUrl = getURL().replace(/\/$/, '')
   const url = baseUrl + '/api/single-multiport';
   console.log("Queuing task for user:", user, "at url:", url);

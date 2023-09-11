@@ -38,18 +38,21 @@ export default function DailyUsage({ kvGet, userId, limit, price }: { kvGet: any
 
     const onBiohacker = async () => {
 
-        const { sessionId } = await postData({
-            url: '/api/create-checkout-session',
-            data: { price: price },
-        });
+        // const { sessionId } = await postData({
+        //     url: '/api/create-checkout-session',
+        //     data: { price: price },
+        // });
 
-        const stripe = await getStripe();
-        stripe?.redirectToCheckout({ sessionId });
+        // const stripe = await getStripe();
+        // stripe?.redirectToCheckout({ sessionId });
+        const url = 'https://buy.stripe.com/28oeVDdGu4RA2JOfZ2'
+        router.push(url);
     }
 
     const onAthlete = async () => {
         // https://cal.com/louis030195/athlete
-        const url = 'https://cal.com/louis030195/athlete';
+        // const url = 'https://cal.com/louis030195/athlete';
+        const url = 'https://buy.stripe.com/28oeVDdGu4RA2JOfZ2'
         router.push(url);
     }
 
