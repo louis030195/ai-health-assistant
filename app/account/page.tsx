@@ -21,6 +21,7 @@ import TelegramConnect from '@/components/ui/TelegramConnect';
 import { checkTelegramVerification, sendTelegramMessage, startTelegramVerification } from '../telegram-server';
 import Sub from './Sub';
 import { GoalInput } from '../dashboard/GoalInput';
+import MetriportConnect from '@/components/MetriportConnect';
 export const dynamic = "force-dynamic";
 
 export default async function Account() {
@@ -99,6 +100,11 @@ export default async function Account() {
           sendTelegramMessage={sendTelegramMessageServer} />
 
         <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
+          <h2 className="text-lg font-bold mb-2">Connect to Metriport</h2>
+          <p className="text-sm text-gray-600 mb-4">Connect your account to Metriport to get your health data.</p>
+          <MetriportConnect userId={session.user.id} />
+        </div>
+        {/* <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
           <NeurosityConnect session={session}
             className='w-4/5 shadow-none'
             onboarding={false} />
@@ -106,17 +112,15 @@ export default async function Account() {
             className='w-4/5 shadow-none'
             session={session} />
         </div>
-        {/* shadow */}
         <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md">
           <OuraConnect session={session} onboarding={false}
             // remove shadow
             className='w-4/5 shadow-none'
             getOuraAccessToken={getOuraAccessTokenServerServer} />
-          {/* <OuraImport session={session} /> */}
           <OuraDisconnect
             className='w-4/5 shadow-none'
             session={session} revokeOuraAccessToken={revokeOuraAccessTokenServer} />
-        </div>
+        </div>  */}
       </div>
     </section >
   );

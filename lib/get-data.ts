@@ -137,7 +137,7 @@ export async function generateDataStringsAndFetchData(user: any, threeDaysAgoFro
 }
 
 
-export async function generateMoreDataStrings(user: any, threeDaysAgoFromOneAm: string) {
+export async function getHealthData(user: any, threeDaysAgoFromOneAm: string) {
   const supabase = createClient<Database>(
     process.env.SUPABASE_URL!,
     process.env.SUPABASE_KEY!

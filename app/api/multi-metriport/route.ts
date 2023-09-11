@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       )
       const { error, data: users } = await supabase
         .from('users')
-        .select('id, timezone, full_name, telegram_chat_id, phone, goal')
+        .select('id, timezone, full_name, telegram_chat_id, phone, goal, metriport_user_id')
 
       if (error) {
         controller.enqueue(encoder.encode("Error fetching users: " + error.message));
@@ -25,9 +25,10 @@ export async function GET(request: Request) {
         return;
       }
 
-      const filteredUsers = users?.filter((user) => user.timezone && user.telegram_chat_id || user.phone) || [];
+      const usersWithMetriportUserId = users.filter((user: any) => user.metriport_user_id);
 
-      for (const user of filteredUsers) {
+
+      for (const user of usersWithMetriportUserId) {
         try {
           await queueInsightTask(user);
           controller.enqueue(encoder.encode(`Task queued successfully for user: ${JSON.stringify(user)}\n`));
@@ -53,21 +54,13 @@ const queueInsightTask = async (user: any) => {
     telegramChatId: user.telegram_chat_id,
     phone: user.phone,
     goal: user.goal,
+    metriportUserId: user.metriport_user_id
   };
 
   const baseUrl = getURL().replace(/\/$/, '')
-  const url = baseUrl + '/api/single-insights';
+  const url = baseUrl + '/api/single-multiport';
   console.log("Queuing task for user:", user, "at url:", url);
-  // const response = await fetch('https://qstash.upstash.io/v1/publish/v1/publish/' + url, {
-  //   method: 'POST',
-  //   headers: {
-  //     'Authorization': 'Bearer ' + process.env.QSTASH_TOKEN!,
-  //     // 'Upstash-Forward-My-Header': 'my-value', // TODO: security
-  //     'Upstash-Retries': '3',
-  //     'Content-type': 'application/json'
-  //   },
-  //   body: JSON.stringify(taskData)
-  // });
+
 
   const response = await fetch(url, {
     method: 'POST',

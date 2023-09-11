@@ -18,7 +18,6 @@ export async function GET(request: Request) {
       const { error, data: users } = await supabase
         .from('users')
         .select('id, timezone, full_name, telegram_chat_id, phone, goal')
-        .gte('telegram_chat_id', '');
 
       if (error) {
         controller.enqueue(encoder.encode("Error fetching users: " + error.message));
