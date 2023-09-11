@@ -29,7 +29,7 @@ export async function middleware(req: NextRequest) {
   const supabase = createMiddlewareClient<Database>({ req, res })
   const { data: { session } } = await supabase.auth.getSession()
 
-  if (process.env.NEXT_RUNTIME === 'nodejs' && req.url.includes('mediar.ai')) {
+  if (process.env.NEXT_RUNTIME === 'nodejs') {
     /** Conditional import required for use with Next middleware to avoid a webpack error 
          * https://nextjs.org/docs/pages/building-your-application/routing/middleware */
     try {

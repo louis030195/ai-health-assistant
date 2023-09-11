@@ -3,7 +3,8 @@ const nextConfig = {
   reactStrictMode: true,
   experimental: {
     appDir: true,
-    serverActions: true
+    serverActions: true,
+    instrumentationHook: true,
   }
 };
 

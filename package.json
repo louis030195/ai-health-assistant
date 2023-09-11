@@ -17,7 +17,7 @@
     "@google-cloud/aiplatform": "^3.0.0",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
-    "@highlight-run/next": "^4.0.0",
+    "@highlight-run/next": "^4.3.0",
     "@hookform/resolvers": "^3.3.1",
     "@huggingface/inference": "^2.6.1",
     "@metriport/api-sdk": "^6.4.1",

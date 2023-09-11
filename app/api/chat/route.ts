@@ -3,6 +3,7 @@ import { Configuration, OpenAIApi } from 'openai-edge'
 import { OpenAIStream, StreamingTextResponse } from 'ai'
 import { kv } from '@vercel/kv'
 import { Ratelimit } from '@upstash/ratelimit'
+import { withHighlight } from '@/utils/highlight.config'
 
 // Create an OpenAI API client (that's edge friendly!)
 const config = new Configuration({
@@ -12,7 +13,6 @@ const openai = new OpenAIApi(config)
 
 // IMPORTANT! Set the runtime to edge
 export const runtime = 'edge'
-
 export async function POST(req: Request) {
   // eslint-disable-next-line turbo/no-undeclared-env-vars
   if (process.env.KV_REST_API_URL && process.env.KV_REST_API_TOKEN) {
