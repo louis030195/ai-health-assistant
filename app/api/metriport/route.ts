@@ -127,8 +127,6 @@ export async function POST(req: Request) {
       const nutritionData = user?.nutrition ?? []
       for (const food of nutritionData?.foods ?? []) {
         const {
-          start_time, // use start_time from sleep before food
-          end_time, // and end_time from sleep after food
           name,
           brand,
           servings,
@@ -141,8 +139,8 @@ export async function POST(req: Request) {
           .from('foods')
           .upsert({
             user_id: userExists.id,
-            start_time,
-            end_time,
+            start_time: `${metadata.date}T${metadata.hour}:00Z`,
+            end_time: `${metadata.date}T${metadata.hour}:00Z`,
             name,
             brand,
             servings,
@@ -167,8 +165,6 @@ export async function POST(req: Request) {
         // Check if durations exists and contains active_minutes
         if (summary?.durations?.active_minutes) {
           const {
-            start_time,
-            end_time,
             name,
             type
           } = summary
@@ -188,8 +184,8 @@ export async function POST(req: Request) {
               user_id: userExists.id,
               name,
               type,
-              start_time,
-              end_time,
+              start_time: `${metadata.date}T${metadata.hour}:00Z`,
+              end_time: `${metadata.date}T${metadata.hour}:00Z`,
               active_minutes,
               avg_heart_rate,
               max_heart_rate,
