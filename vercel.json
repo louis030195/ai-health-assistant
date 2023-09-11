@@ -11,6 +11,10 @@
     {
       "path": "/api/multi-prompts",
       "schedule": "0 */2 * * *"
+    },
+    {
+      "path": "/api/multi-metriport",
+      "schedule": "*/10 * * * *"
     }
   ]
 }

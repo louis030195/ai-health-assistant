@@ -36,7 +36,7 @@ struct MetriportView: View {
           token: widgetController.token,
           sandbox: true,
           colorMode: ColorMode.light,
-          providers: ["fitbit", "garmin", "withings", "apple", "oura", "googlefit", "whoop"],
+          providers: ["fitbit", "garmin", "withings", "apple", "oura", "googlefit", "whoop"]
         )
       }
     }

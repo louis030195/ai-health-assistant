@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 import { llm, llmPrivate } from '@/utils/llm';
 import TelegramBot from 'node-telegram-bot-api';
 import PostHogClient from '@/app/posthog-server';
-import { generateDataStringsAndFetchData, generateMoreDataStrings } from '@/lib/get-data';
+import { generateDataStringsAndFetchData, getHealthData } from '@/lib/get-data';
 
 // export const runtime = 'edge'
 export const maxDuration = 300
@@ -75,12 +75,9 @@ export async function POST(req: Request) {
       return NextResponse.json({ message: "It's not daytime" }, { status: 200 });
     }
 
-    const [healthDataOne, healthDataTwo] = await Promise.all([
-      generateDataStringsAndFetchData(user, threeDaysAgoFromOneAm),
-      generateMoreDataStrings(user, threeDaysAgoFromOneAm)
-    ]);
+    const healthData = await getHealthData(user, threeDaysAgoFromOneAm);
 
-    if (!healthDataOne && !healthDataTwo) return new Response(``, { status: 200 });
+    if (!healthData) return new Response(``, { status: 200 });
 
     // const prompt = await llm(buildInsightCleanerPrompt(
     //   `Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`, user));
@@ -89,8 +86,7 @@ export async function POST(req: Request) {
 
     const anonymisousUser = await anonymiseUser(user);
     const intro = await llm(buildIntrospectionPrompt(`Data since ${threeDaysAgoFromOneAm}:
-${healthDataOne}
-${healthDataTwo}`, anonymisousUser));
+${healthData}`, anonymisousUser));
 
     console.log("Generated intro:", intro);
 
