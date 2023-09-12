@@ -93,31 +93,118 @@ export default function Example({ session, user, products, subscription }: Props
                     </svg>
                 </div>
             </div>
+
             <div className="flow-root bg-white pb-24 sm:pb-32">
                 <div className="-mt-80">
                     <div className="mx-auto max-w-7xl px-6 lg:px-8">
                         <div className="mx-auto grid max-w-md grid-cols-1 gap-8 lg:max-w-6xl lg:grid-cols-3">
 
+                            {/* Hobby Plan */}
                             <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
                                 <div>
-                                    <h3 id="tier-standard" className="text-base font-semibold leading-7 text-indigo-600">
+                                    <h3 id="tier-hobby" className="text-base font-semibold leading-7 text-indigo-600">
+                                        Free
+                                    </h3>
+
+                                    <p className="text-base leading-7 text-gray-600">
+                                        Try simple insights.
+                                    </p>
+                                    <div className="mt-2 border-t border-gray-200 pt-6" />
+
+
+                                    <div className="flex items-baseline gap-x-2">
+                                        <span className="text-5xl font-bold tracking-tight text-gray-900">Free</span>
+                                    </div>
+
+                                    <div className="mt-6 border-t border-gray-200 pt-6" />
+
+                                    <p className="text-base leading-7 text-gray-600">
+                                        Get started with:
+                                    </p>
+
+                                    {/* Features */}
+                                    <ul role="list" className="mt-6 space-y-4 text-sm leading-6 text-gray-600">
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            2 tags & questions per day
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Send image, video, and audio tags
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Email, Discord support
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Max 6-hour support response time
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            14 days of data retention
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Private Data Controls
+                                        </li>
+                                    </ul>
+                                </div>
+
+                                <a
+                                    href="/signin"
+                                    aria-describedby="tier-hobby"
+                                    className="text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+
+                                >
+                                    Get started today
+                                </a>
+                            </div>
+
+
+
+                            {/* Biohacker Plan */}
+                            <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
+                                <div>
+                                    <h3 id="tier-biohacker" className="text-base font-semibold leading-7 text-indigo-600">
                                         Standard
                                     </h3>
+
                                     <p className="text-base leading-7 text-gray-600">
                                         Pay-once license for you.
                                     </p>
                                     <div className="mt-2 border-t border-gray-200 pt-6" />
+
                                     <div className="flex items-baseline gap-x-2">
                                         <span className="text-5xl font-bold tracking-tight text-gray-900">$89</span>
+                                        {/* <span className="text-sm font-semibold leading-7 text-gray-600">/month</span> */}
                                     </div>
+
+
+
+                                    {/* divider */}
+
                                     <div className="mt-6 border-t border-gray-200 pt-6" />
+
+                                    {/* Everything in the Free plan, plus: */}
+
                                     <p className="text-base leading-7 text-gray-600">
-                                        Includes:
+                                        Everything in the Free plan, plus:
                                     </p>
+
+                                    {/* Features */}
                                     <ul role="list" className="mt-6 space-y-4 text-sm leading-6 text-gray-600">
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            1 member (share with your family, friends, coach, psychologist, doctor, etc.)
+                                            Unlimited tags & questions
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Early access to beta features
+                                        </li>
+                                        <li className="flex gap-x-3">
+                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
+                                            Quick support (max 3-hours response time)
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
@@ -125,116 +212,96 @@ export default function Example({ session, user, products, subscription }: Props
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            All Mediar features
-                                        </li>
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            1 year of updates
+                                            30 days of data retention
                                         </li>
                                     </ul>
                                 </div>
-                                <a
-                                    href="https://buy.stripe.com/28oeVDdGu4RA2JOfZ2"
-                                    aria-describedby="tier-standard"
-                                    className="text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+
+                                <Button
+                                    onClick={() => {
+                                        // https://buy.stripe.com/28oeVDdGu4RA2JOfZ2
+                                        window.open('https://buy.stripe.com/28oeVDdGu4RA2JOfZ2', '_blank');
+                                    }}
+                                    aria-describedby="tier-biohacker"
+                                    // purple borders and shadow
+                                    className="bg-indigo-600 text-white shadow-sm hover:bg-indigo-500"
                                 >
-                                    Choose Standard Plan
-                                </a>
+                                    {
+                                        biohackerLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    }
+                                    Invest in your health
+                                </Button>
                             </div>
 
-                            {/* Extended Plan */}
+
+                            {/* Athlete Plan */}
                             <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
                                 <div>
-                                    <h3 id="tier-extended" className="text-base font-semibold leading-7 text-indigo-600">
-                                        Extended
+                                    <h3 id="tier-athlete" className="text-base font-semibold leading-7 text-indigo-600">
+                                        Athlete
                                     </h3>
+
                                     <p className="text-base leading-7 text-gray-600">
-                                        Great for accountability partners.
+                                        For serious athletes 
                                     </p>
+
                                     <div className="mt-2 border-t border-gray-200 pt-6" />
+
                                     <div className="flex items-baseline gap-x-2">
                                         <span className="text-5xl font-bold tracking-tight text-gray-900">$189</span>
                                     </div>
+
                                     <div className="mt-6 border-t border-gray-200 pt-6" />
+
                                     <p className="text-base leading-7 text-gray-600">
-                                        Includes:
+                                        Everything in the Free and Standard plan, plus:
                                     </p>
+
+                                    {/* Features */}
                                     <ul role="list" className="mt-6 space-y-4 text-sm leading-6 text-gray-600">
+                                        
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            3 members (share with your family, friends, coach, psychologist, doctor, etc.)
+                                            Custom Apple shortcuts (use Mediar with Siri)
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Discord bot (social health tracking)
+                                            Share your health with relatives and doctors 
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Pay once, use forever
+                                            Founder phone number
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            All Mediar features
+                                            Email support (max 3-hours response time)
                                         </li>
                                         <li className="flex gap-x-3">
                                             <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            1 year of updates
+                                            90 days of data retention
                                         </li>
                                     </ul>
+
                                 </div>
+
                                 <a
                                     href="https://buy.stripe.com/14k9BjfOC5VEgAE3ch"
-                                    aria-describedby="tier-extended"
+                                    aria-describedby="tier-athlete"
                                     className="text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+
                                 >
-                                    Choose Extended Plan
+                                    Choose Athlete Plan
                                 </a>
+
                             </div>
 
-                            {/* Teams Plan */}
-                            <div className="flex flex-col justify-between rounded-3xl bg-white p-10 shadow-xl ring-1 ring-gray-900/10 sm:p-10">
-                                <div>
-                                    <h3 id="tier-teams" className="text-base font-semibold leading-7 text-indigo-600">
-                                        Teams
-                                    </h3>
-                                    <p className="text-base leading-7 text-gray-600">
-                                        Pay per seat for your team.
-                                    </p>
-                                    <div className="mt-2 border-t border-gray-200 pt-6" />
-                                    <div className="flex items-baseline gap-x-2">
-                                        <span className="text-5xl font-bold tracking-tight text-gray-900">Get in touch</span>
-                                    </div>
-                                    <div className="mt-6 border-t border-gray-200 pt-6" />
-                                    <p className="text-base leading-7 text-gray-600">
-                                        Includes:
-                                    </p>
-                                    <ul role="list" className="mt-6 space-y-4 text-sm leading-6 text-gray-600">
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            Unlimited members (share with your family, friends, coach, psychologist, doctor, etc.)
-                                        </li>
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            All Mediar features
-                                        </li>
-                                        <li className="flex gap-x-3">
-                                            <CheckIcon className="h-6 w-5 flex-none text-indigo-600" aria-hidden="true" />
-                                            App updates during the subscription
-                                        </li>
-                                    </ul>
-                                </div>
-                                <a
-                                    href="https://cal.com/louis030195/feedback"
-                                    aria-describedby="tier-teams"
-                                    className="text-indigo-600 ring-1 ring-inset ring-indigo-200 hover:ring-indigo-300 mt-8 block rounded-md py-2 px-3 text-center text-sm font-semibold leading-6 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-                                >
-                                    Contact Us for Teams Plan
-                                </a>
-                            </div>
-                        </div >
+
+                        </div>
+                        {/* Executive Plan */}
+                        <Executive />
                     </div>
                 </div>
-            </div>
+            </div >
         </div >
     )
 }

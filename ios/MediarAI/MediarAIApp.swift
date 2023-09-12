@@ -23,47 +23,9 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   ) -> Bool {
     print("started launching")
     MetriportClient.checkBackgroundUpdates()  // add this line
-    // if #available(iOS 13.0, *) {
-    // Always adopt a light interface style.
+
     self.window?.overrideUserInterfaceStyle = .light
-    // }
 
-    // BGTaskScheduler.shared.register(forTaskWithIdentifier: "ai.mediar.syncHealthData", using: nil) {
-    //   task in
-    //   if let bgRefreshTask = task as? BGAppRefreshTask {
-    //     let syncViewModel = SyncViewModel()
-    //     syncViewModel.handleAppRefresh(task: bgRefreshTask)
-    //   }
-    // }
-
-    // let readTypes: Set<HKObjectType> = [
-    //   HKObjectType.quantityType(forIdentifier: .appleExerciseTime)!,
-    //   HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
-    //   HKObjectType.quantityType(forIdentifier: .bodyMass)!,
-    //   HKObjectType.quantityType(forIdentifier: .heartRate)!,
-    //   HKObjectType.categoryType(forIdentifier: .sleepAnalysis)!,
-    //   HKObjectType.categoryType(forIdentifier: .mindfulSession)!,
-    //   HKObjectType.characteristicType(forIdentifier: .bloodType)!,
-    //   HKObjectType.characteristicType(forIdentifier: .biologicalSex)!,
-    //   HKObjectType.quantityType(forIdentifier: .bodyMass)!,
-    //   HKObjectType.quantityType(forIdentifier: .bodyMassIndex)!,
-    //   HKObjectType.quantityType(forIdentifier: .activeEnergyBurned)!,
-    //   HKObjectType.quantityType(forIdentifier: .stepCount)!
-    // ]
-
-    // // Request HealthKit permissions
-    // healthStore.requestAuthorization(toShare: [], read: readTypes) { success, error in
-    //   if let error = error {
-    //     print("Error requesting HealthKit permissions: \(error.localizedDescription)")
-    //     return
-    //   }
-
-    //   if success {
-    //     print("Successfully received HealthKit permissions")
-    //   } else {
-    //     print("Failed to receive HealthKit permissions")
-    //   }
-    // }
 
     return true
   }
@@ -78,7 +40,6 @@ struct MediarAIApp: App {
     WindowGroup {
       AppView()
         .environmentObject(model)
-        // .environment(\.colorScheme, .light)
         .preferredColorScheme(.light)
         .onOpenURL(perform: handleURL)
     }

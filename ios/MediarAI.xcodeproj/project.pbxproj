@@ -7,10 +7,14 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		A648D1ED2AAB87900077574B /* WhatsappConnectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A648D1EC2AAB87900077574B /* WhatsappConnectView.swift */; };
 		A648D1EF2AAB87980077574B /* WhatsappConnectViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = A648D1EE2AAB87980077574B /* WhatsappConnectViewModel.swift */; };
 		A648D1F22AABEB640077574B /* MetriportSDK in Frameworks */ = {isa = PBXBuildFile; productRef = A648D1F12AABEB640077574B /* MetriportSDK */; };
 		A648D1F62AACD8FA0077574B /* Metriport.swift in Sources */ = {isa = PBXBuildFile; fileRef = A648D1F52AACD8FA0077574B /* Metriport.swift */; };
+		A67415942AB0D60D00F07345 /* WhatsappConnect.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67415932AB0D60D00F07345 /* WhatsappConnect.swift */; };
+		A674159B2AB0DDBD00F07345 /* (null) in Frameworks */ = {isa = PBXBuildFile; };
+		A674159D2AB0DEA700F07345 /* OTPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = A674159C2AB0DEA700F07345 /* OTPStack.swift */; };
+		A674159F2AB0DEBC00F07345 /* OTPTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A674159E2AB0DEBC00F07345 /* OTPTextField.swift */; };
+		A67415A12AB0DF7F00F07345 /* OTPFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67415A02AB0DF7F00F07345 /* OTPFieldView.swift */; };
 		BF5FC0342AA2461A00BD9125 /* MediarAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0332AA2461A00BD9125 /* MediarAIApp.swift */; };
 		BF5FC0362AA2461A00BD9125 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0352AA2461A00BD9125 /* ContentView.swift */; };
 		BF5FC0382AA2461A00BD9125 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5FC0372AA2461A00BD9125 /* Assets.xcassets */; };
@@ -33,9 +37,12 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		A648D1EC2AAB87900077574B /* WhatsappConnectView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsappConnectView.swift; sourceTree = "<group>"; };
 		A648D1EE2AAB87980077574B /* WhatsappConnectViewModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsappConnectViewModel.swift; sourceTree = "<group>"; };
 		A648D1F52AACD8FA0077574B /* Metriport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Metriport.swift; sourceTree = "<group>"; };
+		A67415932AB0D60D00F07345 /* WhatsappConnect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhatsappConnect.swift; sourceTree = "<group>"; };
+		A674159C2AB0DEA700F07345 /* OTPStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPStack.swift; sourceTree = "<group>"; };
+		A674159E2AB0DEBC00F07345 /* OTPTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPTextField.swift; sourceTree = "<group>"; };
+		A67415A02AB0DF7F00F07345 /* OTPFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPFieldView.swift; sourceTree = "<group>"; };
 		BF5FC0302AA2461A00BD9125 /* MediarAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediarAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5FC0332AA2461A00BD9125 /* MediarAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediarAIApp.swift; sourceTree = "<group>"; };
 		BF5FC0352AA2461A00BD9125 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -66,6 +73,7 @@
 			files = (
 				A648D1F22AABEB640077574B /* MetriportSDK in Frameworks */,
 				BF5FC0552AA2561F00BD9125 /* Supabase in Frameworks */,
+				A674159B2AB0DDBD00F07345 /* (null) in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -119,10 +127,14 @@
 		BF5FC0472AA24AEC00BD9125 /* Components */ = {
 			isa = PBXGroup;
 			children = (
+				A67415932AB0D60D00F07345 /* WhatsappConnect.swift */,
 				A648D1F52AACD8FA0077574B /* Metriport.swift */,
 				BF5FC0482AA24AF500BD9125 /* Colors.swift */,
 				BF5FC04A2AA24F5200BD9125 /* Button.swift */,
 				BF5FC04C2AA254E500BD9125 /* LabelTextField.swift */,
+				A674159C2AB0DEA700F07345 /* OTPStack.swift */,
+				A674159E2AB0DEBC00F07345 /* OTPTextField.swift */,
+				A67415A02AB0DF7F00F07345 /* OTPFieldView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -130,7 +142,6 @@
 		BF5FC04E2AA2557B00BD9125 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				A648D1EC2AAB87900077574B /* WhatsappConnectView.swift */,
 				BF5FC0452AA2493700BD9125 /* SigninView.swift */,
 				BF5FC0412AA2462B00BD9125 /* AlertView.swift */,
 				BF5FC0432AA248DC00BD9125 /* TabsView.swift */,
@@ -248,7 +259,6 @@
 				BF5FC04D2AA254E500BD9125 /* LabelTextField.swift in Sources */,
 				BF5FC0592AA2565700BD9125 /* Constants.swift in Sources */,
 				A648D1F62AACD8FA0077574B /* Metriport.swift in Sources */,
-				A648D1ED2AAB87900077574B /* WhatsappConnectView.swift in Sources */,
 				BF5FC04B2AA24F5200BD9125 /* Button.swift in Sources */,
 				BF5FC0522AA255DD00BD9125 /* AppView.swift in Sources */,
 				BF5FC0422AA2462B00BD9125 /* AlertView.swift in Sources */,
@@ -256,7 +266,11 @@
 				BF5FC0652AA34A5100BD9125 /* SyncViewModel.swift in Sources */,
 				BF5FC0492AA24AF500BD9125 /* Colors.swift in Sources */,
 				BF5FC0572AA2563B00BD9125 /* Model.swift in Sources */,
+				A674159D2AB0DEA700F07345 /* OTPStack.swift in Sources */,
+				A674159F2AB0DEBC00F07345 /* OTPTextField.swift in Sources */,
+				A67415A12AB0DF7F00F07345 /* OTPFieldView.swift in Sources */,
 				BF5FC0362AA2461A00BD9125 /* ContentView.swift in Sources */,
+				A67415942AB0D60D00F07345 /* WhatsappConnect.swift in Sources */,
 				BF5FC0462AA2493700BD9125 /* SigninView.swift in Sources */,
 				BF5FC05B2AA258FB00BD9125 /* SyncView.swift in Sources */,
 				BF5FC0442AA248DC00BD9125 /* TabsView.swift in Sources */,
@@ -413,9 +427,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.mediar.Mediar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -449,9 +466,12 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ai.mediar.Mediar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = YES;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};

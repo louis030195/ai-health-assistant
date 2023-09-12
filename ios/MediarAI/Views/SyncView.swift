@@ -19,9 +19,9 @@ struct SyncView: View {
 
   var body: some View {
     VStack {
-      // WhatsappConnectView()
-      //   .frame(maxWidth: .infinity, alignment: .center)
-      //   .padding()
+      //  WhatsappConnectView()
+      //    .frame(maxWidth: .infinity, alignment: .center)
+      //    .padding()
 
       Text("Connect your health sources")
         .font(.largeTitle)
