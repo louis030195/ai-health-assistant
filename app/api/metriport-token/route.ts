@@ -6,7 +6,7 @@ import { createClient } from "@supabase/supabase-js";
 // export const maxDuration = 300
 
 const metriportClient = new MetriportDevicesApi(process.env.METRIPORT_API_KEY!, {
-  sandbox: true, // set to true to use the sandbox environment
+  sandbox: false, // set to true to use the sandbox environment
 });
 
 export async function POST(req: Request) {

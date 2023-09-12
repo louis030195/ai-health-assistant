@@ -16,7 +16,7 @@ class AppDelegate: NSObject, UIApplicationDelegate {
   var window: UIWindow?
   let healthStore = MetriportHealthStoreManager(
     clientApiKey: Constants.metriportKey,
-    sandbox: true)
+    sandbox: false)
   func application(
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?

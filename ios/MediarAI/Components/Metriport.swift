@@ -21,7 +21,7 @@ struct MetriportView: View {
     supabaseKey: Constants.supabaseKey)
   let healthStore = MetriportHealthStoreManager(
     clientApiKey: Constants.metriportKey,
-    sandbox: true)
+    sandbox: false)
 
   var body: some View {
     VStack {
@@ -34,7 +34,7 @@ struct MetriportView: View {
         MetriportWidget(
           healthStore: healthStore,
           token: widgetController.token,
-          sandbox: true,
+          sandbox: false,
           colorMode: ColorMode.light,
           providers: [
             "fitbit", "garmin", "withings", "apple", "oura", "google", "whoop", "cronometer",
