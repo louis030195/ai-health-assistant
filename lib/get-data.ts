@@ -46,17 +46,58 @@ export async function getHealthData(user: any, threeDaysAgoFromOneAm: string) {
   ])
 
 
+  const activitiesData = activities.data?.map(activity => ({
+    ...activity,
+    start_time: activity.start_time ? convertToUserTimezone(new Date(activity.start_time), user.timezone) : null,
+  }));
+
+  const biometricsData = biometrics.data?.map(biometric => ({
+    ...biometric,
+    start_time: biometric.start_time ? convertToUserTimezone(new Date(biometric.start_time), user.timezone) : null,
+  }));
+
+  const bodyData = body.data?.map(body => ({
+    ...body,
+    start_time: body.start_time ? convertToUserTimezone(new Date(body.start_time), user.timezone) : null,
+  }));
+
+  const foodsData = foods.data?.map(food => ({
+    ...food,
+    start_time: food.start_time ? convertToUserTimezone(new Date(food.start_time), user.timezone) : null,
+  }));
+
+  const sleepData = sleep.data?.map(sleep => ({
+    ...sleep,
+    start_time: sleep.start_time ? convertToUserTimezone(new Date(sleep.start_time), user.timezone) : null,
+  }));
+
+  const tagsData = tags.data?.map(tag => ({
+    ...tag,
+    created_at: tag.created_at ? convertToUserTimezone(new Date(tag.created_at), user.timezone) : null,
+  }));
+
   return JSON.stringify({
-    activities: activities.data,
-    biometrics: biometrics.data,
-    body: body.data,
-    foods: foods.data,
-    sleep: sleep.data,
-    tags: tags.data,
+    activities: activitiesData,
+    biometrics: biometricsData,
+    body: bodyData,
+    foods: foodsData,
+    sleep: sleepData,
+    tags: tagsData,
   });
 
 }
 
-// getHealthData({
-//   id: '20284713-5cd6-4199-8313-0d883f0711a1',
-// }, '2023-09-09T01:00:00.000Z').then(console.log)
+function convertToUserTimezone(date: Date, userTimezone: string) {
+  const userDate = new Date(date.toLocaleString('en-US', { timeZone: userTimezone }));
+  const year = userDate.getFullYear();
+  const month = (userDate.getMonth() + 1).toString().padStart(2, '0'); // months are 0-indexed in JS
+  const day = userDate.getDate().toString().padStart(2, '0');
+  const hours = userDate.getHours().toString().padStart(2, '0');
+  const minutes = userDate.getMinutes().toString().padStart(2, '0');
+  const seconds = userDate.getSeconds().toString().padStart(2, '0');
+  return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
+}
+
+getHealthData({
+  id: '20284713-5cd6-4199-8313-0d883f0711a1', timezone: 'America/Los_Angeles'
+}, '2023-09-09T01:00:00.000Z').then(console.log)
