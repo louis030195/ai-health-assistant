@@ -17,7 +17,7 @@ export async function GET(request: Request) {
       )
       const { error, data: users } = await supabase
         .from('users')
-        .select('id, timezone, full_name, telegram_chat_id, phone, goal')
+        .select('id, timezone, full_name, telegram_chat_id, phone, goal, language')
 
       if (error) {
         controller.enqueue(encoder.encode("Error fetching users: " + error.message));
@@ -25,7 +25,7 @@ export async function GET(request: Request) {
         return;
       }
 
-      const filteredUsers = users?.filter((user) => user.timezone && user.telegram_chat_id || user.phone) || [];
+      const filteredUsers = users?.filter((user) => user.timezone && (user.telegram_chat_id || user.phone)) || [];
 
       for (const user of filteredUsers) {
         try {

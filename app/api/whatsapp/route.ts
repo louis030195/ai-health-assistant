@@ -238,7 +238,7 @@ export async function POST(req: Request) {
       // 1. Fetch the user's information
       const { error: e2, data: users } = await supabase
         .from('users')
-        .select('id, phone, timezone, full_name')
+        .select('id, phone, timezone, full_name, language')
         .eq('id', userId);
 
       if (e2 || !users || users.length === 0) {
@@ -249,12 +249,9 @@ export async function POST(req: Request) {
 
       // 2. Compute yesterday's date for the user
 
-      const usersToday = new Date().toLocaleString('en-US', { timeZone: user.timezone })
       const threeDaysAgo = new Date(new Date().setDate(new Date().getDate() - 3)).toLocaleString('en-US', { timeZone: user.timezone });
 
-      // const yesterday = new Date(new Date().setDate(new Date().getDate() - 1)).toLocaleString('en-US', { timeZone: user.timezone })
       console.log("Yesterday's date for user:", threeDaysAgo);
-      // const yesterdayFromOneAm = new Date(new Date(yesterday).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone })
       const threeDaysAgoFromOneAm = new Date(new Date(threeDaysAgo).setHours(1, 0, 0, 0)).toLocaleString('en-US', { timeZone: user.timezone });
 
       const healthData = await getHealthData(user, threeDaysAgoFromOneAm)

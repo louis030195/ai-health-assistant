@@ -122,11 +122,11 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
                 <Button
                     onClick={() => handleSetTelegramUsername(telegramUsername)}
                     disabled={telegramUsernameLoading || !telegramUsername}
-                    className="w-full"
+                    className="w-[200px] p-6"
                 >
                     {
                         telegramUsernameLoading ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> :
-                            <Save className="mr-2 h-4 w-4" />
+                            <Save className="mr-2 h-6 w-6" />
                     }
                     Save Telegram username
                 </Button>
@@ -140,9 +140,9 @@ export default function TelegramConnect({ session, userDetails, sendTelegramMess
                         window.open('https://t.me/mediar_ai_bot', '_blank');
                     }}
                     disabled={!telegramUsername}
-                    className="w-full"
+                    className="w-[200px] p-6"
                 >
-                    <Send className="mr-2 h-4 w-4" />
+                    <Send className="mr-2 h-6 w-6" />
                     Telegram the bot @mediar_ai_bot
                 </Button>
             </div>

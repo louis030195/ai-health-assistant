@@ -22,6 +22,7 @@ import { checkTelegramVerification, sendTelegramMessage, startTelegramVerificati
 import Sub from './Sub';
 import { GoalInput } from '../dashboard/GoalInput';
 import MetriportConnect from '@/components/MetriportConnect';
+import LanguageDropdown from './LanguageSelector';
 export const dynamic = "force-dynamic";
 
 export default async function Account() {
@@ -77,6 +78,14 @@ export default async function Account() {
           <p className="text-sm text-gray-600 mb-4">Your goal will influence the insights of the AI, the questions asked, and the prompts given to you. You can update your goal here at any time.</p>
           <div className="w-full sm:w-2/3 flex flex-col items-center justify-center gap-2">
             <GoalInput userDetails={userDetails} />
+          </div>
+        </div>
+
+        <div className="flex flex-col items-center justify-center gap-2 p-4 rounded-lg shadow-md w-4/5">
+          <h2 className="text-lg font-bold mb-2">Set Your Language</h2>
+          <p className="text-sm text-gray-600 mb-4">This is change the language the AI uses to communicate with you.</p>
+          <div className="w-full sm:w-2/3 flex flex-col items-center justify-center gap-2">
+            <LanguageDropdown userId={session.user.id} />
           </div>
         </div>
 

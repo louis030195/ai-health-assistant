@@ -17,7 +17,7 @@ export const maxDuration = 300
 
 
 export async function POST(req: Request) {
-  const { userId, timezone, fullName, telegramChatId, phone, goal } = await req.json()
+  const { userId, timezone, fullName, telegramChatId, phone, goal, language } = await req.json()
   try {
     const supabase = createClient<Database>(
       process.env.SUPABASE_URL!,
@@ -39,6 +39,7 @@ export async function POST(req: Request) {
       full_name: fullName,
       telegram_chat_id: telegramChatId,
       goal: goal || '',
+      language: language || 'English',
     }
     console.log("Processing user:", user);
 
@@ -67,10 +68,6 @@ export async function POST(req: Request) {
 
     if (!healthData) return new Response(``, { status: 200 });
 
-    // const prompt = await llm(buildInsightCleanerPrompt(
-    //   `Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`, user));
-
-    // console.log("Prompt:", prompt);
     const anonymisousUser = await anonymiseUser(user);
 
     const insights = await llm(buildInsightPrompt(`Data since ${threeDaysAgoFromOneAm}:

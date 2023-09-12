@@ -28,7 +28,7 @@ const MetriportConnect = ({ userId }: { userId: string }) => {
     };
 
     return (
-        <Button onClick={handleClick} disabled={!connectToken}>
+        <Button onClick={handleClick} disabled={!connectToken} className="w-[200px]">
             Connect your health data
         </Button>
     );

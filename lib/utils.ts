@@ -6,6 +6,10 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
 
+interface PromptBuilderOptions {
+  language?: string
+}
+
 
 export const baseMediarAI = `You are an AI assistant that receive message through Telegram/WhatsApp by users.
 The product is called "Mediar" and is described on the landing page: https://mediar.ai as:
@@ -68,6 +72,7 @@ export async function anonymiseUser(user: any) {
 }
 
 export function buildIntrospectionPrompt(data: string, user: any) {
+  const languagePrompt = user?.language ? `- MAKE SURE TO ANSWER IN THIS LANGUAGE: ${user.language}` : '';
   const prompt = `
 
 Human: ${baseMediarAI}
@@ -87,6 +92,7 @@ ${generalMediarAIInstructions}
 - KEEP YOUR MESSAGE SUPER SHORT, MAX 2 SENTENCES.
 - KEEP YOUR MESSAGE SUPER SHORT, MAX 2 SENTENCES.
 - JUST ASK THE FUCKING QUESTION.
+${languagePrompt}
 
 Assistant:`;
   console.log(prompt);
@@ -94,7 +100,7 @@ Assistant:`;
 }
 
 export function buildInsightPrompt(data: string, user: any) {
-  const userReference = user.fullName ? ` for ${user.fullName}` : '';
+  const languagePrompt = user?.language ? `- MAKE SURE TO ANSWER IN THIS LANGUAGE: ${user.language}` : '';
   const prompt = `
 
 Human: ${baseMediarAI}
@@ -117,6 +123,7 @@ ${generalMediarAIInstructions}
 - Try to be as concise as possible. Just the useful information that will bring the user closer to his goal.
 - If there is no tags, nor wearable data, nothing, tell the user that he/she needs to connect a wearable or send tags to get insights.
 - At the end of your insights, ask for user feedback subtly. Example: "Was this insight helpful? 👍/👎."
+${languagePrompt}
 
 Assistant:`;
   console.log(prompt);
@@ -124,6 +131,7 @@ Assistant:`;
 }
 
 export function buildQuestionPrompt(data: string, user: any, question: string) {
+  const languagePrompt = user?.language ? `- MAKE SURE TO ANSWER IN THIS LANGUAGE: ${user.language}` : '';
   const prompt = `
 
 Human: ${baseMediarAI}
@@ -137,6 +145,7 @@ Eventually provide actionable insights.
 User current time: ${new Date().toLocaleString('en-US', { timeZone: user.timezone })}
 Here is the user question: ${question}
 ${generalMediarAIInstructions}
+${languagePrompt}
 
 Assistant:`;
   console.log(prompt);

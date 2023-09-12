@@ -62,7 +62,7 @@ export function GoalInput({ userDetails }: { userDetails: any }) {
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}> {/* Modify this line */}
             <DialogTrigger asChild>
                 <Button
-                    className="w-1/2"
+                    className="w-[200px]"
                 >
                     Set Goal</Button>
             </DialogTrigger>

@@ -1,5 +1,5 @@
 import { sendWhatsAppMessage } from '@/app/whatsapp-server';
-import { anonymiseUser, baseMediarAI, buildInsightPrompt, buildIntrospectionPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
+import { anonymiseUser, buildIntrospectionPrompt, generalMediarAIInstructions, generateGoalPrompt } from '@/lib/utils';
 import { Database } from '@/types_db';
 import { createClient } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -15,7 +15,7 @@ export const maxDuration = 300
 // curl -X POST -d '{"userId":"20284713-5cd6-4199-8313-0d883f0711a1","timezone":"America/Los_Angeles","fullName":"Louis","telegramChatId":"5776185278", "phone": "+...", "goal": "I want to improve my mood by practicing mindfulness and meditation."}' -H "Content-Type: application/json" http://localhost:3000/api/single-prompts
 
 export async function POST(req: Request) {
-  const { userId, timezone, fullName, telegramChatId, phone, goal } = await req.json()
+  const { userId, timezone, fullName, telegramChatId, phone, goal, language } = await req.json()
   try {
     const supabase = createClient<Database>(
       process.env.SUPABASE_URL!,
@@ -37,6 +37,7 @@ export async function POST(req: Request) {
       full_name: fullName,
       telegram_chat_id: telegramChatId,
       goal: goal || '',
+      language: language || 'English',
     }
     console.log("Processing user:", user);
 
@@ -78,11 +79,6 @@ export async function POST(req: Request) {
     const healthData = await getHealthData(user, threeDaysAgoFromOneAm);
 
     if (!healthData) return new Response(``, { status: 200 });
-
-    // const prompt = await llm(buildInsightCleanerPrompt(
-    //   `Data since ${threeDaysAgoFromOneAm}:\n${neurosString}\n${tagsString}\n${ourasString}\n${appleHealthString}`, user));
-
-    // console.log("Prompt:", prompt);
 
     const anonymisousUser = await anonymiseUser(user);
     const intro = await llm(buildIntrospectionPrompt(`Data since ${threeDaysAgoFromOneAm}:

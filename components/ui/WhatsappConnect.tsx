@@ -130,7 +130,7 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
     }
 
     return (
-        <div className={"bg-white rounded-lg shadow p-6 " + className}>
+        <div className={"bg-white rounded-lg shadow p-6 flex flex-col items-center " + className}>
             <Toaster />
 
             <h2 className="text-2xl font-bold mb-4">Connect WhatsApp</h2>
@@ -186,12 +186,12 @@ export default function WhatsappConnect({ session, subscription, userDetails, st
             <Button
                 onClick={handleConnect}
                 disabled={loading || phoneNumberError !== ''}
-                className="w-full"
+                className="mx-auto w-[200px] p-6"
             >
                 {
                     loading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                 }
-                Send me a WhatsApp verification code
+                Send me a WhatsApp code
             </Button>
 
             <p className="text-gray-500 mt-4">

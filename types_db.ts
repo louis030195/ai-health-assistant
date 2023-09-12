@@ -14,7 +14,7 @@ export interface Database {
           biometrics: Json | null
           data_source: string | null
           date: string | null
-          durations: number | null
+          durations: Json | null
           end_time: string | null
           energy_expenditure: Json | null
           error: string | null
@@ -32,7 +32,7 @@ export interface Database {
           biometrics?: Json | null
           data_source?: string | null
           date?: string | null
-          durations?: number | null
+          durations?: Json | null
           end_time?: string | null
           energy_expenditure?: Json | null
           error?: string | null
@@ -50,7 +50,7 @@ export interface Database {
           biometrics?: Json | null
           data_source?: string | null
           date?: string | null
-          durations?: number | null
+          durations?: Json | null
           end_time?: string | null
           energy_expenditure?: Json | null
           error?: string | null
@@ -480,7 +480,7 @@ export interface Database {
           biometrics: Json | null
           data_source: string | null
           date: string | null
-          durations: number | null
+          durations: Json | null
           end_time: string | null
           error: string | null
           hour: string | null
@@ -494,7 +494,7 @@ export interface Database {
           biometrics?: Json | null
           data_source?: string | null
           date?: string | null
-          durations?: number | null
+          durations?: Json | null
           end_time?: string | null
           error?: string | null
           hour?: string | null
@@ -508,7 +508,7 @@ export interface Database {
           biometrics?: Json | null
           data_source?: string | null
           date?: string | null
-          durations?: number | null
+          durations?: Json | null
           end_time?: string | null
           error?: string | null
           hour?: string | null
@@ -712,6 +712,7 @@ export interface Database {
           full_name: string | null
           goal: string | null
           id: string
+          language: string | null
           metadata: Json | null
           metriport_user_id: string | null
           neurosity: Json | null
@@ -730,6 +731,7 @@ export interface Database {
           full_name?: string | null
           goal?: string | null
           id: string
+          language?: string | null
           metadata?: Json | null
           metriport_user_id?: string | null
           neurosity?: Json | null
@@ -748,6 +750,7 @@ export interface Database {
           full_name?: string | null
           goal?: string | null
           id?: string
+          language?: string | null
           metadata?: Json | null
           metriport_user_id?: string | null
           neurosity?: Json | null
