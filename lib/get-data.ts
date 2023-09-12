@@ -57,6 +57,6 @@ export async function getHealthData(user: any, threeDaysAgoFromOneAm: string) {
 
 }
 
-getHealthData({
-  id: '20284713-5cd6-4199-8313-0d883f0711a1',
-}, '2023-09-09T01:00:00.000Z').then(console.log)
+// getHealthData({
+//   id: '20284713-5cd6-4199-8313-0d883f0711a1',
+// }, '2023-09-09T01:00:00.000Z').then(console.log)
