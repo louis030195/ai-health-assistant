@@ -81,7 +81,7 @@ export default function RootLayout({
             {/* <WhatsAppBanner /> */}
             {/* <FeedbackBanner /> */}
             {/* <DiscountBanner /> */}
-            <AppleHealthBanner />
+            {/* <AppleHealthBanner /> */}
             <SupabaseProvider>
               <Navbar />
               <main
