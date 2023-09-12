@@ -87,7 +87,7 @@ export async function getHealthData(user: any, threeDaysAgoFromOneAm: string) {
 
 }
 
-function convertToUserTimezone(date: Date, userTimezone: string) {
+export function convertToUserTimezone(date: Date, userTimezone: string) {
   const userDate = new Date(date.toLocaleString('en-US', { timeZone: userTimezone }));
   const year = userDate.getFullYear();
   const month = (userDate.getMonth() + 1).toString().padStart(2, '0'); // months are 0-indexed in JS
