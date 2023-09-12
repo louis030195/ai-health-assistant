@@ -6,7 +6,7 @@ import { anonymiseUser, baseMediarAI, buildQuestionPrompt, generalMediarAIInstru
 import TelegramBot from "node-telegram-bot-api";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 import { llm, llmPrivate } from "@/utils/llm";
-import { generateDataStringsAndFetchData, getHealthData } from "@/lib/get-data";
+import { getHealthData } from "@/lib/get-data";
 import { defaultUnclassifiedMessage, feedbackMessage, imageTagMessage, tagMessage } from "@/lib/messages";
 
 // export const runtime = 'edge'

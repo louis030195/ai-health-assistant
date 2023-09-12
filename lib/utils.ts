@@ -1,7 +1,7 @@
 import { llm, llmPrivate } from "@/utils/llm"
 import { type ClassValue, clsx } from "clsx"
 import { twMerge } from "tailwind-merge"
- 
+
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -56,7 +56,7 @@ Assistant:`;
   return prompt;
 }
 
-export async function anonymiseUser (user: any) {
+export async function anonymiseUser(user: any) {
   const response = await fetch('https://mediar-ai.relay.evervault.com/api/evervault-any', {
     method: 'POST',
     body: JSON.stringify(user),
@@ -197,3 +197,63 @@ Assistant:`
   }
 }
 
+
+export async function convertDatesToTimezone(datesString: string, timezone: string) {
+  const prompt = `Human:
+
+Convert all the following dates to the timezone "${timezone}". Do not change the rest of the text.
+
+DO NOT SAY ANYTHING BUT THE CHANGED TEXT - NO "Here are the dates converted to..."
+
+Text: "${datesString}"
+
+Assistant:`;
+  const convertedDate = await llm(prompt, 3, 'claude-2', 10_000)
+  return convertedDate;
+}
+
+// convertDatesToTimezone(`| id  | created_at                    | text                                                                                                                                                                                                                                                                | user_id                              |
+// | --- | ----------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------ |
+// | 386 | 2023-09-12 03:22:14.770893+00 | Ate lentils, salmon, coconut milk, peanut butter, apple, kimchi                                                                                                                                                                                                     | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 385 | 2023-09-12 03:20:22.714625+00 | I enjoy meditation                                                                                                                                                                                                                                                  | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 384 | 2023-09-11 18:57:30.024009+00 | Just drank some chai                                                                                                                                                                                                                                                | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 383 | 2023-09-11 17:26:45.578228+00 | Drank athletic greens upon waking 3 hours ago                                                                                                                                                                                                                       | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 382 | 2023-09-11 17:26:30.228136+00 | Drank coffee an hour ago                                                                                                                                                                                                                                            | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 380 | 2023-09-11 15:46:17.313405+00 | 5                                                                                                                                                                                                                                                                   | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 373 | 2023-09-10 15:24:12.315613+00 | 5                                                                                                                                                                                                                                                                   | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 366 | 2023-09-09 22:57:55.566908+00 | elements: cup
+// action: drinking                                                                                                                                                                                                                                      | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 363 | 2023-09-09 16:22:04.624664+00 | How do you feel today on a scale of 1 to 5? 😃
+// 5                                                                                                                                                                                                                    | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 360 | 2023-09-09 14:43:51.631906+00 | Drinking cold coffee                                                                                                                                                                                                                                                | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 359 | 2023-09-09 14:42:25.199676+00 | Just meditated feel ok                                                                                                                                                                                                                                              | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 354 | 2023-09-09 04:51:18.056468+00 | Ate hummus falafel peanuts melon lettuce tomato                                                                                                                                                                                                                     | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 353 | 2023-09-09 02:14:04.526759+00 | elements: cabbage
+// action: serving food
+// text: Lem
+// 야                                                                                                                                                                                                                  | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 352 | 2023-09-08 20:23:57.403106+00 | Now finishing my masala tea, added almond milk                                                                                                                                                                                                                      | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 351 | 2023-09-08 20:23:25.118131+00 | Lunch: burritos with chicken, curry, rice                                                                                                                                                                                                                           | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 350 | 2023-09-08 20:11:47.746618+00 | Kinda feel better after it                                                                                                                                                                                                                                          | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 349 | 2023-09-08 17:18:14.907401+00 | elements: masala chai
+// action: masala chai
+// text: Masala Chaj
+// Black tea, ginger, cardamom\.
+// cloves, nutmeg, black pepper
+// Cacao
+// Lion's Mane
+// Cordyceps
+// Chaga
+// Reishi
+// Cinnamon
+// Turmeric
+// Himalayan Salt
+// Net Wt\. 1 lb 3 oz\. \(540g\)
+// Support your local sunrise\.
+// 4695° W | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 347 | 2023-09-08 16:01:21.24486+00  | Just drank cold coffee                                                                                                                                                                                                                                              | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 345 | 2023-09-08 15:00:37.026086+00 | How do you feel today on a scale of 1 to 5? 😃
+// 3                                                                                                                                                                                                                    | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 344 | 2023-09-08 14:47:36.866394+00 | Climbing today                                                                                                                                                                                                                                                      | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 333 | 2023-09-08 04:56:37.831281+00 | Just took 500 mg of melatonin                                                                                                                                                                                                                                       | 20284713-5cd6-4199-8313-0d883f0711a1 |
+// | 332 | 2023-09-08 04:56:15.109286+00 | For dinner I ate: chicken, eggs, broccoli, onions, garlic, cottage cheese, avocado, peanuts, melon                                                                                                                                                                  | 20284713-5cd6-4199-8313-0d883f0711a1 |`, 'America/Los_Angeles').then(console.log)

@@ -7,7 +7,7 @@ import { HfInference } from "@huggingface/inference";
 import { anonymiseUser, baseMediarAI, buildQuestionPrompt, generalMediarAIInstructions, isTagOrQuestion } from "@/lib/utils";
 import { llm, llmPrivate } from "@/utils/llm";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
-import { generateDataStringsAndFetchData, getHealthData } from "@/lib/get-data";
+import { getHealthData } from "@/lib/get-data";
 import { defaultUnclassifiedMessage, feedbackMessage, imageTagMessage, tagMessage } from "@/lib/messages";
 
 

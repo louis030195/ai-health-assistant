@@ -7,7 +7,7 @@ import { NextResponse } from 'next/server';
 import { llm, llmPrivate } from '@/utils/llm';
 import TelegramBot from 'node-telegram-bot-api';
 import PostHogClient from '@/app/posthog-server';
-import { generateDataStringsAndFetchData, getHealthData } from '@/lib/get-data';
+import { getHealthData } from '@/lib/get-data';
 
 // export const runtime = 'edge'
 export const maxDuration = 300
