@@ -15,20 +15,11 @@ export default function LanguageDropdown({ userId }: { userId: string }) {
         { language: 'German', flag: '🇩🇪' },
         { language: 'Mandarin Chinese', flag: '🇨🇳' },
         { language: 'Hindi', flag: '🇮🇳' },
-        { language: 'Bengali', flag: '🇧🇩' },
-        { language: 'Portuguese', flag: '🇵🇹' },
         { language: 'Russian', flag: '🇷🇺' },
         { language: 'Japanese', flag: '🇯🇵' },
-        { language: 'Punjabi', flag: '🇵🇰' },
-        { language: 'Javanese', flag: '🇮🇩' },
-        { language: 'Turkish', flag: '🇹🇷' },
         { language: 'Korean', flag: '🇰🇷' },
         { language: 'Vietnamese', flag: '🇻🇳' },
-        { language: 'Telugu', flag: '🇮🇳' },
         { language: 'Italian', flag: '🇮🇹' },
-        { language: 'Marathi', flag: '🇮🇳' },
-        { language: 'Thai', flag: '🇹🇭' },
-        { language: 'Dutch', flag: '🇳🇱' },
     ]; // Add more languages as needed
 
     useEffect(() => {

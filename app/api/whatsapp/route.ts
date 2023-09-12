@@ -8,7 +8,7 @@ import { anonymiseUser, baseMediarAI, buildQuestionPrompt, generalMediarAIInstru
 import { llm, llmPrivate } from "@/utils/llm";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 import { getHealthData } from "@/lib/get-data";
-import { defaultUnclassifiedMessage, feedbackMessage, imageTagMessage, tagMessage } from "@/lib/messages";
+import { getDefaultMessage } from "@/lib/messages";
 
 
 // export const runtime = 'edge'
@@ -96,18 +96,17 @@ export async function POST(req: Request) {
       return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 400 });
 
     }
-    const userId = data[0].id
-    const userPlan = data[0].plan || 'free'
+    const user = data[0];
 
     const phoneVerified = data[0].phone_verified || false
-    await track(userId)
+    await track(user.id)
     if (!phoneVerified) {
       return new Response(`Your phone has not been verified!`);
     }
 
     const date = new Date().toLocaleDateString('en-US', { timeZone: data[0].timezone });
-    const questionKey = QUESTION_PREFIX + userId + '_' + date;
-    const tagKey = TAG_PREFIX + userId + '_' + date;
+    const questionKey = QUESTION_PREFIX + user.id + '_' + date;
+    const tagKey = TAG_PREFIX + user.id + '_' + date;
 
     console.log("Question key:", questionKey, "Tag key:", tagKey);
     const questionCount = (await kv.get(questionKey)) as number || 0;
@@ -117,7 +116,7 @@ export async function POST(req: Request) {
     const hasImage = parsed.NumMedia > 0;
     if (hasImage) {
       // Check if the user has more than two tags or questions and is not on the standard plan
-      if (tagCount > 2 && userPlan !== 'standard') {
+      if (tagCount > 2 && user.plan !== 'standard') {
         // Send a message to the user asking them to upgrade their plan
         const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
         await sendWhatsAppMessage(phoneNumber, upgradeMessage);
@@ -137,7 +136,7 @@ export async function POST(req: Request) {
       };
       await supabase.from('chats').insert({
         text: JSON.stringify(parsed.MediaUrl0),
-        user_id: userId,
+        user_id: user.id,
         category: 'tag',
         channel: 'whatsapp'
       });
@@ -208,20 +207,22 @@ export async function POST(req: Request) {
       // Insert as tag
       const { data: d2, error: e2 } = await supabase.from('tags').insert({
         text: caption,
-        user_id: userId
+        user_id: user.id
       });
 
       console.log("Tag added:", d2, e2);
 
 
-      return new Response(imageTagMessage(caption));
+      return new Response(getDefaultMessage('imageTagMessage',
+        user.language || 'English',
+        { caption }));
     }
     console.log(`Message from ${parsed.ProfileName}: ${parsed.Body}`);
 
     const intent = await isTagOrQuestion(parsed.Body);
     if (intent === 'question') {
       // Check if the user has more than two tags or questions and is not on the standard plan
-      if (questionCount > 2 && userPlan !== 'standard') {
+      if (questionCount > 2 && user.plan !== 'standard') {
         // Send a message to the user asking them to upgrade their plan
         const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
         await sendWhatsAppMessage(phoneNumber, upgradeMessage);
@@ -234,18 +235,6 @@ export async function POST(req: Request) {
         process.env.SUPABASE_URL!,
         process.env.SUPABASE_KEY!
       )
-
-      // 1. Fetch the user's information
-      const { error: e2, data: users } = await supabase
-        .from('users')
-        .select('id, phone, timezone, full_name, language')
-        .eq('id', userId);
-
-      if (e2 || !users || users.length === 0) {
-        throw new Error(`Error fetching user or user not found. Error: ${e2?.message}`);
-      }
-
-      const user = users[0];
 
       // 2. Compute yesterday's date for the user
 
@@ -269,7 +258,7 @@ ${healthData}`,
       console.log("Response:", response);
       const { data, error } = await supabase.from('chats').insert({
         text: response,
-        user_id: userId,
+        user_id: user.id,
         category: 'answer',
       });
 
@@ -287,7 +276,7 @@ ${healthData}`,
         const { data: lastPrompt, error: e4 } = await supabase
           .from('prompts')
           .select()
-          .eq('user_id', userId)
+          .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(1)
 
@@ -300,7 +289,7 @@ ${healthData}`,
         }
       } else {
         // Check if the user has more than two tags or questions and is not on the standard plan
-        if (tagCount > 2 && userPlan !== 'standard') {
+        if (tagCount > 2 && user.plan !== 'standard') {
           // Send a message to the user asking them to upgrade their plan
           const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
           await sendWhatsAppMessage(phoneNumber, upgradeMessage);
@@ -310,31 +299,31 @@ ${healthData}`,
 
       const { data, error } = await supabase.from('tags').insert({
         text: tag,
-        user_id: userId,
+        user_id: user.id,
       });
       console.log("Tag added:", data, error);
       await supabase.from('chats').insert({
         text: tag,
-        user_id: userId,
+        user_id: user.id,
         category: intent,
         channel: 'whatsapp'
       });
 
 
-      return new Response(tagMessage);
+      return new Response(getDefaultMessage('tagMessage', user.language || 'English'));
     } else if (intent === 'feedback') {
       // New code for feedback intent
       const { data, error } = await supabase.from('chats').insert({
         text: parsed.Body,
-        user_id: userId,
+        user_id: user.id,
         category: 'feedback',
         channel: 'whatsapp'
       });
       console.log("Feedback added:", data, error);
 
-      return new Response(feedbackMessage);
+      return new Response(getDefaultMessage('feedbackMessage', user.language || 'English'));
     }
-    return new Response(defaultUnclassifiedMessage);
+    return new Response(getDefaultMessage('defaultUnclassifiedMessage', user.language || 'English'));
   } catch (error) {
     console.log(error);
     return new Response(

@@ -7,7 +7,7 @@ import TelegramBot from "node-telegram-bot-api";
 import { getCaption, opticalCharacterRecognition } from "@/lib/google-cloud";
 import { llm, llmPrivate } from "@/utils/llm";
 import { getHealthData } from "@/lib/get-data";
-import { defaultUnclassifiedMessage, feedbackMessage, imageTagMessage, tagMessage } from "@/lib/messages";
+import { getDefaultMessage } from "@/lib/messages";
 
 // export const runtime = 'edge'
 export const maxDuration = 300
@@ -173,7 +173,7 @@ export async function POST(req: Request) {
     // 1. find username in users table
     const { data, error } = await supabase
       .from('users')
-      .select('id, phone, timezone, full_name, telegram_chat_id, plan')
+      .select('id, phone, timezone, full_name, telegram_chat_id, plan, language')
       .eq('telegram_username', body.message.from.username)
       .limit(1);
 
@@ -184,14 +184,13 @@ export async function POST(req: Request) {
       console.log("Response:", response);
       return new Response(`Error fetching user or user not found. Error: ${error?.message}`, { status: 200 });
     }
-    const userId = data[0].id
-    const userPlan = data[0].plan || 'free'
+    const user = data[0]
 
-    await track(userId)
+    await track(user.id)
 
     const date = new Date().toLocaleDateString('en-US', { timeZone: data[0].timezone });
-    const questionKey = QUESTION_PREFIX + userId + '_' + date;
-    const tagKey = TAG_PREFIX + userId + '_' + date;
+    const questionKey = QUESTION_PREFIX + user.id + '_' + date;
+    const tagKey = TAG_PREFIX + user.id + '_' + date;
 
     console.log("Question key:", questionKey, "Tag key:", tagKey);
     const questionCount = (await kv.get(questionKey)) as number || 0;
@@ -202,7 +201,7 @@ export async function POST(req: Request) {
     if (!data[0].telegram_chat_id) {
       const { error: e3 } = await supabase.from('users').update({
         telegram_chat_id: body.message.chat.id.toString()
-      }).match({ id: userId });
+      }).match({ id: user.id });
       if (e3) {
         console.log("Error updating user:", e3.message);
         return new Response(`Error updating user. Error: ${e3.message}`, { status: 200 });
@@ -215,7 +214,7 @@ export async function POST(req: Request) {
     const hasImage = body.message.photo && body.message.photo.length > 0;
     if (hasImage) {
       // Check if the user has more than two tags or questions and is not on the standard plan
-      if (tagCount > 2 && userPlan !== 'standard') {
+      if (tagCount > 2 && user.plan !== 'standard') {
         // Send a message to the user asking them to upgrade their plan
         const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
         await bot.sendMessage(body.message.chat.id, upgradeMessage, { parse_mode: 'Markdown' });
@@ -236,7 +235,7 @@ export async function POST(req: Request) {
       const fileId = body.message.photo![body.message.photo!.length - 1].file_id;
       await supabase.from('chats').insert({
         text: JSON.stringify(body.message.photo),
-        user_id: userId,
+        user_id: user.id,
         category: 'tag',
         channel: 'telegram'
       });
@@ -309,12 +308,13 @@ export async function POST(req: Request) {
       // Insert as tag
       const { data: d2, error: e2 } = await supabase.from('tags').insert({
         text: caption,
-        user_id: userId
+        user_id: user.id
       });
 
       console.log("Tag added:", d2, e2);
 
-      const response2 = await bot.sendMessage(body.message.chat.id, imageTagMessage(caption), { parse_mode: 'Markdown' })
+      const response2 = await bot.sendMessage(body.message.chat.id,
+        getDefaultMessage('imageTagMessage', user.language || 'English', { caption }), { parse_mode: 'Markdown' })
       console.log("Response:", response2);
       return new Response('', { status: 200 });
     }
@@ -323,7 +323,7 @@ export async function POST(req: Request) {
     const intent = await isTagOrQuestion(body.message.text);
     if (intent === 'question') {
       // Check if the user has more than two tags or questions and is not on the standard plan
-      if (questionCount > 2 && userPlan !== 'standard') {
+      if (questionCount > 2 && user.plan !== 'standard') {
         // Send a message to the user asking them to upgrade their plan
         const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
         await bot.sendMessage(body.message.chat.id, upgradeMessage, { parse_mode: 'Markdown' });
@@ -332,17 +332,7 @@ export async function POST(req: Request) {
       await kv.incr(questionKey);
       const msg = "Sure, give me a few seconds to read your data and I'll get back to you with an answer in less than a minute 🙏. PS: Any feedback appreciated ❤️"
       await bot.sendMessage(body.message.chat.id, msg, { parse_mode: 'Markdown' })
-      // 1. Fetch the user's information
-      const { error: e2, data: users } = await supabase
-        .from('users')
-        .select('id, phone, timezone, full_name, language')
-        .eq('id', userId);
 
-      if (e2 || !users || users.length === 0) {
-        throw new Error(`Error fetching user or user not found. Error: ${e2?.message}`);
-      }
-
-      const user = users[0];
 
       const threeDaysAgo = new Date(new Date().setDate(new Date().getDate() - 3)).toLocaleString('en-US', { timeZone: user.timezone });
 
@@ -363,7 +353,7 @@ ${healthData}`,
       console.log("Response:", response);
       const { data, error } = await supabase.from('chats').insert({
         text: response,
-        user_id: userId,
+        user_id: user.id,
         category: 'answer',
         channel: 'telegram'
       });
@@ -383,7 +373,7 @@ ${healthData}`,
         const { data: lastPrompt, error: e4 } = await supabase
           .from('prompts')
           .select()
-          .eq('user_id', userId)
+          .eq('user_id', user.id)
           .order('created_at', { ascending: false })
           .limit(1)
 
@@ -396,7 +386,7 @@ ${healthData}`,
         }
       } else {
         // Check if the user has more than two tags or questions and is not on the standard plan
-        if (tagCount > 2 && userPlan !== 'standard') {
+        if (tagCount > 2 && user.plan !== 'standard') {
           // Send a message to the user asking them to upgrade their plan
           const upgradeMessage = "You have reached the limit for your current plan. Please upgrade to the standard plan to continue using our service. https://buy.stripe.com/28oeVDdGu4RA2JOfZ2";
           await bot.sendMessage(body.message.chat.id, upgradeMessage, { parse_mode: 'Markdown' });
@@ -406,16 +396,17 @@ ${healthData}`,
 
       const { data, error } = await supabase.from('tags').insert({
         text: tag,
-        user_id: userId,
+        user_id: user.id,
       });
       console.log("Tag added:", data, error);
       await supabase.from('chats').insert({
         text: tag,
-        user_id: userId,
+        user_id: user.id,
         category: 'tag',
         channel: 'telegram'
       });
-      const response = await bot.sendMessage(body.message.chat.id, tagMessage, { parse_mode: 'Markdown' }
+      const response = await bot.sendMessage(body.message.chat.id,
+        getDefaultMessage('tagMessage', user.language || 'English'), { parse_mode: 'Markdown' }
       );
       console.log("Response:", response);
       return new Response('', { status: 200 });
@@ -423,20 +414,22 @@ ${healthData}`,
       // New code for feedback intent
       const { data, error } = await supabase.from('chats').insert({
         text: body.message.text,
-        user_id: userId,
+        user_id: user.id,
         category: 'feedback',
         channel: 'telegram'
       });
       console.log("Feedback added:", data, error);
       const response = await bot.sendMessage(body.message.chat.id,
-        feedbackMessage, { parse_mode: 'Markdown' }
+        getDefaultMessage('feedbackMessage', user.language || 'English')
+        , { parse_mode: 'Markdown' }
       );
       console.log("Response:", response);
       return new Response('', { status: 200 });
     }
 
     const response = await bot.sendMessage(body.message.chat.id,
-      defaultUnclassifiedMessage, { parse_mode: 'Markdown' }
+      getDefaultMessage('defaultUnclassifiedMessage', user.language || 'English'
+      ), { parse_mode: 'Markdown' }
     );
     console.log("Response:", response);
     return new Response('', { status: 200 });
