@@ -98,6 +98,3 @@ function convertToUserTimezone(date: Date, userTimezone: string) {
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.000Z`;
 }
 
-getHealthData({
-  id: '20284713-5cd6-4199-8313-0d883f0711a1', timezone: 'America/Los_Angeles'
-}, '2023-09-09T01:00:00.000Z').then(console.log)
