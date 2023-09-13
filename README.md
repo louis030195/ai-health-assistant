@@ -68,8 +68,7 @@ Let me know if you would like any other changes or additions!
 - [ ] Evervault whole prompt data anonymization 
 - [ ] Supabase column encryption
 - [ ] More health sources
-  - [ ] Google Fit
-  - [ ] ...
+  - [ ] Muse head band
 - [ ] Self-hosted 
 - [ ] Your own LLM, 100% private
 
