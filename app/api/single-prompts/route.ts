@@ -52,8 +52,8 @@ export async function POST(req: Request) {
     // Get the current time in the user's timezone
     const currentTime = new Date().toLocaleString('en-US', { timeZone: user.timezone });
 
-    // Get the time three hours ago in the user's timezone
-    const threeHoursAgo = new Date(new Date().setHours(new Date().getHours() - 3)).toLocaleString('en-US', { timeZone: user.timezone });
+    // Get the time eight hours ago in the user's timezone
+    const threeHoursAgo = new Date(new Date().setHours(new Date().getHours() - 8)).toLocaleString('en-US', { timeZone: user.timezone });
 
     // Check if there is already a prompt sent in the last 3 hours
     const { data: recentPrompts } = await supabase

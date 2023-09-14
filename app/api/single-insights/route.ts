@@ -104,23 +104,7 @@ ${healthData}`, anonymisousUser));
         console.log("Error fetching last whatsapp message:", e4.message);
       } else {
         console.log("Last whatsapp message:", lastWhatsappMessage);
-
-        // 2. if it was less than 24 hours ago, skip
-
-        // 3. if it was more than 24 hours ago, send the template message
-        const lastMessage = lastWhatsappMessage[0];
-        const lastMessageDate = lastMessage?.created_at ? new Date(lastMessage.created_at!).getTime() : 0;
-        const now = new Date().getTime();
-        const diff = now - lastMessageDate;
-        const hours = Math.floor(diff / 1000 / 60 / 60);
-        console.log("Last whatsapp message was:", hours, "hours ago");
-        if (!lastWhatsappMessage || lastWhatsappMessage.length === 0 || hours > 24) {
-
-          // const template = `👋  Hey! Your health matter a lot to me 🥦💪🧠. How can I become a better health assistant for you?`
-          const template = `👋 Hey! Your health matter a lot to me 🥦💪🧠. How can I become a better health assistant for you?`
-          await sendWhatsAppMessage(phone, template);
-        }
-
+        
         // 4. send the insight
         await sendWhatsAppMessage(phone, insights);
       }

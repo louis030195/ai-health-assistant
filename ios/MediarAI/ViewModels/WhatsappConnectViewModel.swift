@@ -50,9 +50,11 @@ class WhatsappConnectViewModel: ObservableObject {
       var request = URLRequest(url: url)
       request.httpMethod = "POST"
 
-      // merge `+${countryCode}${phoneNumber}` into a single string
-      // let number = "+\(countryCode ?? 1)\(phoneNumber)"
-      request.httpBody = try? JSONSerialization.data(withJSONObject: ["to": phoneNumber])
+      print("startVerification for Phone number: \(phoneNumber)")
+      // remove spaces from string
+      request.httpBody = try? JSONSerialization.data(withJSONObject: [
+        "to": phoneNumber.replacingOccurrences(of: " ", with: "")
+      ])
       request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 
       let task = URLSession.shared.dataTask(with: request) { (data, _, error) in
@@ -83,8 +85,9 @@ class WhatsappConnectViewModel: ObservableObject {
       return
     }
 
+    print("verifyOtp for Phone number: \(phoneNumber)")
     request.httpBody = try? JSONSerialization.data(withJSONObject: [
-      "to": phoneNumber, "otp": otp, "id": userId
+      "to": phoneNumber.replacingOccurrences(of: " ", with: ""), "otp": otp, "id": userId
     ])
     request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 

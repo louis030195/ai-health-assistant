@@ -26,7 +26,6 @@ class AppDelegate: NSObject, UIApplicationDelegate {
 
     self.window?.overrideUserInterfaceStyle = .light
 
-
     return true
   }
 }
@@ -44,7 +43,22 @@ struct MediarAIApp: App {
         .onOpenURL(perform: handleURL)
     }
   }
+  func trackEvent(userId: String, event: String) {
+    let url = URL(string: "https://app.posthog.com/capture/")!
+    var request = URLRequest(url: url)
+    request.httpMethod = "POST"
+    request.setValue("application/json", forHTTPHeaderField: "Content-Type")
 
+    let body: [String: Any] = [
+      "api_key": "phc_V7co1flWmfnd9Hd6LSyPRau9sARsxMEiOrmNvGeUhbJ",
+      "event": event,
+      "distinct_id": userId
+    ]
+    request.httpBody = try? JSONSerialization.data(withJSONObject: body)
+
+    let task = URLSession.shared.dataTask(with: request)
+    task.resume()
+  }
   func handleURL(_ url: URL) {
     if url.host == "auth-callback" {
       let client = SupabaseClient(
@@ -52,8 +66,9 @@ struct MediarAIApp: App {
         supabaseKey: Constants.supabaseKey)
       Task {
         do {
-          _ = try await client.auth.session(from: url)
+          let session = try await client.auth.session(from: url)
           model.loggedIn = true
+          trackEvent(userId: session.user.id.uuidString, event: "sign in")
           print("### Successful oAuth")
         } catch {
           print("### oAuthCallback error: \(error)")

@@ -15,6 +15,8 @@
 		A674159D2AB0DEA700F07345 /* OTPStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = A674159C2AB0DEA700F07345 /* OTPStack.swift */; };
 		A674159F2AB0DEBC00F07345 /* OTPTextField.swift in Sources */ = {isa = PBXBuildFile; fileRef = A674159E2AB0DEBC00F07345 /* OTPTextField.swift */; };
 		A67415A12AB0DF7F00F07345 /* OTPFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67415A02AB0DF7F00F07345 /* OTPFieldView.swift */; };
+		A67415B42AB11ACB00F07345 /* PhoneNumberKit in Frameworks */ = {isa = PBXBuildFile; productRef = A67415B32AB11ACB00F07345 /* PhoneNumberKit */; };
+		A67415B62AB11D7300F07345 /* PhoneNumber.swift in Sources */ = {isa = PBXBuildFile; fileRef = A67415B52AB11D7300F07345 /* PhoneNumber.swift */; };
 		BF5FC0342AA2461A00BD9125 /* MediarAIApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0332AA2461A00BD9125 /* MediarAIApp.swift */; };
 		BF5FC0362AA2461A00BD9125 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BF5FC0352AA2461A00BD9125 /* ContentView.swift */; };
 		BF5FC0382AA2461A00BD9125 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = BF5FC0372AA2461A00BD9125 /* Assets.xcassets */; };
@@ -43,6 +45,7 @@
 		A674159C2AB0DEA700F07345 /* OTPStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPStack.swift; sourceTree = "<group>"; };
 		A674159E2AB0DEBC00F07345 /* OTPTextField.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPTextField.swift; sourceTree = "<group>"; };
 		A67415A02AB0DF7F00F07345 /* OTPFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OTPFieldView.swift; sourceTree = "<group>"; };
+		A67415B52AB11D7300F07345 /* PhoneNumber.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhoneNumber.swift; sourceTree = "<group>"; };
 		BF5FC0302AA2461A00BD9125 /* MediarAI.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediarAI.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BF5FC0332AA2461A00BD9125 /* MediarAIApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MediarAIApp.swift; sourceTree = "<group>"; };
 		BF5FC0352AA2461A00BD9125 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -72,6 +75,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				A648D1F22AABEB640077574B /* MetriportSDK in Frameworks */,
+				A67415B42AB11ACB00F07345 /* PhoneNumberKit in Frameworks */,
 				BF5FC0552AA2561F00BD9125 /* Supabase in Frameworks */,
 				A674159B2AB0DDBD00F07345 /* (null) in Frameworks */,
 			);
@@ -135,6 +139,7 @@
 				A674159C2AB0DEA700F07345 /* OTPStack.swift */,
 				A674159E2AB0DEBC00F07345 /* OTPTextField.swift */,
 				A67415A02AB0DF7F00F07345 /* OTPFieldView.swift */,
+				A67415B52AB11D7300F07345 /* PhoneNumber.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -196,6 +201,7 @@
 			packageProductDependencies = (
 				BF5FC0542AA2561F00BD9125 /* Supabase */,
 				A648D1F12AABEB640077574B /* MetriportSDK */,
+				A67415B32AB11ACB00F07345 /* PhoneNumberKit */,
 			);
 			productName = MediarAI;
 			productReference = BF5FC0302AA2461A00BD9125 /* MediarAI.app */;
@@ -228,6 +234,7 @@
 			packageReferences = (
 				BF5FC0532AA2561F00BD9125 /* XCRemoteSwiftPackageReference "supabase-swift" */,
 				A648D1F02AABEB640077574B /* XCRemoteSwiftPackageReference "metriport-ios-sdk" */,
+				A67415B22AB11ACB00F07345 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */,
 			);
 			productRefGroup = BF5FC0312AA2461A00BD9125 /* Products */;
 			projectDirPath = "";
@@ -269,6 +276,7 @@
 				A674159D2AB0DEA700F07345 /* OTPStack.swift in Sources */,
 				A674159F2AB0DEBC00F07345 /* OTPTextField.swift in Sources */,
 				A67415A12AB0DF7F00F07345 /* OTPFieldView.swift in Sources */,
+				A67415B62AB11D7300F07345 /* PhoneNumber.swift in Sources */,
 				BF5FC0362AA2461A00BD9125 /* ContentView.swift in Sources */,
 				A67415942AB0D60D00F07345 /* WhatsappConnect.swift in Sources */,
 				BF5FC0462AA2493700BD9125 /* SigninView.swift in Sources */,
@@ -507,6 +515,14 @@
 				minimumVersion = 1.0.0;
 			};
 		};
+		A67415B22AB11ACB00F07345 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/marmelroy/PhoneNumberKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 3.0.0;
+			};
+		};
 		BF5FC0532AA2561F00BD9125 /* XCRemoteSwiftPackageReference "supabase-swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/supabase/supabase-swift.git";
@@ -522,6 +538,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = A648D1F02AABEB640077574B /* XCRemoteSwiftPackageReference "metriport-ios-sdk" */;
 			productName = MetriportSDK;
+		};
+		A67415B32AB11ACB00F07345 /* PhoneNumberKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = A67415B22AB11ACB00F07345 /* XCRemoteSwiftPackageReference "PhoneNumberKit" */;
+			productName = PhoneNumberKit;
 		};
 		BF5FC0542AA2561F00BD9125 /* Supabase */ = {
 			isa = XCSwiftPackageProductDependency;

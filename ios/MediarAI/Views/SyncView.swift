@@ -5,6 +5,7 @@
 //  Created by Louis AB on 01/09/2023.
 //
 
+import Combine
 import HealthKit
 import Supabase
 import SwiftUI
@@ -13,15 +14,19 @@ struct SyncView: View {
   @EnvironmentObject var model: Model
   @State private var showAlert = false
   @State private var message = ""
+  @State private var isPhoneVerified: Bool = true  // default value
+
   let client = SupabaseClient(
     supabaseURL: URL(string: Constants.supabaseUrl)!,
     supabaseKey: Constants.supabaseKey)
 
   var body: some View {
     VStack {
-      //  WhatsappConnectView()
-      //    .frame(maxWidth: .infinity, alignment: .center)
-      //    .padding()
+      // if !isPhoneVerified {
+      // WhatsappConnectView()
+      //   .frame(maxWidth: .infinity, alignment: .center)
+      //   .padding()
+      // }
 
       Text("Connect your health sources")
         .font(.largeTitle)
@@ -34,38 +39,6 @@ struct SyncView: View {
       .padding()
 
       MetriportView()
-
-      // ButtonView(text: "Connect Apple Health", variant: .default) {
-      //   HealthKitService.fetchAllHealthData { healthData in
-      //     if let healthData = healthData {
-      //       print("fetched data")
-      //       Task {
-      //         do {
-      //           let result = await HealthDatabaseService.uploadData(healthData: healthData)
-      //           let (success, error) = (result.0, result.1)
-      //           if success {
-      //             message = "Successfully uploaded data to database!"
-      //           } else {
-      //             message = "Error while uploading data to database: \(error ?? "")"
-      //           }
-      //           showAlert = true
-      //         } catch {
-      //           message = "Error while uploading data to database: \(error)"
-      //           showAlert = true
-      //           print("Error while uploading data to database: \(error)")
-      //         }
-      //       }
-      //     } else {
-      //       print("error while fetching data")
-      //       message = "Error while fetching health data"
-      //       showAlert = true
-      //     }
-      //   }
-      // }
-      // .alert(isPresented: $showAlert) {
-      //   Alert(
-      //     title: Text("Upload Status"), message: Text(message), dismissButton: .default(Text("OK")))
-      // }
 
       Text("Just head back to WhatsApp after this, the main interface of Mediar.")
         .font(.subheadline)
@@ -117,13 +90,84 @@ struct SyncView: View {
       //             }
       //         }
       //     }
+      Spacer()  // Pushes the link to the bottom
 
-    }.navigationTitle("Sync Health Data")
+      Text("Delete your account and all your data")
+        .font(.footnote)
+        .foregroundColor(.blue)
+        .underline()
+        .onTapGesture {
+          if let url = URL(string: "mailto:louis@mediar.ai") {
+            UIApplication.shared.open(url)
+          }
+        }
+        .padding()
+    }
+    .onAppear {
+      Task {
+        await fetchUserDetails()
+      }
+    }
+    .navigationTitle("Mediar")
+    .ignoresSafeArea(.keyboard, edges: .bottom)
+    // .modifier(KeyboardAdaptive())
+  }
+
+  func fetchUserDetails() async {
+    guard let user = try? await self.client.auth.session.user else { return }
+    do {
+      let result: Bool = try await self.client
+        .database
+        .from("users")
+        .select(columns: "phone_verified")
+        .eq(column: "id", value: user.id)
+        .single()
+        .execute()
+        .value
+
+      self.isPhoneVerified = result
+
+    } catch {
+      print("Failed to execute query: \(error)")
+    }
   }
 }
 
 struct SyncView_Previews: PreviewProvider {
   static var previews: some View {
     SyncView()
+  }
+}
+
+struct KeyboardAdaptive: ViewModifier {
+  @State private var keyboardHeight: CGFloat = 0
+
+  func body(content: Content) -> some View {
+    content
+      .padding(.bottom, keyboardHeight)
+      .onReceive(Publishers.keyboardHeight) { self.keyboardHeight = $0 }
+  }
+}
+
+extension Publishers {
+  static var keyboardHeight: AnyPublisher<CGFloat, Never> {
+    let willShow = NotificationCenter.default.publisher(
+      for: UIApplication.keyboardWillShowNotification
+    )
+    .map { $0.keyboardHeight }
+
+    let willHide = NotificationCenter.default.publisher(
+      for: UIApplication.keyboardWillHideNotification
+    )
+    .map { _ in CGFloat(0) }
+
+    return MergeMany(willShow, willHide)
+      .eraseToAnyPublisher()
+  }
+}
+
+extension Notification {
+  var keyboardHeight: CGFloat {
+    return (userInfo?[UIResponder.keyboardFrameEndUserInfoKey] as? CGRect)?.height ?? 0
   }
 }
