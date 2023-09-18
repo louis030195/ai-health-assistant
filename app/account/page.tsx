@@ -23,6 +23,7 @@ import Sub from './Sub';
 import { GoalInput } from '../dashboard/GoalInput';
 import MetriportConnect from '@/components/MetriportConnect';
 import LanguageDropdown from './LanguageSelector';
+import AppleHealthConnect from '@/components/AppleHealthConnect';
 export const dynamic = "force-dynamic";
 
 export default async function Account() {
@@ -93,6 +94,9 @@ export default async function Account() {
           <h2 className="text-lg font-bold mb-2">Connect your health data</h2>
           <p className="text-sm text-gray-600 mb-4">Connect your health/fitness accounts to get your health data.</p>
           <MetriportConnect userId={session.user.id} />
+          <AppleHealthConnect
+            customTitle="Connect Apple Health"
+            appStoreLink="https://testflight.apple.com/join/ofhHbnbd" />
         </div>
 
         <WhatsappConnect session={session} subscription={subscription || undefined} userDetails={userDetails || undefined}

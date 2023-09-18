@@ -26,6 +26,7 @@ import SaveTimezone from './SaveTimezone';
 import { GoalInput } from './GoalInput';
 import AppleHealthConnect from '@/components/AppleHealthConnect';
 import MetriportConnect from '@/components/MetriportConnect';
+import Link from 'next/link';
 export const dynamic = "force-dynamic";
 
 export default async function Dashboard() {
@@ -68,64 +69,23 @@ export default async function Dashboard() {
 
 
   return (
-    <div className="flex flex-col  gap-10 items-center">
+    <div className="flex flex-col gap-10 items-center bg-gray-100 p-10">
       <SaveTimezone userId={session?.user?.id} saveUserTimezoneServer={saveUserTimezoneServer} />
       <PosthogMail session={session!} />
-      {/* <MetriportConnect userId={session!.user.id} /> */}
-      <AppleHealthConnect
-        customTitle="Connect Apple Health"
-        appStoreLink="https://testflight.apple.com/join/ofhHbnbd" />
 
-      {/* {
-        // @ts-ignore
-        userDetails?.neurosity?.disabled !== true &&
-        <NeurosityStatus userId={session!.user.id} />
-      } */}
+      <h2 className="text-2xl font-bold text-blue-700">Welcome to Mediar!</h2>
+      <p className="text-lg text-gray-700">Follow these steps to get started:</p>
+      <ol className="list-decimal list-inside text-gray-600">
+        <li>Set your health goal</li>
+        <li>Setup your communication preferences (WhatsApp or Telegram)</li>
+        <li>Connect your health data sources (Apple Health, Google Fit, etc.)</li>
+        <li>Send updates about what you eat, drink, do, and how you feel to get personalized insights</li>
+      </ol>
 
-      {/* <TagBox session={session!}
-        className="flex flex-col items-center gap-2 p-4 bg-white rounded-lg shadow-lg justify-end"
-      /> */}
-
-      {/* <GoalInput userDetails={userDetails} /> */}
-      <p className="text-black text-lg font-bold text-center">Everything happens in Telegram/WhatsApp.{" "}
-        <a
-          className="text-blue-500 underline"
-          href="/account">Connect your account</a> and head there.</p>
-      {/* @ts-ignore */}
-      {/* <iframe width="100%" height="400" src="https://www.youtube.com/embed/S0I5GDEoIkc" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> */}
-      {/* @ts-ignore */}
-      <iframe width="100%" height="560"
-        src="https://www.youtube.com/embed/u4HlR_z49CA"
-        title="YouTube video player"
-        // frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      // allowfullscreen
-      >
-
-      </iframe>
-      {/* <iframe width="100%" height="400" src="https://youtube.com/shorts/u4HlR_z49CA?feature=share" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe> */}
-
-
-
-
-      {/* {
-        // @ts-ignore
-        userDetails?.neurosity?.disabled !== true &&
-        <NeurosityFocusChart session={session!} getStates={getStatesServer} getTags={getTagsServer} />
-      }
-      {
-        // @ts-ignore
-        userDetails?.oura?.disabled !== true &&
-        <OuraSleepChart session={session!} getSleeps={getSleepServer} getTags={getTagsServer} />
-      } */}
-      {/* {
-        // @ts-ignore
-        userDetails?.oura?.disabled !== true &&
-        <OuraHrvChart session={session!} />
-      } */}
-      {/* <CommandDialogDemo /> */}
-      {/* <Chat /> */}
-      {/* <NeurosityBrainwaveChart session={session!} getBrainwaves={getBrainwavesServer} getTags={getTagsServer} /> */}
+      <Link
+        href="/account"
+        className="text-sm mt-2 underline text-blue-500"
+      >Go to account to configure these...</Link>
     </div>
   );
 }
