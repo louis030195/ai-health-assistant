@@ -3,14 +3,11 @@
 
 <img width="150" alt="mediarlogo" src="https://github.com/louis030195/mediar/assets/25003283/f55e6467-b5eb-45c1-932a-ad37c92debb8">
 
-<h1 align="center">Mediar</h1>  
-
 <h3 align="center">Your personal AI health assistant</h3>
 
 <p align="center">
 <a href="https://discord.gg/pFKpxYpZEa"><img alt="Discord" src="https://img.shields.io/discord/1134978992932401264?color=green&style=for-the-badge"></a>
 <br>  
-<a href="https://mediar.com/signup">Get Mediar</a> ·
 <a href="https://github.com/louis030195/mediar/issues/new?assignees=&labels=enhancement">Request Feature</a> ·  
 <a href="https://github.com/louis030195/mediar/issues/new?assignees=&labels=bug">Report Bug</a>
 
